@@ -1,5 +1,3 @@
-// Prisma schema from whiteboard: User (Auth0), Devices, Bill History
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/client"
@@ -10,25 +8,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// =============================================================================
-// USER (Auth0)
-// =============================================================================
-
 model User {
-  id          String  @id // from Auth0
-  email       String  @unique // from Auth0
-  zip         String? @map("zip")
-  utilityProv String? @map("utility_prov")
-
-  devices     Device[]
+  id          String        @id
+  email       String        @unique
+  utilityProv String?       @map("utility_prov")
+  locations   Location[]
   billHistory BillHistory[]
+  devices     Device[]
 
   @@map("users")
 }
 
-// =============================================================================
-// DEVICES
-// =============================================================================
+model Location {
+  id     String @id @default(uuid()) @map("location_id")
+  userId String @map("user_id")
+  zip    String @map("zip")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("locations")
+}
 
 model Device {
   id                 String  @id @default(uuid()) @map("device_id")
@@ -37,27 +36,21 @@ model Device {
   type               String
   brand              String?
   model              String?
-  hourlyEnergy       Float?  @map("hourly_energy") // kWh or similar
-  runDurationMinutes Int?    @map("run_duration_minutes") // how long one run takes (e.g. 120 = 2 hours for dishwasher)
+  hourlyEnergy       Float?  @map("hourly_energy")
   isSmart            Boolean @default(false) @map("is_smart")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  runDurationMinutes Int?    @map("run_duration_minutes")
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("devices")
 }
 
-// =============================================================================
-// BILL HISTORY
-// =============================================================================
-
 model BillHistory {
   id          String   @id @default(uuid()) @map("bill_id")
   userId      String   @map("user_id")
   billTotal   Decimal  @map("bill_total") @db.Decimal(12, 2)
-  createdDate DateTime @default(now()) @map("created_date") @db.Timestamptz
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdDate DateTime @default(now()) @map("created_date") @db.Timestamptz(6)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("bill_history")

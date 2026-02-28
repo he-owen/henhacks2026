@@ -6,11 +6,13 @@ import SignIn from './sign-in/SignIn';
 import SignInSide from './sign-in-side/SignInSide';
 import SignUp from './sign-up/SignUp';
 import ProtectedRoute from './auth/ProtectedRoute';
+import SyncUserToBackend from './auth/syncUserToBackend';
 
 export default function App() {
   return (
     <>
       <CssBaseline />
+      <SyncUserToBackend />
       <Routes>
         <Route
           path="/"

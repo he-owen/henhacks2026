@@ -11,12 +11,22 @@ datasource db {
 model User {
   id          String        @id
   email       String        @unique
-  zip         String?       @map("zip")
   utilityProv String?       @map("utility_prov")
+  locations   Location[]
   billHistory BillHistory[]
   devices     Device[]
 
   @@map("users")
+}
+
+model Location {
+  id     String @id @default(uuid()) @map("location_id")
+  userId String @map("user_id")
+  zip    String @map("zip")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("locations")
 }
 
 model Device {
@@ -45,3 +55,4 @@ model BillHistory {
   @@index([userId])
   @@map("bill_history")
 }
+
