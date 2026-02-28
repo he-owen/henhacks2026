@@ -1,0 +1,17 @@
+{
+  "name": "henhacks2026",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "db:generate": "dotenv -e .env -- prisma generate --schema=./database/schema.prisma",
+    "db:push": "dotenv -e .env -- prisma db push --schema=./database/schema.prisma",
+    "db:migrate": "dotenv -e .env -- prisma migrate dev --schema=./database/schema.prisma",
+    "db:pull": "dotenv -e .env -- prisma db pull --schema=./database/schema.prisma",
+    "db:studio": "dotenv -e .env -- prisma studio --schema=./database/schema.prisma"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.4.2",
+    "prisma": "^6.0.0"
+  }
+}

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -17,6 +18,8 @@ import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '../shared-theme/AppTheme';
 import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
+import { useAuth0 } from '@auth0/auth0-react';
+import LoginButton from '../auth/LoginButton';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -61,7 +64,13 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props) {
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth0();
   const [emailError, setEmailError] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isLoading && isAuthenticated) navigate('/', { replace: true });
+  }, [isAuthenticated, isLoading, navigate]);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
@@ -113,6 +122,19 @@ export default function SignIn(props) {
 
     return isValid;
   };
+
+  if (isLoading) {
+    return (
+      <AppTheme {...props}>
+        <CssBaseline enableColorScheme />
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+          <Typography>Loading…</Typography>
+        </Box>
+      </AppTheme>
+    );
+  }
+
+  if (isAuthenticated) return null;
 
   return (
     <AppTheme {...props}>
@@ -198,6 +220,7 @@ export default function SignIn(props) {
           </Box>
           <Divider>or</Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <LoginButton fullWidth variant="outlined" />
             <Button
               fullWidth
               variant="outlined"

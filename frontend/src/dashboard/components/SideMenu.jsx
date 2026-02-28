@@ -9,6 +9,8 @@ import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
+import { useAuth0 } from '@auth0/auth0-react';
+import LogoutButton from '../../auth/LogoutButton';
 
 const drawerWidth = 240;
 
@@ -24,6 +26,8 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
+  const { user } = useAuth0();
+
   return (
     <Drawer
       variant="permanent"
@@ -67,19 +71,19 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
+          alt={user?.name ?? user?.email ?? 'User'}
+          src={user?.picture}
           sx={{ width: 36, height: 36 }}
         />
-        <Box sx={{ mr: 'auto' }}>
-          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Riley Carter
+        <Box sx={{ mr: 'auto', minWidth: 0 }}>
+          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }} noWrap>
+            {user?.name ?? user?.email}
           </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
+          <Typography variant="caption" sx={{ color: 'text.secondary' }} noWrap display="block">
+            {user?.email}
           </Typography>
         </Box>
-        <OptionsMenu />
+        <LogoutButton size="small" variant="text" sx={{ flexShrink: 0 }} />
       </Stack>
     </Drawer>
   );
