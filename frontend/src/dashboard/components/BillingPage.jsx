@@ -5,23 +5,19 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
+import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import { DataGrid } from '@mui/x-data-grid';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
-import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import Copyright from '../internals/components/Copyright';
 
 const MONTHS = [
@@ -35,7 +31,32 @@ const initialHistory = [
   { id: '3', month: 11, year: 2024, totalAmount: 142.80, usageKwh: 920, utility: 'Local Electric Co' },
   { id: '4', month: 10, year: 2024, totalAmount: 98.50, usageKwh: 652, utility: 'Local Electric Co' },
   { id: '5', month: 9, year: 2024, totalAmount: 135.00, usageKwh: 891, utility: 'Local Electric Co' },
+  { id: '6', month: 8, year: 2024, totalAmount: 168.90, usageKwh: 1102, utility: 'Local Electric Co' },
+  { id: '7', month: 7, year: 2024, totalAmount: 172.30, usageKwh: 1145, utility: 'Local Electric Co' },
+  { id: '8', month: 6, year: 2024, totalAmount: 145.60, usageKwh: 958, utility: 'Local Electric Co' },
 ];
+
+function renderAmount(params) {
+  if (params.value == null) return '—';
+  return `$${params.value.toFixed(2)}`;
+}
+
+function renderUsage(params) {
+  if (params.value == null) return '—';
+  return `${params.value.toLocaleString()} kWh`;
+}
+
+function renderPeriod(params) {
+  return `${MONTHS[params.row.month - 1]} ${params.row.year}`;
+}
+
+function renderTrend(params) {
+  if (params.value == null) return null;
+  const val = params.value;
+  if (val > 150) return <Chip label="High" color="error" size="small" variant="outlined" />;
+  if (val > 120) return <Chip label="Average" color="warning" size="small" variant="outlined" />;
+  return <Chip label="Low" color="success" size="small" variant="outlined" />;
+}
 
 function a11yProps(index) {
   return {
@@ -96,7 +117,6 @@ export default function BillingPage() {
       utility: form.utility || '—',
     };
     setHistory((prev) => [newBill, ...prev]);
-    setForm(emptyForm);
     handleCloseDialog();
   };
 
@@ -139,16 +159,76 @@ export default function BillingPage() {
     setHistory((prev) => prev.filter((b) => b.id !== id));
   };
 
-  const formatMonthYear = (month, year) => `${MONTHS[month - 1]} ${year}`;
+  const columns = [
+    {
+      field: 'period',
+      headerName: 'Period',
+      flex: 1.2,
+      minWidth: 150,
+      renderCell: renderPeriod,
+      sortComparator: (a, b, paramA, paramB) => {
+        const rowA = paramA.api.getRow(paramA.id);
+        const rowB = paramB.api.getRow(paramB.id);
+        return (rowA.year * 12 + rowA.month) - (rowB.year * 12 + rowB.month);
+      },
+    },
+    {
+      field: 'totalAmount',
+      headerName: 'Amount',
+      flex: 0.8,
+      minWidth: 100,
+      headerAlign: 'right',
+      align: 'right',
+      renderCell: renderAmount,
+    },
+    {
+      field: 'usageKwh',
+      headerName: 'Usage',
+      flex: 0.8,
+      minWidth: 110,
+      headerAlign: 'right',
+      align: 'right',
+      renderCell: renderUsage,
+    },
+    {
+      field: 'trend',
+      headerName: 'Level',
+      flex: 0.6,
+      minWidth: 90,
+      valueGetter: (value, row) => row.totalAmount,
+      renderCell: renderTrend,
+      sortable: false,
+    },
+    { field: 'utility', headerName: 'Utility', flex: 1, minWidth: 140 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 0.5,
+      minWidth: 70,
+      sortable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <Tooltip title="Delete">
+          <IconButton
+            size="small"
+            color="error"
+            onClick={() => handleDeleteBill(params.row.id)}
+          >
+            <DeleteRoundedIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      ),
+    },
+  ];
 
   return (
-    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1200px' } }}>
+    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       <Stack
         direction="row"
         sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
       >
         <Typography component="h2" variant="h6">
-          Billing & Utility Bills
+          Billing
         </Typography>
         <Button
           variant="contained"
@@ -156,46 +236,44 @@ export default function BillingPage() {
           startIcon={<AddRoundedIcon />}
           onClick={handleOpenDialog}
         >
-          Add bill
+          Add Bill
         </Button>
       </Stack>
-
-      <TableContainer component={Paper} variant="outlined" sx={{ mb: 3 }}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Period</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Usage (kWh)</TableCell>
-              <TableCell>Utility</TableCell>
-              <TableCell align="right" padding="none" />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {history.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{formatMonthYear(row.month, row.year)}</TableCell>
-                <TableCell align="right">
-                  {row.totalAmount != null ? `$${row.totalAmount.toFixed(2)}` : '—'}
-                </TableCell>
-                <TableCell align="right">
-                  {row.usageKwh != null ? row.usageKwh : '—'}
-                </TableCell>
-                <TableCell>{row.utility}</TableCell>
-                <TableCell align="right" padding="none">
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteBill(row.id)}
-                    aria-label="Delete"
-                  >
-                    <DeleteOutlineRoundedIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <DataGrid
+        rows={history}
+        columns={columns}
+        getRowClassName={(params) =>
+          params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+        }
+        initialState={{
+          pagination: { paginationModel: { pageSize: 20 } },
+          sorting: { sortModel: [{ field: 'period', sort: 'desc' }] },
+        }}
+        pageSizeOptions={[10, 20, 50]}
+        disableColumnResize
+        density="compact"
+        disableRowSelectionOnClick
+        slotProps={{
+          filterPanel: {
+            filterFormProps: {
+              logicOperatorInputProps: { variant: 'outlined', size: 'small' },
+              columnInputProps: {
+                variant: 'outlined',
+                size: 'small',
+                sx: { mt: 'auto' },
+              },
+              operatorInputProps: {
+                variant: 'outlined',
+                size: 'small',
+                sx: { mt: 'auto' },
+              },
+              valueInputProps: {
+                InputComponentProps: { variant: 'outlined', size: 'small' },
+              },
+            },
+          },
+        }}
+      />
 
       <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
         <DialogTitle>Add utility bill</DialogTitle>

@@ -21,7 +21,7 @@ const recommendations = [
     id: '1',
     icon: <AcUnitRoundedIcon />,
     title: 'Shift HVAC to off-peak hours',
-    description: 'Pre-cool your home before on-peak rates start. Running AC during midday could cost 2–3× more than at night.',
+    description: 'Pre-cool your home before on-peak rates start. Running AC during midday could cost 2\u20133\u00d7 more than at night.',
     savings: '$18/mo',
     priority: 'high',
   },
@@ -45,11 +45,13 @@ const recommendations = [
     id: '4',
     icon: <BoltRoundedIcon />,
     title: 'Reduce phantom load',
-    description: 'Several devices draw power when "off". Use smart strips or unplug rarely used electronics.',
+    description: 'Several devices draw power when \u201coff\u201d. Use smart strips or unplug rarely used electronics.',
     savings: '$3/mo',
     priority: 'low',
   },
 ];
+
+const priorityColor = { high: 'error', medium: 'warning', low: 'default' };
 
 export default function OptimizationPage() {
   const [running, setRunning] = React.useState(false);
@@ -60,13 +62,32 @@ export default function OptimizationPage() {
   };
 
   return (
-    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1100px' } }}>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Optimization
-      </Typography>
+    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+      <Stack
+        direction="row"
+        sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
+      >
+        <Typography component="h2" variant="h6">
+          Optimization
+        </Typography>
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={<AutoAwesomeRoundedIcon />}
+          onClick={handleRunOptimization}
+          disabled={running}
+        >
+          {running ? 'Analyzing\u2026' : 'Run Optimization'}
+        </Button>
+      </Stack>
 
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, md: 4 }}>
+      <Grid
+        container
+        spacing={2}
+        columns={12}
+        sx={{ mb: (theme) => theme.spacing(2) }}
+      >
+        <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
           <Card variant="outlined" sx={{ height: '100%' }}>
             <CardContent>
               <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
@@ -84,7 +105,7 @@ export default function OptimizationPage() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
           <Card variant="outlined" sx={{ height: '100%' }}>
             <CardContent>
               <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
@@ -93,7 +114,7 @@ export default function OptimizationPage() {
                   Optimization score
                 </Typography>
               </Stack>
-              <Stack direction="row" alignItems="center" spacing={2}>
+              <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 0.5 }}>
                 <LinearProgress
                   variant="determinate"
                   value={62}
@@ -107,75 +128,59 @@ export default function OptimizationPage() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card variant="outlined" sx={{ height: '100%' }}>
+        <Grid size={{ xs: 12, sm: 12, lg: 4 }}>
+          <Card variant="outlined" sx={{ height: '100%', bgcolor: 'action.hover' }}>
             <CardContent>
-              <Button
-                variant="contained"
-                fullWidth
-                startIcon={<AutoAwesomeRoundedIcon />}
-                onClick={handleRunOptimization}
-                disabled={running}
-              >
-                {running ? 'Analyzing…' : 'Run optimization'}
-              </Button>
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                Re-analyze your devices and rates for updated recommendations.
+              <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+                Coming next
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Our optimization engine will use your utility rate structure, device
+                usage, and bill history to suggest personalized schedules and track
+                savings over time.
               </Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
 
-      <Typography component="h3" variant="subtitle1" sx={{ mb: 1.5, fontWeight: 600 }}>
+      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Recommendations
       </Typography>
-      <Stack spacing={2} sx={{ mb: 3 }}>
+      <Stack spacing={1.5}>
         {recommendations.map((rec) => (
           <Card key={rec.id} variant="outlined">
-            <CardContent>
-              <Stack direction="row" spacing={2} alignItems="flex-start">
-                <Box sx={{ color: 'primary.main', mt: 0.5 }}>{rec.icon}</Box>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.5 }}>
-                    <Typography variant="subtitle1" fontWeight={600}>
-                      {rec.title}
-                    </Typography>
-                    <Chip
-                      label={rec.savings}
-                      size="small"
-                      color="success"
-                      variant="outlined"
-                    />
-                    <Chip
-                      label={rec.priority}
-                      size="small"
-                      variant="outlined"
-                      sx={{ textTransform: 'capitalize' }}
-                    />
-                  </Stack>
-                  <Typography variant="body2" color="text.secondary">
+            <CardContent sx={{ py: 1.5, '&:last-child': { pb: 1.5 } }}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Box sx={{ color: 'primary.main', display: 'flex' }}>{rec.icon}</Box>
+                <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                  <Typography variant="subtitle2" fontWeight={600}>
+                    {rec.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" noWrap={false}>
                     {rec.description}
                   </Typography>
                 </Box>
+                <Stack direction="row" spacing={0.5} sx={{ flexShrink: 0 }}>
+                  <Chip
+                    label={rec.savings}
+                    size="small"
+                    color="success"
+                    variant="outlined"
+                  />
+                  <Chip
+                    label={rec.priority}
+                    size="small"
+                    color={priorityColor[rec.priority]}
+                    variant="outlined"
+                    sx={{ textTransform: 'capitalize' }}
+                  />
+                </Stack>
               </Stack>
             </CardContent>
           </Card>
         ))}
       </Stack>
-
-      <Card variant="outlined" sx={{ bgcolor: 'action.hover' }}>
-        <CardContent>
-          <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-            Coming next
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Our optimization engine will use your utility rate structure, device usage, and bill history
-            to suggest personalized schedules and habits. You’ll be able to compare scenarios and
-            track savings over time.
-          </Typography>
-        </CardContent>
-      </Card>
 
       <Copyright sx={{ my: 4 }} />
     </Box>
