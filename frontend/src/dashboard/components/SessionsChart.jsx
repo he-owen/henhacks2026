@@ -25,9 +25,7 @@ AreaGradient.propTypes = {
 
 function getDaysInMonth(month, year) {
   const date = new Date(year, month, 0);
-  const monthName = date.toLocaleDateString('en-US', {
-    month: 'short',
-  });
+  const monthName = date.toLocaleDateString('en-US', { month: 'short' });
   const daysInMonth = date.getDate();
   const days = [];
   let i = 1;
@@ -52,7 +50,7 @@ export default function SessionsChart() {
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Sessions
+          Daily Energy Usage
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -64,12 +62,12 @@ export default function SessionsChart() {
             }}
           >
             <Typography variant="h4" component="p">
-              13,277
+              842 kWh
             </Typography>
-            <Chip size="small" color="success" label="+35%" />
+            <Chip size="small" color="success" label="-12%" />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Sessions per day for the last 30 days
+            Energy consumption by category for the last 30 days
           </Typography>
         </Stack>
         <LineChart
@@ -85,67 +83,64 @@ export default function SessionsChart() {
           yAxis={[{ width: 50 }]}
           series={[
             {
-              id: 'direct',
-              label: 'Direct',
+              id: 'hvac',
+              label: 'HVAC',
               showMark: false,
               curve: 'linear',
               stack: 'total',
               area: true,
               stackOrder: 'ascending',
               data: [
-                300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800, 3300,
-                3600, 3900, 4200, 4500, 3900, 4800, 5100, 5400, 4800, 5700, 6000,
-                6300, 6600, 6900, 7200, 7500, 7800, 8100,
+                12, 14, 11, 15, 13, 10, 14, 12, 9, 13, 11, 8, 12, 10, 7, 11,
+                9, 6, 10, 8, 5, 9, 7, 4, 8, 6, 5, 7, 6, 8,
               ],
             },
             {
-              id: 'referral',
-              label: 'Referral',
+              id: 'appliances',
+              label: 'Appliances',
               showMark: false,
               curve: 'linear',
               stack: 'total',
               area: true,
               stackOrder: 'ascending',
               data: [
-                500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300, 3200,
-                3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300, 5600, 5900, 6200,
-                6500, 5600, 6800, 7100, 7400, 7700, 8000,
+                8, 7, 9, 8, 7, 9, 8, 7, 9, 8, 7, 9, 8, 7, 9, 8, 7, 9, 8, 7,
+                9, 8, 7, 9, 8, 7, 9, 8, 7, 9,
               ],
             },
             {
-              id: 'organic',
-              label: 'Organic',
+              id: 'lighting',
+              label: 'Lighting & Other',
               showMark: false,
               curve: 'linear',
               stack: 'total',
               stackOrder: 'ascending',
-              data: [
-                1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500,
-                3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300, 4500, 4000, 4700,
-                5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
-              ],
               area: true,
+              data: [
+                3, 3, 4, 3, 3, 4, 3, 3, 4, 3, 3, 4, 3, 3, 4, 3, 3, 4, 3, 3,
+                4, 3, 3, 4, 3, 3, 4, 3, 3, 4,
+              ],
             },
           ]}
           height={250}
           margin={{ left: 0, right: 20, top: 20, bottom: 0 }}
           grid={{ horizontal: true }}
           sx={{
-            '& .MuiAreaElement-series-organic': {
-              fill: "url('#organic')",
+            '& .MuiAreaElement-series-hvac': {
+              fill: "url('#home-hvac')",
             },
-            '& .MuiAreaElement-series-referral': {
-              fill: "url('#referral')",
+            '& .MuiAreaElement-series-appliances': {
+              fill: "url('#home-appliances')",
             },
-            '& .MuiAreaElement-series-direct': {
-              fill: "url('#direct')",
+            '& .MuiAreaElement-series-lighting': {
+              fill: "url('#home-lighting')",
             },
           }}
           hideLegend
         >
-          <AreaGradient color={theme.palette.primary.dark} id="organic" />
-          <AreaGradient color={theme.palette.primary.main} id="referral" />
-          <AreaGradient color={theme.palette.primary.light} id="direct" />
+          <AreaGradient color={theme.palette.primary.dark} id="home-hvac" />
+          <AreaGradient color={theme.palette.primary.main} id="home-appliances" />
+          <AreaGradient color={theme.palette.primary.light} id="home-lighting" />
         </LineChart>
       </CardContent>
     </Card>

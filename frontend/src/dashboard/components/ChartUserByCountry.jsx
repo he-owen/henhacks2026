@@ -9,44 +9,41 @@ import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-
-import {
-  IndiaFlag,
-  UsaFlag,
-  BrazilFlag,
-  GlobeFlag,
-} from '../internals/components/CustomIcons';
+import AcUnitRoundedIcon from '@mui/icons-material/AcUnitRounded';
+import KitchenRoundedIcon from '@mui/icons-material/KitchenRounded';
+import LightbulbRoundedIcon from '@mui/icons-material/LightbulbRounded';
+import DevicesOtherRoundedIcon from '@mui/icons-material/DevicesOtherRounded';
 
 const data = [
-  { label: 'India', value: 50000 },
-  { label: 'USA', value: 35000 },
-  { label: 'Brazil', value: 10000 },
-  { label: 'Other', value: 5000 },
+  { label: 'HVAC', value: 420 },
+  { label: 'Appliances', value: 230 },
+  { label: 'Lighting', value: 110 },
+  { label: 'Other', value: 82 },
 ];
 
-const countries = [
+const categories = [
   {
-    name: 'India',
+    name: 'HVAC',
     value: 50,
-    flag: <IndiaFlag />,
+    icon: <AcUnitRoundedIcon sx={{ fontSize: '1rem' }} />,
     color: 'hsl(220, 25%, 65%)',
   },
   {
-    name: 'USA',
-    value: 35,
-    flag: <UsaFlag />,
+    name: 'Appliances',
+    value: 27,
+    icon: <KitchenRoundedIcon sx={{ fontSize: '1rem' }} />,
     color: 'hsl(220, 25%, 45%)',
   },
   {
-    name: 'Brazil',
-    value: 10,
-    flag: <BrazilFlag />,
+    name: 'Lighting',
+    value: 13,
+    icon: <LightbulbRoundedIcon sx={{ fontSize: '1rem' }} />,
     color: 'hsl(220, 25%, 30%)',
   },
   {
     name: 'Other',
-    value: 5,
-    flag: <GlobeFlag />,
+    value: 10,
+    icon: <DevicesOtherRoundedIcon sx={{ fontSize: '1rem' }} />,
     color: 'hsl(220, 25%, 20%)',
   },
 ];
@@ -59,30 +56,16 @@ const StyledText = styled('text', {
   fill: (theme.vars || theme).palette.text.secondary,
   variants: [
     {
-      props: {
-        variant: 'primary',
-      },
+      props: { variant: 'primary' },
       style: {
         fontSize: theme.typography.h5.fontSize,
-      },
-    },
-    {
-      props: ({ variant }) => variant !== 'primary',
-      style: {
-        fontSize: theme.typography.body2.fontSize,
-      },
-    },
-    {
-      props: {
-        variant: 'primary',
-      },
-      style: {
         fontWeight: theme.typography.h5.fontWeight,
       },
     },
     {
       props: ({ variant }) => variant !== 'primary',
       style: {
+        fontSize: theme.typography.body2.fontSize,
         fontWeight: theme.typography.body2.fontWeight,
       },
     },
@@ -126,17 +109,12 @@ export default function ChartUserByCountry() {
     >
       <CardContent>
         <Typography component="h2" variant="subtitle2">
-          Users by country
+          Usage by Device Type
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <PieChart
             colors={colors}
-            margin={{
-              left: 80,
-              right: 80,
-              top: 80,
-              bottom: 80,
-            }}
+            margin={{ left: 80, right: 80, top: 80, bottom: 80 }}
             series={[
               {
                 data,
@@ -150,16 +128,16 @@ export default function ChartUserByCountry() {
             width={260}
             hideLegend
           >
-            <PieCenterLabel primaryText="98.5K" secondaryText="Total" />
+            <PieCenterLabel primaryText="842" secondaryText="kWh" />
           </PieChart>
         </Box>
-        {countries.map((country, index) => (
+        {categories.map((category, index) => (
           <Stack
             key={index}
             direction="row"
             sx={{ alignItems: 'center', gap: 2, pb: 2 }}
           >
-            {country.flag}
+            {category.icon}
             <Stack sx={{ gap: 1, flexGrow: 1 }}>
               <Stack
                 direction="row"
@@ -170,19 +148,19 @@ export default function ChartUserByCountry() {
                 }}
               >
                 <Typography variant="body2" sx={{ fontWeight: '500' }}>
-                  {country.name}
+                  {category.name}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  {country.value}%
+                  {category.value}%
                 </Typography>
               </Stack>
               <LinearProgress
                 variant="determinate"
-                aria-label="Number of users by country"
-                value={country.value}
+                aria-label="Energy usage by device type"
+                value={category.value}
                 sx={{
                   [`& .${linearProgressClasses.bar}`]: {
-                    backgroundColor: country.color,
+                    backgroundColor: category.color,
                   },
                 }}
               />
