@@ -1,0 +1,64 @@
+// Prisma schema from whiteboard: User (Auth0), Devices, Bill History
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// USER (Auth0)
+// =============================================================================
+
+model User {
+  id          String  @id // from Auth0
+  email       String  @unique // from Auth0
+  zip         String? @map("zip")
+  utilityProv String? @map("utility_prov")
+
+  devices     Device[]
+  billHistory BillHistory[]
+
+  @@map("users")
+}
+
+// =============================================================================
+// DEVICES
+// =============================================================================
+
+model Device {
+  id                 String  @id @default(uuid()) @map("device_id")
+  userId             String  @map("user_id")
+  name               String
+  type               String
+  brand              String?
+  model              String?
+  hourlyEnergy       Float?  @map("hourly_energy") // kWh or similar
+  runDurationMinutes Int?    @map("run_duration_minutes") // how long one run takes (e.g. 120 = 2 hours for dishwasher)
+  isSmart            Boolean @default(false) @map("is_smart")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("devices")
+}
+
+// =============================================================================
+// BILL HISTORY
+// =============================================================================
+
+model BillHistory {
+  id          String   @id @default(uuid()) @map("bill_id")
+  userId      String   @map("user_id")
+  billTotal   Decimal  @map("bill_total") @db.Decimal(12, 2)
+  createdDate DateTime @default(now()) @map("created_date") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("bill_history")
+}
