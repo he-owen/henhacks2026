@@ -3,13 +3,21 @@ from sqlalchemy import text
 from config import DATABASE_URL
 import os
 import logging
+import ssl
 
 _use_ssl = os.getenv("DATABASE_SSL", "true").lower() in ("1", "true", "yes")
+_verify_ssl = os.getenv("DATABASE_SSL_VERIFY", "false").lower() in ("1", "true", "yes")
 
 _connect_args = {}
 if _use_ssl:
-    # Supabase (and most cloud Postgres) require SSL. asyncpg works best with ssl=True.
-    _connect_args["ssl"] = True
+    if _verify_ssl:
+        _connect_args["ssl"] = True
+    else:
+        # Skip cert verification (avoids CERTIFICATE_VERIFY_FAILED on Render/Supabase)
+        _ctx = ssl.create_default_context()
+        _ctx.check_hostname = False
+        _ctx.verify_mode = ssl.CERT_NONE
+        _connect_args["ssl"] = _ctx
 
 engine = create_async_engine(
     DATABASE_URL,
