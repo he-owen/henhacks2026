@@ -32,7 +32,7 @@ const emptyDevice = {
   runDurationMinutes: '',
 };
 
-export default function DeviceFormDialog({ open, onClose, onSave, device }) {
+export default function DeviceFormDialog({ open, onClose, onSave, device, saving = false }) {
   const [form, setForm] = React.useState(emptyDevice);
   const isEdit = Boolean(device);
 
@@ -149,9 +149,9 @@ export default function DeviceFormDialog({ open, onClose, onSave, device }) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button type="submit" variant="contained">
-          {isEdit ? 'Save Changes' : 'Add Device'}
+        <Button onClick={onClose} disabled={saving}>Cancel</Button>
+        <Button type="submit" variant="contained" disabled={saving}>
+          {saving ? 'Saving…' : isEdit ? 'Save Changes' : 'Add Device'}
         </Button>
       </DialogActions>
     </Dialog>
@@ -163,4 +163,5 @@ DeviceFormDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   device: PropTypes.object,
+  saving: PropTypes.bool,
 };

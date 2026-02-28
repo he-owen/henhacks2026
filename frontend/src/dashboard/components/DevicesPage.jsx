@@ -6,95 +6,16 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { DataGrid } from '@mui/x-data-grid';
+import { useAuth0 } from '@auth0/auth0-react';
 import Copyright from '../internals/components/Copyright';
 import DeviceFormDialog from './DeviceFormDialog';
-
-const sampleDevices = [
-  {
-    id: '1',
-    name: 'Living Room AC',
-    type: 'HVAC',
-    brand: 'Samsung',
-    model: 'WindFree 2.0',
-    hourlyEnergy: 1.2,
-    isSmart: true,
-    runDurationMinutes: 480,
-  },
-  {
-    id: '2',
-    name: 'Kitchen Refrigerator',
-    type: 'Appliance',
-    brand: 'LG',
-    model: 'InstaView',
-    hourlyEnergy: 0.15,
-    isSmart: true,
-    runDurationMinutes: 1440,
-  },
-  {
-    id: '3',
-    name: 'Bedroom Lights',
-    type: 'Lighting',
-    brand: 'Philips',
-    model: 'Hue A19',
-    hourlyEnergy: 0.06,
-    isSmart: true,
-    runDurationMinutes: 300,
-  },
-  {
-    id: '4',
-    name: 'Water Heater',
-    type: 'Water Heater',
-    brand: 'Rheem',
-    model: 'ProTerra',
-    hourlyEnergy: 4.5,
-    isSmart: false,
-    runDurationMinutes: 120,
-  },
-  {
-    id: '5',
-    name: 'Garage EV Charger',
-    type: 'EV Charger',
-    brand: 'ChargePoint',
-    model: 'Home Flex',
-    hourlyEnergy: 9.6,
-    isSmart: true,
-    runDurationMinutes: 240,
-  },
-  {
-    id: '6',
-    name: 'Office Desktop',
-    type: 'Electronics',
-    brand: 'Dell',
-    model: 'OptiPlex 7090',
-    hourlyEnergy: 0.2,
-    isSmart: false,
-    runDurationMinutes: 480,
-  },
-  {
-    id: '7',
-    name: 'Washing Machine',
-    type: 'Appliance',
-    brand: 'Whirlpool',
-    model: 'WFW9620',
-    hourlyEnergy: 0.5,
-    isSmart: false,
-    runDurationMinutes: 60,
-  },
-  {
-    id: '8',
-    name: 'Rooftop Solar',
-    type: 'Solar',
-    brand: 'SunPower',
-    model: 'Maxeon 6',
-    hourlyEnergy: -3.2,
-    isSmart: true,
-    runDurationMinutes: 600,
-  },
-];
+import { getDevices, createDevice, updateDevice, deleteDevice } from '../../api';
 
 function renderSmartChip(params) {
   return (
@@ -122,9 +43,33 @@ function formatDuration(params) {
 }
 
 export default function DevicesPage() {
-  const [devices, setDevices] = React.useState(sampleDevices);
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const [devices, setDevices] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [editingDevice, setEditingDevice] = React.useState(null);
+  const [saving, setSaving] = React.useState(false);
+
+  const fetchDevices = React.useCallback(async () => {
+    if (!isAuthenticated) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const token = await getAccessTokenSilently();
+      const list = await getDevices(token);
+      setDevices(list);
+    } catch (e) {
+      setError(e?.message ?? 'Failed to load devices');
+      setDevices([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
+
+  React.useEffect(() => {
+    fetchDevices();
+  }, [fetchDevices]);
 
   const handleAdd = () => {
     setEditingDevice(null);
@@ -136,22 +81,35 @@ export default function DevicesPage() {
     setDialogOpen(true);
   };
 
-  const handleDelete = (id) => {
-    setDevices((prev) => prev.filter((d) => d.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      const token = await getAccessTokenSilently();
+      await deleteDevice(token, id);
+      setDevices((prev) => prev.filter((d) => d.id !== id));
+    } catch (e) {
+      setError(e?.message ?? 'Failed to delete device');
+    }
   };
 
-  const handleSave = (formData) => {
-    if (editingDevice) {
-      setDevices((prev) =>
-        prev.map((d) =>
-          d.id === editingDevice.id ? { ...d, ...formData } : d,
-        ),
-      );
-    } else {
-      setDevices((prev) => [
-        ...prev,
-        { ...formData, id: crypto.randomUUID() },
-      ]);
+  const handleSave = async (formData) => {
+    setSaving(true);
+    setError(null);
+    try {
+      const token = await getAccessTokenSilently();
+      if (editingDevice) {
+        const updated = await updateDevice(token, editingDevice.id, formData);
+        setDevices((prev) =>
+          prev.map((d) => (d.id === editingDevice.id ? updated : d)),
+        );
+      } else {
+        const created = await createDevice(token, formData);
+        setDevices((prev) => [...prev, created]);
+      }
+      setDialogOpen(false);
+    } catch (e) {
+      setError(e?.message ?? 'Failed to save device');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -213,8 +171,22 @@ export default function DevicesPage() {
     },
   ];
 
+  if (!isAuthenticated) {
+    return (
+      <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+        <Alert severity="info">Sign in to view and manage your devices.</Alert>
+        <Copyright sx={{ my: 4 }} />
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+      {error && (
+        <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
       <Stack
         direction="row"
         sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
@@ -227,10 +199,16 @@ export default function DevicesPage() {
           size="small"
           startIcon={<AddRoundedIcon />}
           onClick={handleAdd}
+          disabled={loading}
         >
           Add Device
         </Button>
       </Stack>
+      {loading ? (
+        <Stack alignItems="center" sx={{ py: 4 }}>
+          <CircularProgress />
+        </Stack>
+      ) : (
       <DataGrid
         rows={devices}
         columns={columns}
@@ -265,11 +243,13 @@ export default function DevicesPage() {
           },
         }}
       />
+      )}
       <DeviceFormDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         onSave={handleSave}
         device={editingDevice}
+        saving={saving}
       />
       <Copyright sx={{ my: 4 }} />
     </Box>

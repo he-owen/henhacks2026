@@ -1,4 +1,5 @@
 """Fetch Auth0 user profile from the userinfo endpoint using the access token."""
+
 import httpx
 from config import AUTH0_DOMAIN
 
