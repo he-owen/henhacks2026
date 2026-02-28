@@ -1,0 +1,38 @@
+# Ping Render status endpoint so it doesn't spin down on the free tier.
+# Random delay 0-4 min before each ping; cron every 5 min → pings land every 5-9 min at random.
+# Set RENDER_PING_URL to your app root (e.g. https://your-app.onrender.com) in repo Variables.
+
+name: Keep Render awake
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping status endpoint (random delay)
+        run: |
+          base="${RENDER_PING_URL}"
+          if [ -z "$base" ]; then
+            echo "RENDER_PING_URL not set. Add it in repo Settings → Secrets and variables → Actions → Variables."
+            exit 1
+          fi
+          base="${base%/}"
+          url="${base}/api/status"
+          # Random delay 0–240 seconds so pings aren’t on a fixed schedule
+          delay=$(( RANDOM % 241 ))
+          echo "Waiting ${delay}s then pinging $url"
+          sleep "$delay"
+          # Vary User-Agent so requests look like normal browser traffic
+          uas=(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
+          )
+          ua="${uas[$(( RANDOM % 3 ))]}"
+          curl -sf --max-time 30 -A "$ua" "$url" || true
+        env:
+          RENDER_PING_URL: ${{ vars.RENDER_PING_URL }}
