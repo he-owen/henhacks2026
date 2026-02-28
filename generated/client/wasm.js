@@ -96,8 +96,13 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  zip: 'zip',
   utilityProv: 'utilityProv'
+};
+
+exports.Prisma.LocationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  zip: 'zip'
 };
 
 exports.Prisma.DeviceScalarFieldEnum = {
@@ -108,8 +113,8 @@ exports.Prisma.DeviceScalarFieldEnum = {
   brand: 'brand',
   model: 'model',
   hourlyEnergy: 'hourlyEnergy',
-  runDurationMinutes: 'runDurationMinutes',
-  isSmart: 'isSmart'
+  isSmart: 'isSmart',
+  runDurationMinutes: 'runDurationMinutes'
 };
 
 exports.Prisma.BillHistoryScalarFieldEnum = {
@@ -137,6 +142,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Location: 'Location',
   Device: 'Device',
   BillHistory: 'BillHistory'
 };
@@ -169,7 +175,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../database",
@@ -179,7 +185,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -188,13 +193,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// Prisma schema from whiteboard: User (Auth0), Devices, Bill History\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// =============================================================================\n// USER (Auth0)\n// =============================================================================\n\nmodel User {\n  id          String  @id // from Auth0\n  email       String  @unique // from Auth0\n  zip         String? @map(\"zip\")\n  utilityProv String? @map(\"utility_prov\")\n\n  devices     Device[]\n  billHistory BillHistory[]\n\n  @@map(\"users\")\n}\n\n// =============================================================================\n// DEVICES\n// =============================================================================\n\nmodel Device {\n  id                 String  @id @default(uuid()) @map(\"device_id\")\n  userId             String  @map(\"user_id\")\n  name               String\n  type               String\n  brand              String?\n  model              String?\n  hourlyEnergy       Float?  @map(\"hourly_energy\") // kWh or similar\n  runDurationMinutes Int?    @map(\"run_duration_minutes\") // how long one run takes (e.g. 120 = 2 hours for dishwasher)\n  isSmart            Boolean @default(false) @map(\"is_smart\")\n\n  user User @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@index([userId])\n  @@map(\"devices\")\n}\n\n// =============================================================================\n// BILL HISTORY\n// =============================================================================\n\nmodel BillHistory {\n  id          String   @id @default(uuid()) @map(\"bill_id\")\n  userId      String   @map(\"user_id\")\n  billTotal   Decimal  @map(\"bill_total\") @db.Decimal(12, 2)\n  createdDate DateTime @default(now()) @map(\"created_date\") @db.Timestamptz\n\n  user User @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@index([userId])\n  @@map(\"bill_history\")\n}\n",
-  "inlineSchemaHash": "b8206e30b5488f56f8be7dd63396c8dc527c999f362c6b113250bfbeb34748a6",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id          String        @id\n  email       String        @unique\n  utilityProv String?       @map(\"utility_prov\")\n  locations   Location[]\n  billHistory BillHistory[]\n  devices     Device[]\n\n  @@map(\"users\")\n}\n\nmodel Location {\n  id     String @id @default(uuid()) @map(\"location_id\")\n  userId String @map(\"user_id\")\n  zip    String @map(\"zip\")\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@index([userId])\n  @@map(\"locations\")\n}\n\nmodel Device {\n  id                 String  @id @default(uuid()) @map(\"device_id\")\n  userId             String  @map(\"user_id\")\n  name               String\n  type               String\n  brand              String?\n  model              String?\n  hourlyEnergy       Float?  @map(\"hourly_energy\")\n  isSmart            Boolean @default(false) @map(\"is_smart\")\n  runDurationMinutes Int?    @map(\"run_duration_minutes\")\n  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@index([userId])\n  @@map(\"devices\")\n}\n\nmodel BillHistory {\n  id          String   @id @default(uuid()) @map(\"bill_id\")\n  userId      String   @map(\"user_id\")\n  billTotal   Decimal  @map(\"bill_total\") @db.Decimal(12, 2)\n  createdDate DateTime @default(now()) @map(\"created_date\") @db.Timestamptz(6)\n  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@index([userId])\n  @@map(\"bill_history\")\n}\n",
+  "inlineSchemaHash": "0ffe2be6061db6add6dd43f753cd6ea9c0b6ef77eeef4fde38fcdedbb68ea64d",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"zip\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"zip\"},{\"name\":\"utilityProv\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"utility_prov\"},{\"name\":\"devices\",\"kind\":\"object\",\"type\":\"Device\",\"relationName\":\"DeviceToUser\"},{\"name\":\"billHistory\",\"kind\":\"object\",\"type\":\"BillHistory\",\"relationName\":\"BillHistoryToUser\"}],\"dbName\":\"users\"},\"Device\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"device_id\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"user_id\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"brand\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"model\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hourlyEnergy\",\"kind\":\"scalar\",\"type\":\"Float\",\"dbName\":\"hourly_energy\"},{\"name\":\"runDurationMinutes\",\"kind\":\"scalar\",\"type\":\"Int\",\"dbName\":\"run_duration_minutes\"},{\"name\":\"isSmart\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_smart\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"DeviceToUser\"}],\"dbName\":\"devices\"},\"BillHistory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"bill_id\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"user_id\"},{\"name\":\"billTotal\",\"kind\":\"scalar\",\"type\":\"Decimal\",\"dbName\":\"bill_total\"},{\"name\":\"createdDate\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_date\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"BillHistoryToUser\"}],\"dbName\":\"bill_history\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"utilityProv\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"utility_prov\"},{\"name\":\"locations\",\"kind\":\"object\",\"type\":\"Location\",\"relationName\":\"LocationToUser\"},{\"name\":\"billHistory\",\"kind\":\"object\",\"type\":\"BillHistory\",\"relationName\":\"BillHistoryToUser\"},{\"name\":\"devices\",\"kind\":\"object\",\"type\":\"Device\",\"relationName\":\"DeviceToUser\"}],\"dbName\":\"users\"},\"Location\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"location_id\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"user_id\"},{\"name\":\"zip\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"zip\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"LocationToUser\"}],\"dbName\":\"locations\"},\"Device\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"device_id\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"user_id\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"brand\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"model\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hourlyEnergy\",\"kind\":\"scalar\",\"type\":\"Float\",\"dbName\":\"hourly_energy\"},{\"name\":\"isSmart\",\"kind\":\"scalar\",\"type\":\"Boolean\",\"dbName\":\"is_smart\"},{\"name\":\"runDurationMinutes\",\"kind\":\"scalar\",\"type\":\"Int\",\"dbName\":\"run_duration_minutes\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"DeviceToUser\"}],\"dbName\":\"devices\"},\"BillHistory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"bill_id\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"user_id\"},{\"name\":\"billTotal\",\"kind\":\"scalar\",\"type\":\"Decimal\",\"dbName\":\"bill_total\"},{\"name\":\"createdDate\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_date\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"BillHistoryToUser\"}],\"dbName\":\"bill_history\"}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

@@ -37,3 +37,22 @@ async def check_database() -> bool:
     except Exception as e:
         logger.warning("Database check failed: %s", e, exc_info=True)
         return False
+
+
+async def upsert_user(user_id: str, email: str) -> bool:
+    """Insert or update a user by Auth0 id and email. Returns True on success."""
+    try:
+        async with async_session() as session:
+            await session.execute(
+                text("""
+                    INSERT INTO users (id, email)
+                    VALUES (:id, :email)
+                    ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email
+                """),
+                {"id": user_id, "email": email},
+            )
+            await session.commit()
+        return True
+    except Exception as e:
+        logger.warning("User upsert failed: %s", e, exc_info=True)
+        return False

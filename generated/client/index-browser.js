@@ -124,8 +124,13 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  zip: 'zip',
   utilityProv: 'utilityProv'
+};
+
+exports.Prisma.LocationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  zip: 'zip'
 };
 
 exports.Prisma.DeviceScalarFieldEnum = {
@@ -136,8 +141,8 @@ exports.Prisma.DeviceScalarFieldEnum = {
   brand: 'brand',
   model: 'model',
   hourlyEnergy: 'hourlyEnergy',
-  runDurationMinutes: 'runDurationMinutes',
-  isSmart: 'isSmart'
+  isSmart: 'isSmart',
+  runDurationMinutes: 'runDurationMinutes'
 };
 
 exports.Prisma.BillHistoryScalarFieldEnum = {
@@ -165,6 +170,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Location: 'Location',
   Device: 'Device',
   BillHistory: 'BillHistory'
 };

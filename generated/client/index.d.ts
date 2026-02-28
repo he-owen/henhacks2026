@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model Location
+ * 
+ */
+export type Location = $Result.DefaultSelection<Prisma.$LocationPayload>
+/**
  * Model Device
  * 
  */
@@ -156,6 +161,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.location`: Exposes CRUD operations for the **Location** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Locations
+    * const locations = await prisma.location.findMany()
+    * ```
+    */
+  get location(): Prisma.LocationDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.device`: Exposes CRUD operations for the **Device** model.
@@ -618,6 +633,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    Location: 'Location',
     Device: 'Device',
     BillHistory: 'BillHistory'
   };
@@ -638,7 +654,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "device" | "billHistory"
+      modelProps: "user" | "location" | "device" | "billHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -713,6 +729,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      Location: {
+        payload: Prisma.$LocationPayload<ExtArgs>
+        fields: Prisma.LocationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LocationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LocationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
+          }
+          findFirst: {
+            args: Prisma.LocationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LocationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
+          }
+          findMany: {
+            args: Prisma.LocationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>[]
+          }
+          create: {
+            args: Prisma.LocationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
+          }
+          createMany: {
+            args: Prisma.LocationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LocationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>[]
+          }
+          delete: {
+            args: Prisma.LocationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
+          }
+          update: {
+            args: Prisma.LocationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
+          }
+          deleteMany: {
+            args: Prisma.LocationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LocationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LocationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>[]
+          }
+          upsert: {
+            args: Prisma.LocationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LocationPayload>
+          }
+          aggregate: {
+            args: Prisma.LocationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLocation>
+          }
+          groupBy: {
+            args: Prisma.LocationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LocationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LocationCountArgs<ExtArgs>
+            result: $Utils.Optional<LocationCountAggregateOutputType> | number
           }
         }
       }
@@ -961,6 +1051,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    location?: LocationOmit
     device?: DeviceOmit
     billHistory?: BillHistoryOmit
   }
@@ -1043,13 +1134,15 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    devices: number
+    locations: number
     billHistory: number
+    devices: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    devices?: boolean | UserCountOutputTypeCountDevicesArgs
+    locations?: boolean | UserCountOutputTypeCountLocationsArgs
     billHistory?: boolean | UserCountOutputTypeCountBillHistoryArgs
+    devices?: boolean | UserCountOutputTypeCountDevicesArgs
   }
 
   // Custom InputTypes
@@ -1066,8 +1159,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DeviceWhereInput
+  export type UserCountOutputTypeCountLocationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LocationWhereInput
   }
 
   /**
@@ -1075,6 +1168,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountBillHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BillHistoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DeviceWhereInput
   }
 
 
@@ -1095,21 +1195,18 @@ export namespace Prisma {
   export type UserMinAggregateOutputType = {
     id: string | null
     email: string | null
-    zip: string | null
     utilityProv: string | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: string | null
     email: string | null
-    zip: string | null
     utilityProv: string | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
     email: number
-    zip: number
     utilityProv: number
     _all: number
   }
@@ -1118,21 +1215,18 @@ export namespace Prisma {
   export type UserMinAggregateInputType = {
     id?: true
     email?: true
-    zip?: true
     utilityProv?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
     email?: true
-    zip?: true
     utilityProv?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
     email?: true
-    zip?: true
     utilityProv?: true
     _all?: true
   }
@@ -1212,7 +1306,6 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     id: string
     email: string
-    zip: string | null
     utilityProv: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
@@ -1236,38 +1329,36 @@ export namespace Prisma {
   export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
-    zip?: boolean
     utilityProv?: boolean
-    devices?: boolean | User$devicesArgs<ExtArgs>
+    locations?: boolean | User$locationsArgs<ExtArgs>
     billHistory?: boolean | User$billHistoryArgs<ExtArgs>
+    devices?: boolean | User$devicesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
-    zip?: boolean
     utilityProv?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
-    zip?: boolean
     utilityProv?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
     email?: boolean
-    zip?: boolean
     utilityProv?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "zip" | "utilityProv", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "utilityProv", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    devices?: boolean | User$devicesArgs<ExtArgs>
+    locations?: boolean | User$locationsArgs<ExtArgs>
     billHistory?: boolean | User$billHistoryArgs<ExtArgs>
+    devices?: boolean | User$devicesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1276,13 +1367,13 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      devices: Prisma.$DevicePayload<ExtArgs>[]
+      locations: Prisma.$LocationPayload<ExtArgs>[]
       billHistory: Prisma.$BillHistoryPayload<ExtArgs>[]
+      devices: Prisma.$DevicePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: string
-      zip: string | null
       utilityProv: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -1678,8 +1769,9 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    devices<T extends User$devicesArgs<ExtArgs> = {}>(args?: Subset<T, User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    locations<T extends User$locationsArgs<ExtArgs> = {}>(args?: Subset<T, User$locationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     billHistory<T extends User$billHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$billHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    devices<T extends User$devicesArgs<ExtArgs> = {}>(args?: Subset<T, User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1711,7 +1803,6 @@ export namespace Prisma {
   interface UserFieldRefs {
     readonly id: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
-    readonly zip: FieldRef<"User", 'String'>
     readonly utilityProv: FieldRef<"User", 'String'>
   }
     
@@ -2101,27 +2192,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.devices
+   * User.locations
    */
-  export type User$devicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$locationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Device
+     * Select specific fields to fetch from the Location
      */
-    select?: DeviceSelect<ExtArgs> | null
+    select?: LocationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Device
+     * Omit specific fields from the Location
      */
-    omit?: DeviceOmit<ExtArgs> | null
+    omit?: LocationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: DeviceInclude<ExtArgs> | null
-    where?: DeviceWhereInput
-    orderBy?: DeviceOrderByWithRelationInput | DeviceOrderByWithRelationInput[]
-    cursor?: DeviceWhereUniqueInput
+    include?: LocationInclude<ExtArgs> | null
+    where?: LocationWhereInput
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
+    cursor?: LocationWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: DeviceScalarFieldEnum | DeviceScalarFieldEnum[]
+    distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
   }
 
   /**
@@ -2149,6 +2240,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.devices
+   */
+  export type User$devicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Device
+     */
+    select?: DeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Device
+     */
+    omit?: DeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeviceInclude<ExtArgs> | null
+    where?: DeviceWhereInput
+    orderBy?: DeviceOrderByWithRelationInput | DeviceOrderByWithRelationInput[]
+    cursor?: DeviceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DeviceScalarFieldEnum | DeviceScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2164,6 +2279,1038 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Location
+   */
+
+  export type AggregateLocation = {
+    _count: LocationCountAggregateOutputType | null
+    _min: LocationMinAggregateOutputType | null
+    _max: LocationMaxAggregateOutputType | null
+  }
+
+  export type LocationMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    zip: string | null
+  }
+
+  export type LocationMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    zip: string | null
+  }
+
+  export type LocationCountAggregateOutputType = {
+    id: number
+    userId: number
+    zip: number
+    _all: number
+  }
+
+
+  export type LocationMinAggregateInputType = {
+    id?: true
+    userId?: true
+    zip?: true
+  }
+
+  export type LocationMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    zip?: true
+  }
+
+  export type LocationCountAggregateInputType = {
+    id?: true
+    userId?: true
+    zip?: true
+    _all?: true
+  }
+
+  export type LocationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Location to aggregate.
+     */
+    where?: LocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Locations to fetch.
+     */
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Locations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Locations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Locations
+    **/
+    _count?: true | LocationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LocationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LocationMaxAggregateInputType
+  }
+
+  export type GetLocationAggregateType<T extends LocationAggregateArgs> = {
+        [P in keyof T & keyof AggregateLocation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLocation[P]>
+      : GetScalarType<T[P], AggregateLocation[P]>
+  }
+
+
+
+
+  export type LocationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LocationWhereInput
+    orderBy?: LocationOrderByWithAggregationInput | LocationOrderByWithAggregationInput[]
+    by: LocationScalarFieldEnum[] | LocationScalarFieldEnum
+    having?: LocationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LocationCountAggregateInputType | true
+    _min?: LocationMinAggregateInputType
+    _max?: LocationMaxAggregateInputType
+  }
+
+  export type LocationGroupByOutputType = {
+    id: string
+    userId: string
+    zip: string
+    _count: LocationCountAggregateOutputType | null
+    _min: LocationMinAggregateOutputType | null
+    _max: LocationMaxAggregateOutputType | null
+  }
+
+  type GetLocationGroupByPayload<T extends LocationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LocationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LocationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LocationGroupByOutputType[P]>
+            : GetScalarType<T[P], LocationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LocationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    zip?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["location"]>
+
+  export type LocationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    zip?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["location"]>
+
+  export type LocationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    zip?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["location"]>
+
+  export type LocationSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    zip?: boolean
+  }
+
+  export type LocationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "zip", ExtArgs["result"]["location"]>
+  export type LocationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type LocationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type LocationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $LocationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Location"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      zip: string
+    }, ExtArgs["result"]["location"]>
+    composites: {}
+  }
+
+  type LocationGetPayload<S extends boolean | null | undefined | LocationDefaultArgs> = $Result.GetResult<Prisma.$LocationPayload, S>
+
+  type LocationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LocationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LocationCountAggregateInputType | true
+    }
+
+  export interface LocationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Location'], meta: { name: 'Location' } }
+    /**
+     * Find zero or one Location that matches the filter.
+     * @param {LocationFindUniqueArgs} args - Arguments to find a Location
+     * @example
+     * // Get one Location
+     * const location = await prisma.location.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LocationFindUniqueArgs>(args: SelectSubset<T, LocationFindUniqueArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Location that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LocationFindUniqueOrThrowArgs} args - Arguments to find a Location
+     * @example
+     * // Get one Location
+     * const location = await prisma.location.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LocationFindUniqueOrThrowArgs>(args: SelectSubset<T, LocationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Location that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LocationFindFirstArgs} args - Arguments to find a Location
+     * @example
+     * // Get one Location
+     * const location = await prisma.location.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LocationFindFirstArgs>(args?: SelectSubset<T, LocationFindFirstArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Location that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LocationFindFirstOrThrowArgs} args - Arguments to find a Location
+     * @example
+     * // Get one Location
+     * const location = await prisma.location.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LocationFindFirstOrThrowArgs>(args?: SelectSubset<T, LocationFindFirstOrThrowArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Locations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LocationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Locations
+     * const locations = await prisma.location.findMany()
+     * 
+     * // Get first 10 Locations
+     * const locations = await prisma.location.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const locationWithIdOnly = await prisma.location.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LocationFindManyArgs>(args?: SelectSubset<T, LocationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Location.
+     * @param {LocationCreateArgs} args - Arguments to create a Location.
+     * @example
+     * // Create one Location
+     * const Location = await prisma.location.create({
+     *   data: {
+     *     // ... data to create a Location
+     *   }
+     * })
+     * 
+     */
+    create<T extends LocationCreateArgs>(args: SelectSubset<T, LocationCreateArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Locations.
+     * @param {LocationCreateManyArgs} args - Arguments to create many Locations.
+     * @example
+     * // Create many Locations
+     * const location = await prisma.location.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LocationCreateManyArgs>(args?: SelectSubset<T, LocationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Locations and returns the data saved in the database.
+     * @param {LocationCreateManyAndReturnArgs} args - Arguments to create many Locations.
+     * @example
+     * // Create many Locations
+     * const location = await prisma.location.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Locations and only return the `id`
+     * const locationWithIdOnly = await prisma.location.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LocationCreateManyAndReturnArgs>(args?: SelectSubset<T, LocationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Location.
+     * @param {LocationDeleteArgs} args - Arguments to delete one Location.
+     * @example
+     * // Delete one Location
+     * const Location = await prisma.location.delete({
+     *   where: {
+     *     // ... filter to delete one Location
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LocationDeleteArgs>(args: SelectSubset<T, LocationDeleteArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Location.
+     * @param {LocationUpdateArgs} args - Arguments to update one Location.
+     * @example
+     * // Update one Location
+     * const location = await prisma.location.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LocationUpdateArgs>(args: SelectSubset<T, LocationUpdateArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Locations.
+     * @param {LocationDeleteManyArgs} args - Arguments to filter Locations to delete.
+     * @example
+     * // Delete a few Locations
+     * const { count } = await prisma.location.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LocationDeleteManyArgs>(args?: SelectSubset<T, LocationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Locations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LocationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Locations
+     * const location = await prisma.location.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LocationUpdateManyArgs>(args: SelectSubset<T, LocationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Locations and returns the data updated in the database.
+     * @param {LocationUpdateManyAndReturnArgs} args - Arguments to update many Locations.
+     * @example
+     * // Update many Locations
+     * const location = await prisma.location.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Locations and only return the `id`
+     * const locationWithIdOnly = await prisma.location.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LocationUpdateManyAndReturnArgs>(args: SelectSubset<T, LocationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Location.
+     * @param {LocationUpsertArgs} args - Arguments to update or create a Location.
+     * @example
+     * // Update or create a Location
+     * const location = await prisma.location.upsert({
+     *   create: {
+     *     // ... data to create a Location
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Location we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LocationUpsertArgs>(args: SelectSubset<T, LocationUpsertArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Locations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LocationCountArgs} args - Arguments to filter Locations to count.
+     * @example
+     * // Count the number of Locations
+     * const count = await prisma.location.count({
+     *   where: {
+     *     // ... the filter for the Locations we want to count
+     *   }
+     * })
+    **/
+    count<T extends LocationCountArgs>(
+      args?: Subset<T, LocationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LocationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Location.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LocationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LocationAggregateArgs>(args: Subset<T, LocationAggregateArgs>): Prisma.PrismaPromise<GetLocationAggregateType<T>>
+
+    /**
+     * Group by Location.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LocationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LocationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LocationGroupByArgs['orderBy'] }
+        : { orderBy?: LocationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLocationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Location model
+   */
+  readonly fields: LocationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Location.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LocationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Location model
+   */
+  interface LocationFieldRefs {
+    readonly id: FieldRef<"Location", 'String'>
+    readonly userId: FieldRef<"Location", 'String'>
+    readonly zip: FieldRef<"Location", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Location findUnique
+   */
+  export type LocationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * Filter, which Location to fetch.
+     */
+    where: LocationWhereUniqueInput
+  }
+
+  /**
+   * Location findUniqueOrThrow
+   */
+  export type LocationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * Filter, which Location to fetch.
+     */
+    where: LocationWhereUniqueInput
+  }
+
+  /**
+   * Location findFirst
+   */
+  export type LocationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * Filter, which Location to fetch.
+     */
+    where?: LocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Locations to fetch.
+     */
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Locations.
+     */
+    cursor?: LocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Locations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Locations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Locations.
+     */
+    distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
+  }
+
+  /**
+   * Location findFirstOrThrow
+   */
+  export type LocationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * Filter, which Location to fetch.
+     */
+    where?: LocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Locations to fetch.
+     */
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Locations.
+     */
+    cursor?: LocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Locations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Locations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Locations.
+     */
+    distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
+  }
+
+  /**
+   * Location findMany
+   */
+  export type LocationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * Filter, which Locations to fetch.
+     */
+    where?: LocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Locations to fetch.
+     */
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Locations.
+     */
+    cursor?: LocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Locations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Locations.
+     */
+    skip?: number
+    distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
+  }
+
+  /**
+   * Location create
+   */
+  export type LocationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Location.
+     */
+    data: XOR<LocationCreateInput, LocationUncheckedCreateInput>
+  }
+
+  /**
+   * Location createMany
+   */
+  export type LocationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Locations.
+     */
+    data: LocationCreateManyInput | LocationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Location createManyAndReturn
+   */
+  export type LocationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Locations.
+     */
+    data: LocationCreateManyInput | LocationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Location update
+   */
+  export type LocationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Location.
+     */
+    data: XOR<LocationUpdateInput, LocationUncheckedUpdateInput>
+    /**
+     * Choose, which Location to update.
+     */
+    where: LocationWhereUniqueInput
+  }
+
+  /**
+   * Location updateMany
+   */
+  export type LocationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Locations.
+     */
+    data: XOR<LocationUpdateManyMutationInput, LocationUncheckedUpdateManyInput>
+    /**
+     * Filter which Locations to update
+     */
+    where?: LocationWhereInput
+    /**
+     * Limit how many Locations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Location updateManyAndReturn
+   */
+  export type LocationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * The data used to update Locations.
+     */
+    data: XOR<LocationUpdateManyMutationInput, LocationUncheckedUpdateManyInput>
+    /**
+     * Filter which Locations to update
+     */
+    where?: LocationWhereInput
+    /**
+     * Limit how many Locations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Location upsert
+   */
+  export type LocationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Location to update in case it exists.
+     */
+    where: LocationWhereUniqueInput
+    /**
+     * In case the Location found by the `where` argument doesn't exist, create a new Location with this data.
+     */
+    create: XOR<LocationCreateInput, LocationUncheckedCreateInput>
+    /**
+     * In case the Location was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LocationUpdateInput, LocationUncheckedUpdateInput>
+  }
+
+  /**
+   * Location delete
+   */
+  export type LocationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    /**
+     * Filter which Location to delete.
+     */
+    where: LocationWhereUniqueInput
+  }
+
+  /**
+   * Location deleteMany
+   */
+  export type LocationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Locations to delete
+     */
+    where?: LocationWhereInput
+    /**
+     * Limit how many Locations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Location without action
+   */
+  export type LocationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
   }
 
 
@@ -2197,8 +3344,8 @@ export namespace Prisma {
     brand: string | null
     model: string | null
     hourlyEnergy: number | null
-    runDurationMinutes: number | null
     isSmart: boolean | null
+    runDurationMinutes: number | null
   }
 
   export type DeviceMaxAggregateOutputType = {
@@ -2209,8 +3356,8 @@ export namespace Prisma {
     brand: string | null
     model: string | null
     hourlyEnergy: number | null
-    runDurationMinutes: number | null
     isSmart: boolean | null
+    runDurationMinutes: number | null
   }
 
   export type DeviceCountAggregateOutputType = {
@@ -2221,8 +3368,8 @@ export namespace Prisma {
     brand: number
     model: number
     hourlyEnergy: number
-    runDurationMinutes: number
     isSmart: number
+    runDurationMinutes: number
     _all: number
   }
 
@@ -2245,8 +3392,8 @@ export namespace Prisma {
     brand?: true
     model?: true
     hourlyEnergy?: true
-    runDurationMinutes?: true
     isSmart?: true
+    runDurationMinutes?: true
   }
 
   export type DeviceMaxAggregateInputType = {
@@ -2257,8 +3404,8 @@ export namespace Prisma {
     brand?: true
     model?: true
     hourlyEnergy?: true
-    runDurationMinutes?: true
     isSmart?: true
+    runDurationMinutes?: true
   }
 
   export type DeviceCountAggregateInputType = {
@@ -2269,8 +3416,8 @@ export namespace Prisma {
     brand?: true
     model?: true
     hourlyEnergy?: true
-    runDurationMinutes?: true
     isSmart?: true
+    runDurationMinutes?: true
     _all?: true
   }
 
@@ -2368,8 +3515,8 @@ export namespace Prisma {
     brand: string | null
     model: string | null
     hourlyEnergy: number | null
-    runDurationMinutes: number | null
     isSmart: boolean
+    runDurationMinutes: number | null
     _count: DeviceCountAggregateOutputType | null
     _avg: DeviceAvgAggregateOutputType | null
     _sum: DeviceSumAggregateOutputType | null
@@ -2399,8 +3546,8 @@ export namespace Prisma {
     brand?: boolean
     model?: boolean
     hourlyEnergy?: boolean
-    runDurationMinutes?: boolean
     isSmart?: boolean
+    runDurationMinutes?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["device"]>
 
@@ -2412,8 +3559,8 @@ export namespace Prisma {
     brand?: boolean
     model?: boolean
     hourlyEnergy?: boolean
-    runDurationMinutes?: boolean
     isSmart?: boolean
+    runDurationMinutes?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["device"]>
 
@@ -2425,8 +3572,8 @@ export namespace Prisma {
     brand?: boolean
     model?: boolean
     hourlyEnergy?: boolean
-    runDurationMinutes?: boolean
     isSmart?: boolean
+    runDurationMinutes?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["device"]>
 
@@ -2438,11 +3585,11 @@ export namespace Prisma {
     brand?: boolean
     model?: boolean
     hourlyEnergy?: boolean
-    runDurationMinutes?: boolean
     isSmart?: boolean
+    runDurationMinutes?: boolean
   }
 
-  export type DeviceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "type" | "brand" | "model" | "hourlyEnergy" | "runDurationMinutes" | "isSmart", ExtArgs["result"]["device"]>
+  export type DeviceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "type" | "brand" | "model" | "hourlyEnergy" | "isSmart" | "runDurationMinutes", ExtArgs["result"]["device"]>
   export type DeviceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2466,8 +3613,8 @@ export namespace Prisma {
       brand: string | null
       model: string | null
       hourlyEnergy: number | null
-      runDurationMinutes: number | null
       isSmart: boolean
+      runDurationMinutes: number | null
     }, ExtArgs["result"]["device"]>
     composites: {}
   }
@@ -2899,8 +4046,8 @@ export namespace Prisma {
     readonly brand: FieldRef<"Device", 'String'>
     readonly model: FieldRef<"Device", 'String'>
     readonly hourlyEnergy: FieldRef<"Device", 'Float'>
-    readonly runDurationMinutes: FieldRef<"Device", 'Int'>
     readonly isSmart: FieldRef<"Device", 'Boolean'>
+    readonly runDurationMinutes: FieldRef<"Device", 'Int'>
   }
     
 
@@ -4411,11 +5558,19 @@ export namespace Prisma {
   export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
-    zip: 'zip',
     utilityProv: 'utilityProv'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const LocationScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    zip: 'zip'
+  };
+
+  export type LocationScalarFieldEnum = (typeof LocationScalarFieldEnum)[keyof typeof LocationScalarFieldEnum]
 
 
   export const DeviceScalarFieldEnum: {
@@ -4426,8 +5581,8 @@ export namespace Prisma {
     brand: 'brand',
     model: 'model',
     hourlyEnergy: 'hourlyEnergy',
-    runDurationMinutes: 'runDurationMinutes',
-    isSmart: 'isSmart'
+    isSmart: 'isSmart',
+    runDurationMinutes: 'runDurationMinutes'
   };
 
   export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof DeviceScalarFieldEnum]
@@ -4501,6 +5656,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -4511,13 +5673,6 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -4558,19 +5713,19 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
-    zip?: StringNullableFilter<"User"> | string | null
     utilityProv?: StringNullableFilter<"User"> | string | null
-    devices?: DeviceListRelationFilter
+    locations?: LocationListRelationFilter
     billHistory?: BillHistoryListRelationFilter
+    devices?: DeviceListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
-    zip?: SortOrderInput | SortOrder
     utilityProv?: SortOrderInput | SortOrder
-    devices?: DeviceOrderByRelationAggregateInput
+    locations?: LocationOrderByRelationAggregateInput
     billHistory?: BillHistoryOrderByRelationAggregateInput
+    devices?: DeviceOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -4579,16 +5734,15 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    zip?: StringNullableFilter<"User"> | string | null
     utilityProv?: StringNullableFilter<"User"> | string | null
-    devices?: DeviceListRelationFilter
+    locations?: LocationListRelationFilter
     billHistory?: BillHistoryListRelationFilter
+    devices?: DeviceListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
-    zip?: SortOrderInput | SortOrder
     utilityProv?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -4601,8 +5755,52 @@ export namespace Prisma {
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
-    zip?: StringNullableWithAggregatesFilter<"User"> | string | null
     utilityProv?: StringNullableWithAggregatesFilter<"User"> | string | null
+  }
+
+  export type LocationWhereInput = {
+    AND?: LocationWhereInput | LocationWhereInput[]
+    OR?: LocationWhereInput[]
+    NOT?: LocationWhereInput | LocationWhereInput[]
+    id?: StringFilter<"Location"> | string
+    userId?: StringFilter<"Location"> | string
+    zip?: StringFilter<"Location"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type LocationOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    zip?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type LocationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: LocationWhereInput | LocationWhereInput[]
+    OR?: LocationWhereInput[]
+    NOT?: LocationWhereInput | LocationWhereInput[]
+    userId?: StringFilter<"Location"> | string
+    zip?: StringFilter<"Location"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type LocationOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    zip?: SortOrder
+    _count?: LocationCountOrderByAggregateInput
+    _max?: LocationMaxOrderByAggregateInput
+    _min?: LocationMinOrderByAggregateInput
+  }
+
+  export type LocationScalarWhereWithAggregatesInput = {
+    AND?: LocationScalarWhereWithAggregatesInput | LocationScalarWhereWithAggregatesInput[]
+    OR?: LocationScalarWhereWithAggregatesInput[]
+    NOT?: LocationScalarWhereWithAggregatesInput | LocationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Location"> | string
+    userId?: StringWithAggregatesFilter<"Location"> | string
+    zip?: StringWithAggregatesFilter<"Location"> | string
   }
 
   export type DeviceWhereInput = {
@@ -4616,8 +5814,8 @@ export namespace Prisma {
     brand?: StringNullableFilter<"Device"> | string | null
     model?: StringNullableFilter<"Device"> | string | null
     hourlyEnergy?: FloatNullableFilter<"Device"> | number | null
-    runDurationMinutes?: IntNullableFilter<"Device"> | number | null
     isSmart?: BoolFilter<"Device"> | boolean
+    runDurationMinutes?: IntNullableFilter<"Device"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -4629,8 +5827,8 @@ export namespace Prisma {
     brand?: SortOrderInput | SortOrder
     model?: SortOrderInput | SortOrder
     hourlyEnergy?: SortOrderInput | SortOrder
-    runDurationMinutes?: SortOrderInput | SortOrder
     isSmart?: SortOrder
+    runDurationMinutes?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
   }
 
@@ -4645,8 +5843,8 @@ export namespace Prisma {
     brand?: StringNullableFilter<"Device"> | string | null
     model?: StringNullableFilter<"Device"> | string | null
     hourlyEnergy?: FloatNullableFilter<"Device"> | number | null
-    runDurationMinutes?: IntNullableFilter<"Device"> | number | null
     isSmart?: BoolFilter<"Device"> | boolean
+    runDurationMinutes?: IntNullableFilter<"Device"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
@@ -4658,8 +5856,8 @@ export namespace Prisma {
     brand?: SortOrderInput | SortOrder
     model?: SortOrderInput | SortOrder
     hourlyEnergy?: SortOrderInput | SortOrder
-    runDurationMinutes?: SortOrderInput | SortOrder
     isSmart?: SortOrder
+    runDurationMinutes?: SortOrderInput | SortOrder
     _count?: DeviceCountOrderByAggregateInput
     _avg?: DeviceAvgOrderByAggregateInput
     _max?: DeviceMaxOrderByAggregateInput
@@ -4678,8 +5876,8 @@ export namespace Prisma {
     brand?: StringNullableWithAggregatesFilter<"Device"> | string | null
     model?: StringNullableWithAggregatesFilter<"Device"> | string | null
     hourlyEnergy?: FloatNullableWithAggregatesFilter<"Device"> | number | null
-    runDurationMinutes?: IntNullableWithAggregatesFilter<"Device"> | number | null
     isSmart?: BoolWithAggregatesFilter<"Device"> | boolean
+    runDurationMinutes?: IntNullableWithAggregatesFilter<"Device"> | number | null
   }
 
   export type BillHistoryWhereInput = {
@@ -4737,58 +5935,96 @@ export namespace Prisma {
   export type UserCreateInput = {
     id: string
     email: string
-    zip?: string | null
     utilityProv?: string | null
-    devices?: DeviceCreateNestedManyWithoutUserInput
+    locations?: LocationCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryCreateNestedManyWithoutUserInput
+    devices?: DeviceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
     id: string
     email: string
-    zip?: string | null
     utilityProv?: string | null
-    devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
+    devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    zip?: NullableStringFieldUpdateOperationsInput | string | null
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
-    devices?: DeviceUpdateManyWithoutUserNestedInput
+    locations?: LocationUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
+    devices?: DeviceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    zip?: NullableStringFieldUpdateOperationsInput | string | null
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
-    devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
+    devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
     id: string
     email: string
-    zip?: string | null
     utilityProv?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    zip?: NullableStringFieldUpdateOperationsInput | string | null
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    zip?: NullableStringFieldUpdateOperationsInput | string | null
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type LocationCreateInput = {
+    id?: string
+    zip: string
+    user: UserCreateNestedOneWithoutLocationsInput
+  }
+
+  export type LocationUncheckedCreateInput = {
+    id?: string
+    userId: string
+    zip: string
+  }
+
+  export type LocationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zip?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutLocationsNestedInput
+  }
+
+  export type LocationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    zip?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type LocationCreateManyInput = {
+    id?: string
+    userId: string
+    zip: string
+  }
+
+  export type LocationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zip?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type LocationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    zip?: StringFieldUpdateOperationsInput | string
   }
 
   export type DeviceCreateInput = {
@@ -4798,8 +6034,8 @@ export namespace Prisma {
     brand?: string | null
     model?: string | null
     hourlyEnergy?: number | null
-    runDurationMinutes?: number | null
     isSmart?: boolean
+    runDurationMinutes?: number | null
     user: UserCreateNestedOneWithoutDevicesInput
   }
 
@@ -4811,8 +6047,8 @@ export namespace Prisma {
     brand?: string | null
     model?: string | null
     hourlyEnergy?: number | null
-    runDurationMinutes?: number | null
     isSmart?: boolean
+    runDurationMinutes?: number | null
   }
 
   export type DeviceUpdateInput = {
@@ -4822,8 +6058,8 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
+    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     user?: UserUpdateOneRequiredWithoutDevicesNestedInput
   }
 
@@ -4835,8 +6071,8 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
+    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type DeviceCreateManyInput = {
@@ -4847,8 +6083,8 @@ export namespace Prisma {
     brand?: string | null
     model?: string | null
     hourlyEnergy?: number | null
-    runDurationMinutes?: number | null
     isSmart?: boolean
+    runDurationMinutes?: number | null
   }
 
   export type DeviceUpdateManyMutationInput = {
@@ -4858,8 +6094,8 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
+    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type DeviceUncheckedUpdateManyInput = {
@@ -4870,8 +6106,8 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
+    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BillHistoryCreateInput = {
@@ -4952,10 +6188,10 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type DeviceListRelationFilter = {
-    every?: DeviceWhereInput
-    some?: DeviceWhereInput
-    none?: DeviceWhereInput
+  export type LocationListRelationFilter = {
+    every?: LocationWhereInput
+    some?: LocationWhereInput
+    none?: LocationWhereInput
   }
 
   export type BillHistoryListRelationFilter = {
@@ -4964,12 +6200,18 @@ export namespace Prisma {
     none?: BillHistoryWhereInput
   }
 
+  export type DeviceListRelationFilter = {
+    every?: DeviceWhereInput
+    some?: DeviceWhereInput
+    none?: DeviceWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
-  export type DeviceOrderByRelationAggregateInput = {
+  export type LocationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -4977,24 +6219,25 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type DeviceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
-    zip?: SortOrder
     utilityProv?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
-    zip?: SortOrder
     utilityProv?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
-    zip?: SortOrder
     utilityProv?: SortOrder
   }
 
@@ -5034,6 +6277,29 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type LocationCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    zip?: SortOrder
+  }
+
+  export type LocationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    zip?: SortOrder
+  }
+
+  export type LocationMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    zip?: SortOrder
+  }
+
   export type FloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -5043,6 +6309,11 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -5056,16 +6327,6 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
   export type DeviceCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -5074,8 +6335,8 @@ export namespace Prisma {
     brand?: SortOrder
     model?: SortOrder
     hourlyEnergy?: SortOrder
-    runDurationMinutes?: SortOrder
     isSmart?: SortOrder
+    runDurationMinutes?: SortOrder
   }
 
   export type DeviceAvgOrderByAggregateInput = {
@@ -5091,8 +6352,8 @@ export namespace Prisma {
     brand?: SortOrder
     model?: SortOrder
     hourlyEnergy?: SortOrder
-    runDurationMinutes?: SortOrder
     isSmart?: SortOrder
+    runDurationMinutes?: SortOrder
   }
 
   export type DeviceMinOrderByAggregateInput = {
@@ -5103,8 +6364,8 @@ export namespace Prisma {
     brand?: SortOrder
     model?: SortOrder
     hourlyEnergy?: SortOrder
-    runDurationMinutes?: SortOrder
     isSmart?: SortOrder
+    runDurationMinutes?: SortOrder
   }
 
   export type DeviceSumOrderByAggregateInput = {
@@ -5128,6 +6389,14 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -5142,14 +6411,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DecimalFilter<$PrismaModel = never> = {
@@ -5233,6 +6494,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type LocationCreateNestedManyWithoutUserInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
+    createMany?: LocationCreateManyUserInputEnvelope
+    connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+  }
+
+  export type BillHistoryCreateNestedManyWithoutUserInput = {
+    create?: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput> | BillHistoryCreateWithoutUserInput[] | BillHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: BillHistoryCreateOrConnectWithoutUserInput | BillHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: BillHistoryCreateManyUserInputEnvelope
+    connect?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
+  }
+
   export type DeviceCreateNestedManyWithoutUserInput = {
     create?: XOR<DeviceCreateWithoutUserInput, DeviceUncheckedCreateWithoutUserInput> | DeviceCreateWithoutUserInput[] | DeviceUncheckedCreateWithoutUserInput[]
     connectOrCreate?: DeviceCreateOrConnectWithoutUserInput | DeviceCreateOrConnectWithoutUserInput[]
@@ -5240,7 +6515,14 @@ export namespace Prisma {
     connect?: DeviceWhereUniqueInput | DeviceWhereUniqueInput[]
   }
 
-  export type BillHistoryCreateNestedManyWithoutUserInput = {
+  export type LocationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
+    createMany?: LocationCreateManyUserInputEnvelope
+    connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+  }
+
+  export type BillHistoryUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput> | BillHistoryCreateWithoutUserInput[] | BillHistoryUncheckedCreateWithoutUserInput[]
     connectOrCreate?: BillHistoryCreateOrConnectWithoutUserInput | BillHistoryCreateOrConnectWithoutUserInput[]
     createMany?: BillHistoryCreateManyUserInputEnvelope
@@ -5254,19 +6536,40 @@ export namespace Prisma {
     connect?: DeviceWhereUniqueInput | DeviceWhereUniqueInput[]
   }
 
-  export type BillHistoryUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput> | BillHistoryCreateWithoutUserInput[] | BillHistoryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BillHistoryCreateOrConnectWithoutUserInput | BillHistoryCreateOrConnectWithoutUserInput[]
-    createMany?: BillHistoryCreateManyUserInputEnvelope
-    connect?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
-  }
-
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type LocationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
+    upsert?: LocationUpsertWithWhereUniqueWithoutUserInput | LocationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LocationCreateManyUserInputEnvelope
+    set?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    disconnect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    delete?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    update?: LocationUpdateWithWhereUniqueWithoutUserInput | LocationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LocationUpdateManyWithWhereWithoutUserInput | LocationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LocationScalarWhereInput | LocationScalarWhereInput[]
+  }
+
+  export type BillHistoryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput> | BillHistoryCreateWithoutUserInput[] | BillHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: BillHistoryCreateOrConnectWithoutUserInput | BillHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: BillHistoryUpsertWithWhereUniqueWithoutUserInput | BillHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: BillHistoryCreateManyUserInputEnvelope
+    set?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
+    disconnect?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
+    delete?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
+    connect?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
+    update?: BillHistoryUpdateWithWhereUniqueWithoutUserInput | BillHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: BillHistoryUpdateManyWithWhereWithoutUserInput | BillHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: BillHistoryScalarWhereInput | BillHistoryScalarWhereInput[]
   }
 
   export type DeviceUpdateManyWithoutUserNestedInput = {
@@ -5283,7 +6586,21 @@ export namespace Prisma {
     deleteMany?: DeviceScalarWhereInput | DeviceScalarWhereInput[]
   }
 
-  export type BillHistoryUpdateManyWithoutUserNestedInput = {
+  export type LocationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
+    upsert?: LocationUpsertWithWhereUniqueWithoutUserInput | LocationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LocationCreateManyUserInputEnvelope
+    set?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    disconnect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    delete?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    update?: LocationUpdateWithWhereUniqueWithoutUserInput | LocationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LocationUpdateManyWithWhereWithoutUserInput | LocationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LocationScalarWhereInput | LocationScalarWhereInput[]
+  }
+
+  export type BillHistoryUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput> | BillHistoryCreateWithoutUserInput[] | BillHistoryUncheckedCreateWithoutUserInput[]
     connectOrCreate?: BillHistoryCreateOrConnectWithoutUserInput | BillHistoryCreateOrConnectWithoutUserInput[]
     upsert?: BillHistoryUpsertWithWhereUniqueWithoutUserInput | BillHistoryUpsertWithWhereUniqueWithoutUserInput[]
@@ -5311,18 +6628,18 @@ export namespace Prisma {
     deleteMany?: DeviceScalarWhereInput | DeviceScalarWhereInput[]
   }
 
-  export type BillHistoryUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput> | BillHistoryCreateWithoutUserInput[] | BillHistoryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: BillHistoryCreateOrConnectWithoutUserInput | BillHistoryCreateOrConnectWithoutUserInput[]
-    upsert?: BillHistoryUpsertWithWhereUniqueWithoutUserInput | BillHistoryUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: BillHistoryCreateManyUserInputEnvelope
-    set?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
-    disconnect?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
-    delete?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
-    connect?: BillHistoryWhereUniqueInput | BillHistoryWhereUniqueInput[]
-    update?: BillHistoryUpdateWithWhereUniqueWithoutUserInput | BillHistoryUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: BillHistoryUpdateManyWithWhereWithoutUserInput | BillHistoryUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: BillHistoryScalarWhereInput | BillHistoryScalarWhereInput[]
+  export type UserCreateNestedOneWithoutLocationsInput = {
+    create?: XOR<UserCreateWithoutLocationsInput, UserUncheckedCreateWithoutLocationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLocationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutLocationsNestedInput = {
+    create?: XOR<UserCreateWithoutLocationsInput, UserUncheckedCreateWithoutLocationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLocationsInput
+    upsert?: UserUpsertWithoutLocationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLocationsInput, UserUpdateWithoutLocationsInput>, UserUncheckedUpdateWithoutLocationsInput>
   }
 
   export type UserCreateNestedOneWithoutDevicesInput = {
@@ -5339,16 +6656,16 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type UserUpdateOneRequiredWithoutDevicesNestedInput = {
@@ -5501,6 +6818,14 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -5515,14 +6840,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -5577,35 +6894,23 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type DeviceCreateWithoutUserInput = {
+  export type LocationCreateWithoutUserInput = {
     id?: string
-    name: string
-    type: string
-    brand?: string | null
-    model?: string | null
-    hourlyEnergy?: number | null
-    runDurationMinutes?: number | null
-    isSmart?: boolean
+    zip: string
   }
 
-  export type DeviceUncheckedCreateWithoutUserInput = {
+  export type LocationUncheckedCreateWithoutUserInput = {
     id?: string
-    name: string
-    type: string
-    brand?: string | null
-    model?: string | null
-    hourlyEnergy?: number | null
-    runDurationMinutes?: number | null
-    isSmart?: boolean
+    zip: string
   }
 
-  export type DeviceCreateOrConnectWithoutUserInput = {
-    where: DeviceWhereUniqueInput
-    create: XOR<DeviceCreateWithoutUserInput, DeviceUncheckedCreateWithoutUserInput>
+  export type LocationCreateOrConnectWithoutUserInput = {
+    where: LocationWhereUniqueInput
+    create: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
   }
 
-  export type DeviceCreateManyUserInputEnvelope = {
-    data: DeviceCreateManyUserInput | DeviceCreateManyUserInput[]
+  export type LocationCreateManyUserInputEnvelope = {
+    data: LocationCreateManyUserInput | LocationCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -5629,6 +6934,89 @@ export namespace Prisma {
   export type BillHistoryCreateManyUserInputEnvelope = {
     data: BillHistoryCreateManyUserInput | BillHistoryCreateManyUserInput[]
     skipDuplicates?: boolean
+  }
+
+  export type DeviceCreateWithoutUserInput = {
+    id?: string
+    name: string
+    type: string
+    brand?: string | null
+    model?: string | null
+    hourlyEnergy?: number | null
+    isSmart?: boolean
+    runDurationMinutes?: number | null
+  }
+
+  export type DeviceUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    type: string
+    brand?: string | null
+    model?: string | null
+    hourlyEnergy?: number | null
+    isSmart?: boolean
+    runDurationMinutes?: number | null
+  }
+
+  export type DeviceCreateOrConnectWithoutUserInput = {
+    where: DeviceWhereUniqueInput
+    create: XOR<DeviceCreateWithoutUserInput, DeviceUncheckedCreateWithoutUserInput>
+  }
+
+  export type DeviceCreateManyUserInputEnvelope = {
+    data: DeviceCreateManyUserInput | DeviceCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LocationUpsertWithWhereUniqueWithoutUserInput = {
+    where: LocationWhereUniqueInput
+    update: XOR<LocationUpdateWithoutUserInput, LocationUncheckedUpdateWithoutUserInput>
+    create: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
+  }
+
+  export type LocationUpdateWithWhereUniqueWithoutUserInput = {
+    where: LocationWhereUniqueInput
+    data: XOR<LocationUpdateWithoutUserInput, LocationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LocationUpdateManyWithWhereWithoutUserInput = {
+    where: LocationScalarWhereInput
+    data: XOR<LocationUpdateManyMutationInput, LocationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type LocationScalarWhereInput = {
+    AND?: LocationScalarWhereInput | LocationScalarWhereInput[]
+    OR?: LocationScalarWhereInput[]
+    NOT?: LocationScalarWhereInput | LocationScalarWhereInput[]
+    id?: StringFilter<"Location"> | string
+    userId?: StringFilter<"Location"> | string
+    zip?: StringFilter<"Location"> | string
+  }
+
+  export type BillHistoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: BillHistoryWhereUniqueInput
+    update: XOR<BillHistoryUpdateWithoutUserInput, BillHistoryUncheckedUpdateWithoutUserInput>
+    create: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type BillHistoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: BillHistoryWhereUniqueInput
+    data: XOR<BillHistoryUpdateWithoutUserInput, BillHistoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type BillHistoryUpdateManyWithWhereWithoutUserInput = {
+    where: BillHistoryScalarWhereInput
+    data: XOR<BillHistoryUpdateManyMutationInput, BillHistoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type BillHistoryScalarWhereInput = {
+    AND?: BillHistoryScalarWhereInput | BillHistoryScalarWhereInput[]
+    OR?: BillHistoryScalarWhereInput[]
+    NOT?: BillHistoryScalarWhereInput | BillHistoryScalarWhereInput[]
+    id?: StringFilter<"BillHistory"> | string
+    userId?: StringFilter<"BillHistory"> | string
+    billTotal?: DecimalFilter<"BillHistory"> | Decimal | DecimalJsLike | number | string
+    createdDate?: DateTimeFilter<"BillHistory"> | Date | string
   }
 
   export type DeviceUpsertWithWhereUniqueWithoutUserInput = {
@@ -5658,49 +7046,71 @@ export namespace Prisma {
     brand?: StringNullableFilter<"Device"> | string | null
     model?: StringNullableFilter<"Device"> | string | null
     hourlyEnergy?: FloatNullableFilter<"Device"> | number | null
-    runDurationMinutes?: IntNullableFilter<"Device"> | number | null
     isSmart?: BoolFilter<"Device"> | boolean
+    runDurationMinutes?: IntNullableFilter<"Device"> | number | null
   }
 
-  export type BillHistoryUpsertWithWhereUniqueWithoutUserInput = {
-    where: BillHistoryWhereUniqueInput
-    update: XOR<BillHistoryUpdateWithoutUserInput, BillHistoryUncheckedUpdateWithoutUserInput>
-    create: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput>
+  export type UserCreateWithoutLocationsInput = {
+    id: string
+    email: string
+    utilityProv?: string | null
+    billHistory?: BillHistoryCreateNestedManyWithoutUserInput
+    devices?: DeviceCreateNestedManyWithoutUserInput
   }
 
-  export type BillHistoryUpdateWithWhereUniqueWithoutUserInput = {
-    where: BillHistoryWhereUniqueInput
-    data: XOR<BillHistoryUpdateWithoutUserInput, BillHistoryUncheckedUpdateWithoutUserInput>
+  export type UserUncheckedCreateWithoutLocationsInput = {
+    id: string
+    email: string
+    utilityProv?: string | null
+    billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
+    devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type BillHistoryUpdateManyWithWhereWithoutUserInput = {
-    where: BillHistoryScalarWhereInput
-    data: XOR<BillHistoryUpdateManyMutationInput, BillHistoryUncheckedUpdateManyWithoutUserInput>
+  export type UserCreateOrConnectWithoutLocationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLocationsInput, UserUncheckedCreateWithoutLocationsInput>
   }
 
-  export type BillHistoryScalarWhereInput = {
-    AND?: BillHistoryScalarWhereInput | BillHistoryScalarWhereInput[]
-    OR?: BillHistoryScalarWhereInput[]
-    NOT?: BillHistoryScalarWhereInput | BillHistoryScalarWhereInput[]
-    id?: StringFilter<"BillHistory"> | string
-    userId?: StringFilter<"BillHistory"> | string
-    billTotal?: DecimalFilter<"BillHistory"> | Decimal | DecimalJsLike | number | string
-    createdDate?: DateTimeFilter<"BillHistory"> | Date | string
+  export type UserUpsertWithoutLocationsInput = {
+    update: XOR<UserUpdateWithoutLocationsInput, UserUncheckedUpdateWithoutLocationsInput>
+    create: XOR<UserCreateWithoutLocationsInput, UserUncheckedCreateWithoutLocationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLocationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLocationsInput, UserUncheckedUpdateWithoutLocationsInput>
+  }
+
+  export type UserUpdateWithoutLocationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
+    devices?: DeviceUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLocationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
+    devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutDevicesInput = {
     id: string
     email: string
-    zip?: string | null
     utilityProv?: string | null
+    locations?: LocationCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDevicesInput = {
     id: string
     email: string
-    zip?: string | null
     utilityProv?: string | null
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -5723,32 +7133,32 @@ export namespace Prisma {
   export type UserUpdateWithoutDevicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    zip?: NullableStringFieldUpdateOperationsInput | string | null
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    locations?: LocationUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDevicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    zip?: NullableStringFieldUpdateOperationsInput | string | null
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutBillHistoryInput = {
     id: string
     email: string
-    zip?: string | null
     utilityProv?: string | null
+    locations?: LocationCreateNestedManyWithoutUserInput
     devices?: DeviceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBillHistoryInput = {
     id: string
     email: string
-    zip?: string | null
     utilityProv?: string | null
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -5771,17 +7181,28 @@ export namespace Prisma {
   export type UserUpdateWithoutBillHistoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    zip?: NullableStringFieldUpdateOperationsInput | string | null
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    locations?: LocationUpdateManyWithoutUserNestedInput
     devices?: DeviceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBillHistoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    zip?: NullableStringFieldUpdateOperationsInput | string | null
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type LocationCreateManyUserInput = {
+    id?: string
+    zip: string
+  }
+
+  export type BillHistoryCreateManyUserInput = {
+    id?: string
+    billTotal: Decimal | DecimalJsLike | number | string
+    createdDate?: Date | string
   }
 
   export type DeviceCreateManyUserInput = {
@@ -5791,47 +7212,23 @@ export namespace Prisma {
     brand?: string | null
     model?: string | null
     hourlyEnergy?: number | null
-    runDurationMinutes?: number | null
     isSmart?: boolean
+    runDurationMinutes?: number | null
   }
 
-  export type BillHistoryCreateManyUserInput = {
-    id?: string
-    billTotal: Decimal | DecimalJsLike | number | string
-    createdDate?: Date | string
-  }
-
-  export type DeviceUpdateWithoutUserInput = {
+  export type LocationUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    brand?: NullableStringFieldUpdateOperationsInput | string | null
-    model?: NullableStringFieldUpdateOperationsInput | string | null
-    hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
-    isSmart?: BoolFieldUpdateOperationsInput | boolean
+    zip?: StringFieldUpdateOperationsInput | string
   }
 
-  export type DeviceUncheckedUpdateWithoutUserInput = {
+  export type LocationUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    brand?: NullableStringFieldUpdateOperationsInput | string | null
-    model?: NullableStringFieldUpdateOperationsInput | string | null
-    hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
-    isSmart?: BoolFieldUpdateOperationsInput | boolean
+    zip?: StringFieldUpdateOperationsInput | string
   }
 
-  export type DeviceUncheckedUpdateManyWithoutUserInput = {
+  export type LocationUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: StringFieldUpdateOperationsInput | string
-    brand?: NullableStringFieldUpdateOperationsInput | string | null
-    model?: NullableStringFieldUpdateOperationsInput | string | null
-    hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
-    isSmart?: BoolFieldUpdateOperationsInput | boolean
+    zip?: StringFieldUpdateOperationsInput | string
   }
 
   export type BillHistoryUpdateWithoutUserInput = {
@@ -5850,6 +7247,39 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     billTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdDate?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DeviceUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    isSmart?: BoolFieldUpdateOperationsInput | boolean
+    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type DeviceUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    isSmart?: BoolFieldUpdateOperationsInput | boolean
+    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type DeviceUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    brand?: NullableStringFieldUpdateOperationsInput | string | null
+    model?: NullableStringFieldUpdateOperationsInput | string | null
+    hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    isSmart?: BoolFieldUpdateOperationsInput | boolean
+    runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
 
