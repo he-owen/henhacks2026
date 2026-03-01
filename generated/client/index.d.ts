@@ -5009,62 +5009,104 @@ export namespace Prisma {
   }
 
   export type BillHistoryAvgAggregateOutputType = {
+    month: number | null
+    year: number | null
     billTotal: Decimal | null
+    usageKwh: number | null
   }
 
   export type BillHistorySumAggregateOutputType = {
+    month: number | null
+    year: number | null
     billTotal: Decimal | null
+    usageKwh: number | null
   }
 
   export type BillHistoryMinAggregateOutputType = {
     id: string | null
     userId: string | null
+    month: number | null
+    year: number | null
     billTotal: Decimal | null
+    usageKwh: number | null
+    utility: string | null
+    locationId: string | null
     createdDate: Date | null
   }
 
   export type BillHistoryMaxAggregateOutputType = {
     id: string | null
     userId: string | null
+    month: number | null
+    year: number | null
     billTotal: Decimal | null
+    usageKwh: number | null
+    utility: string | null
+    locationId: string | null
     createdDate: Date | null
   }
 
   export type BillHistoryCountAggregateOutputType = {
     id: number
     userId: number
+    month: number
+    year: number
     billTotal: number
+    usageKwh: number
+    utility: number
+    locationId: number
     createdDate: number
     _all: number
   }
 
 
   export type BillHistoryAvgAggregateInputType = {
+    month?: true
+    year?: true
     billTotal?: true
+    usageKwh?: true
   }
 
   export type BillHistorySumAggregateInputType = {
+    month?: true
+    year?: true
     billTotal?: true
+    usageKwh?: true
   }
 
   export type BillHistoryMinAggregateInputType = {
     id?: true
     userId?: true
+    month?: true
+    year?: true
     billTotal?: true
+    usageKwh?: true
+    utility?: true
+    locationId?: true
     createdDate?: true
   }
 
   export type BillHistoryMaxAggregateInputType = {
     id?: true
     userId?: true
+    month?: true
+    year?: true
     billTotal?: true
+    usageKwh?: true
+    utility?: true
+    locationId?: true
     createdDate?: true
   }
 
   export type BillHistoryCountAggregateInputType = {
     id?: true
     userId?: true
+    month?: true
+    year?: true
     billTotal?: true
+    usageKwh?: true
+    utility?: true
+    locationId?: true
     createdDate?: true
     _all?: true
   }
@@ -5158,7 +5200,12 @@ export namespace Prisma {
   export type BillHistoryGroupByOutputType = {
     id: string
     userId: string
+    month: number
+    year: number
     billTotal: Decimal
+    usageKwh: number | null
+    utility: string | null
+    locationId: string | null
     createdDate: Date
     _count: BillHistoryCountAggregateOutputType | null
     _avg: BillHistoryAvgAggregateOutputType | null
@@ -5184,7 +5231,12 @@ export namespace Prisma {
   export type BillHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    month?: boolean
+    year?: boolean
     billTotal?: boolean
+    usageKwh?: boolean
+    utility?: boolean
+    locationId?: boolean
     createdDate?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["billHistory"]>
@@ -5192,7 +5244,12 @@ export namespace Prisma {
   export type BillHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    month?: boolean
+    year?: boolean
     billTotal?: boolean
+    usageKwh?: boolean
+    utility?: boolean
+    locationId?: boolean
     createdDate?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["billHistory"]>
@@ -5200,7 +5257,12 @@ export namespace Prisma {
   export type BillHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
+    month?: boolean
+    year?: boolean
     billTotal?: boolean
+    usageKwh?: boolean
+    utility?: boolean
+    locationId?: boolean
     createdDate?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["billHistory"]>
@@ -5208,11 +5270,16 @@ export namespace Prisma {
   export type BillHistorySelectScalar = {
     id?: boolean
     userId?: boolean
+    month?: boolean
+    year?: boolean
     billTotal?: boolean
+    usageKwh?: boolean
+    utility?: boolean
+    locationId?: boolean
     createdDate?: boolean
   }
 
-  export type BillHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "billTotal" | "createdDate", ExtArgs["result"]["billHistory"]>
+  export type BillHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "month" | "year" | "billTotal" | "usageKwh" | "utility" | "locationId" | "createdDate", ExtArgs["result"]["billHistory"]>
   export type BillHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -5231,7 +5298,12 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
+      month: number
+      year: number
       billTotal: Prisma.Decimal
+      usageKwh: number | null
+      utility: string | null
+      locationId: string | null
       createdDate: Date
     }, ExtArgs["result"]["billHistory"]>
     composites: {}
@@ -5659,7 +5731,12 @@ export namespace Prisma {
   interface BillHistoryFieldRefs {
     readonly id: FieldRef<"BillHistory", 'String'>
     readonly userId: FieldRef<"BillHistory", 'String'>
+    readonly month: FieldRef<"BillHistory", 'Int'>
+    readonly year: FieldRef<"BillHistory", 'Int'>
     readonly billTotal: FieldRef<"BillHistory", 'Decimal'>
+    readonly usageKwh: FieldRef<"BillHistory", 'Int'>
+    readonly utility: FieldRef<"BillHistory", 'String'>
+    readonly locationId: FieldRef<"BillHistory", 'String'>
     readonly createdDate: FieldRef<"BillHistory", 'DateTime'>
   }
     
@@ -9529,7 +9606,12 @@ export namespace Prisma {
   export const BillHistoryScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
+    month: 'month',
+    year: 'year',
     billTotal: 'billTotal',
+    usageKwh: 'usageKwh',
+    utility: 'utility',
+    locationId: 'locationId',
     createdDate: 'createdDate'
   };
 
@@ -9941,7 +10023,12 @@ export namespace Prisma {
     NOT?: BillHistoryWhereInput | BillHistoryWhereInput[]
     id?: StringFilter<"BillHistory"> | string
     userId?: StringFilter<"BillHistory"> | string
+    month?: IntFilter<"BillHistory"> | number
+    year?: IntFilter<"BillHistory"> | number
     billTotal?: DecimalFilter<"BillHistory"> | Decimal | DecimalJsLike | number | string
+    usageKwh?: IntNullableFilter<"BillHistory"> | number | null
+    utility?: StringNullableFilter<"BillHistory"> | string | null
+    locationId?: StringNullableFilter<"BillHistory"> | string | null
     createdDate?: DateTimeFilter<"BillHistory"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -9949,7 +10036,12 @@ export namespace Prisma {
   export type BillHistoryOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
     billTotal?: SortOrder
+    usageKwh?: SortOrderInput | SortOrder
+    utility?: SortOrderInput | SortOrder
+    locationId?: SortOrderInput | SortOrder
     createdDate?: SortOrder
     user?: UserOrderByWithRelationInput
   }
@@ -9960,7 +10052,12 @@ export namespace Prisma {
     OR?: BillHistoryWhereInput[]
     NOT?: BillHistoryWhereInput | BillHistoryWhereInput[]
     userId?: StringFilter<"BillHistory"> | string
+    month?: IntFilter<"BillHistory"> | number
+    year?: IntFilter<"BillHistory"> | number
     billTotal?: DecimalFilter<"BillHistory"> | Decimal | DecimalJsLike | number | string
+    usageKwh?: IntNullableFilter<"BillHistory"> | number | null
+    utility?: StringNullableFilter<"BillHistory"> | string | null
+    locationId?: StringNullableFilter<"BillHistory"> | string | null
     createdDate?: DateTimeFilter<"BillHistory"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -9968,7 +10065,12 @@ export namespace Prisma {
   export type BillHistoryOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
     billTotal?: SortOrder
+    usageKwh?: SortOrderInput | SortOrder
+    utility?: SortOrderInput | SortOrder
+    locationId?: SortOrderInput | SortOrder
     createdDate?: SortOrder
     _count?: BillHistoryCountOrderByAggregateInput
     _avg?: BillHistoryAvgOrderByAggregateInput
@@ -9983,7 +10085,12 @@ export namespace Prisma {
     NOT?: BillHistoryScalarWhereWithAggregatesInput | BillHistoryScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"BillHistory"> | string
     userId?: StringWithAggregatesFilter<"BillHistory"> | string
+    month?: IntWithAggregatesFilter<"BillHistory"> | number
+    year?: IntWithAggregatesFilter<"BillHistory"> | number
     billTotal?: DecimalWithAggregatesFilter<"BillHistory"> | Decimal | DecimalJsLike | number | string
+    usageKwh?: IntNullableWithAggregatesFilter<"BillHistory"> | number | null
+    utility?: StringNullableWithAggregatesFilter<"BillHistory"> | string | null
+    locationId?: StringNullableWithAggregatesFilter<"BillHistory"> | string | null
     createdDate?: DateTimeWithAggregatesFilter<"BillHistory"> | Date | string
   }
 
@@ -10427,7 +10534,12 @@ export namespace Prisma {
 
   export type BillHistoryCreateInput = {
     id?: string
+    month: number
+    year: number
     billTotal: Decimal | DecimalJsLike | number | string
+    usageKwh?: number | null
+    utility?: string | null
+    locationId?: string | null
     createdDate?: Date | string
     user: UserCreateNestedOneWithoutBillHistoryInput
   }
@@ -10435,13 +10547,23 @@ export namespace Prisma {
   export type BillHistoryUncheckedCreateInput = {
     id?: string
     userId: string
+    month: number
+    year: number
     billTotal: Decimal | DecimalJsLike | number | string
+    usageKwh?: number | null
+    utility?: string | null
+    locationId?: string | null
     createdDate?: Date | string
   }
 
   export type BillHistoryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
     billTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    usageKwh?: NullableIntFieldUpdateOperationsInput | number | null
+    utility?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdDate?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBillHistoryNestedInput
   }
@@ -10449,27 +10571,47 @@ export namespace Prisma {
   export type BillHistoryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
     billTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    usageKwh?: NullableIntFieldUpdateOperationsInput | number | null
+    utility?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BillHistoryCreateManyInput = {
     id?: string
     userId: string
+    month: number
+    year: number
     billTotal: Decimal | DecimalJsLike | number | string
+    usageKwh?: number | null
+    utility?: string | null
+    locationId?: string | null
     createdDate?: Date | string
   }
 
   export type BillHistoryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
     billTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    usageKwh?: NullableIntFieldUpdateOperationsInput | number | null
+    utility?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BillHistoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
     billTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    usageKwh?: NullableIntFieldUpdateOperationsInput | number | null
+    utility?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10999,6 +11141,17 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type DecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -11024,30 +11177,67 @@ export namespace Prisma {
   export type BillHistoryCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
     billTotal?: SortOrder
+    usageKwh?: SortOrder
+    utility?: SortOrder
+    locationId?: SortOrder
     createdDate?: SortOrder
   }
 
   export type BillHistoryAvgOrderByAggregateInput = {
+    month?: SortOrder
+    year?: SortOrder
     billTotal?: SortOrder
+    usageKwh?: SortOrder
   }
 
   export type BillHistoryMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
     billTotal?: SortOrder
+    usageKwh?: SortOrder
+    utility?: SortOrder
+    locationId?: SortOrder
     createdDate?: SortOrder
   }
 
   export type BillHistoryMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
     billTotal?: SortOrder
+    usageKwh?: SortOrder
+    utility?: SortOrder
+    locationId?: SortOrder
     createdDate?: SortOrder
   }
 
   export type BillHistorySumOrderByAggregateInput = {
+    month?: SortOrder
+    year?: SortOrder
     billTotal?: SortOrder
+    usageKwh?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -11294,17 +11484,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type UtilityProviderScalarRelationFilter = {
     is?: UtilityProviderWhereInput
     isNot?: UtilityProviderWhereInput
@@ -11366,22 +11545,6 @@ export namespace Prisma {
     deliveryCost?: SortOrder
     totalRate?: SortOrder
     periodIndex?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type BillHistoryCreateNestedManyWithoutUserInput = {
@@ -11678,6 +11841,14 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string
     increment?: Decimal | DecimalJsLike | number | string
@@ -11808,14 +11979,6 @@ export namespace Prisma {
     create?: XOR<UtilityProviderCreateWithoutHourlyRatesInput, UtilityProviderUncheckedCreateWithoutHourlyRatesInput>
     connectOrCreate?: UtilityProviderCreateOrConnectWithoutHourlyRatesInput
     connect?: UtilityProviderWhereUniqueInput
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UtilityProviderUpdateOneRequiredWithoutHourlyRatesNestedInput = {
@@ -11988,6 +12151,33 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -12040,17 +12230,6 @@ export namespace Prisma {
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -12091,31 +12270,25 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
   export type BillHistoryCreateWithoutUserInput = {
     id?: string
+    month: number
+    year: number
     billTotal: Decimal | DecimalJsLike | number | string
+    usageKwh?: number | null
+    utility?: string | null
+    locationId?: string | null
     createdDate?: Date | string
   }
 
   export type BillHistoryUncheckedCreateWithoutUserInput = {
     id?: string
+    month: number
+    year: number
     billTotal: Decimal | DecimalJsLike | number | string
+    usageKwh?: number | null
+    utility?: string | null
+    locationId?: string | null
     createdDate?: Date | string
   }
 
@@ -12265,7 +12438,12 @@ export namespace Prisma {
     NOT?: BillHistoryScalarWhereInput | BillHistoryScalarWhereInput[]
     id?: StringFilter<"BillHistory"> | string
     userId?: StringFilter<"BillHistory"> | string
+    month?: IntFilter<"BillHistory"> | number
+    year?: IntFilter<"BillHistory"> | number
     billTotal?: DecimalFilter<"BillHistory"> | Decimal | DecimalJsLike | number | string
+    usageKwh?: IntNullableFilter<"BillHistory"> | number | null
+    utility?: StringNullableFilter<"BillHistory"> | string | null
+    locationId?: StringNullableFilter<"BillHistory"> | string | null
     createdDate?: DateTimeFilter<"BillHistory"> | Date | string
   }
 
@@ -12908,7 +13086,12 @@ export namespace Prisma {
 
   export type BillHistoryCreateManyUserInput = {
     id?: string
+    month: number
+    year: number
     billTotal: Decimal | DecimalJsLike | number | string
+    usageKwh?: number | null
+    utility?: string | null
+    locationId?: string | null
     createdDate?: Date | string
   }
 
@@ -12934,19 +13117,34 @@ export namespace Prisma {
 
   export type BillHistoryUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
     billTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    usageKwh?: NullableIntFieldUpdateOperationsInput | number | null
+    utility?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BillHistoryUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
     billTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    usageKwh?: NullableIntFieldUpdateOperationsInput | number | null
+    utility?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BillHistoryUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
     billTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    usageKwh?: NullableIntFieldUpdateOperationsInput | number | null
+    utility?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

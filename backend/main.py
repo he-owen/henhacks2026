@@ -28,6 +28,10 @@ from database import (
     create_location as db_create_location,
     update_location as db_update_location,
     delete_location as db_delete_location,
+    get_bills_by_user,
+    create_bill as db_create_bill,
+    update_bill as db_update_bill,
+    delete_bill as db_delete_bill,
 )
 from daily_optimizer import run_optimization_hybrid
 from weekly_scheduler import find_optimal_day_for_appliances
@@ -523,6 +527,112 @@ async def delete_location_endpoint(location_id: str, userinfo: dict = Depends(_r
     deleted = await db_delete_location(location_id, user_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Location not found or access denied")
+    return {"deleted": True}
+
+
+# ---------------------------------------------------------------------------
+# Bills
+# ---------------------------------------------------------------------------
+
+def _bill_response(row: dict):
+    return {
+        "id": row["bill_id"],
+        "userId": row["user_id"],
+        "month": row["month"],
+        "year": row["year"],
+        "totalAmount": float(row["bill_total"]),
+        "usageKwh": row.get("usage_kwh"),
+        "utility": row.get("utility"),
+        "locationId": row.get("location_id"),
+        "createdDate": row["created_date"].isoformat() if hasattr(row["created_date"], "isoformat") else str(row["created_date"]),
+    }
+
+
+@app.get("/api/bills")
+async def list_bills(userinfo: dict = Depends(_require_user)):
+    user_id = userinfo["sub"]
+    rows = await get_bills_by_user(user_id)
+    return [_bill_response(r) for r in rows]
+
+
+@app.post("/api/bills")
+async def create_bill_endpoint(request: Request, userinfo: dict = Depends(_require_user)):
+    body = await request.json()
+    user_id = userinfo["sub"]
+    month = body.get("month")
+    year = body.get("year")
+    total_amount = body.get("totalAmount")
+    if month is None or year is None or total_amount is None:
+        raise HTTPException(status_code=400, detail="month, year, and totalAmount are required")
+    row = await db_create_bill(
+        user_id=user_id,
+        month=int(month),
+        year=int(year),
+        bill_total=float(total_amount),
+        usage_kwh=int(body["usageKwh"]) if body.get("usageKwh") is not None else None,
+        utility=body.get("utility") or None,
+        location_id=body.get("locationId") or None,
+    )
+    if not row:
+        raise HTTPException(status_code=500, detail="Failed to create bill")
+    return _bill_response(row)
+
+
+@app.post("/api/bills/extract")
+async def extract_bill_endpoint(request: Request, userinfo: dict = Depends(_require_user)):
+    """Accept a PDF upload, use Gemini to extract bill data, and return the extracted fields."""
+    if not _gemini:
+        raise HTTPException(status_code=503, detail="Gemini API not configured")
+
+    content_type = request.headers.get("content-type", "")
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+        file = form.get("file")
+        if not file:
+            raise HTTPException(status_code=400, detail="No file uploaded")
+        pdf_bytes = await file.read()
+    else:
+        pdf_bytes = await request.body()
+
+    if not pdf_bytes:
+        raise HTTPException(status_code=400, detail="Empty file")
+
+    try:
+        extracted = await asyncio.to_thread(_gemini.extract_bill_from_pdf, pdf_bytes)
+    except Exception as e:
+        logger.exception("Gemini bill extraction failed")
+        raise HTTPException(status_code=502, detail=f"Failed to extract bill data: {e}")
+
+    return extracted
+
+
+@app.put("/api/bills/{bill_id}")
+async def update_bill_endpoint(bill_id: str, request: Request, userinfo: dict = Depends(_require_user)):
+    body = await request.json()
+    user_id = userinfo["sub"]
+    month = body.get("month")
+    year = body.get("year")
+    total_amount = body.get("totalAmount")
+    if month is None or year is None or total_amount is None:
+        raise HTTPException(status_code=400, detail="month, year, and totalAmount are required")
+    row = await db_update_bill(
+        bill_id=bill_id,
+        user_id=user_id,
+        month=int(month),
+        year=int(year),
+        bill_total=float(total_amount),
+    )
+    if not row:
+        raise HTTPException(status_code=404, detail="Bill not found or access denied")
+    return _bill_response(row)
+
+
+@app.delete("/api/bills/{bill_id}")
+async def delete_bill_endpoint(bill_id: str, userinfo: dict = Depends(_require_user)):
+    user_id = userinfo["sub"]
+    deleted = await db_delete_bill(bill_id, user_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Bill not found or access denied")
     return {"deleted": True}
 
 

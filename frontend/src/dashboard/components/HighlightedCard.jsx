@@ -56,35 +56,6 @@ export default function HighlightedCard({ variant }) {
       </Card>
     );
   }
-
-  return (
-    <Card sx={{ height: '100%' }}>
-      <CardContent>
-        <BoltRoundedIcon />
-        <Typography
-          component="h2"
-          variant="subtitle2"
-          gutterBottom
-          sx={{ fontWeight: '600' }}
-        >
-          Optimize your energy
-        </Typography>
-        <Typography sx={{ color: 'text.secondary', mb: '8px' }}>
-          Get personalized recommendations to reduce your energy bill and
-          carbon footprint.
-        </Typography>
-        <Button
-          variant="contained"
-          size="small"
-          color="primary"
-          endIcon={<ChevronRightRoundedIcon />}
-          fullWidth={isSmallScreen}
-        >
-          Get recommendations
-        </Button>
-      </CardContent>
-    </Card>
-  );
 }
 
 HighlightedCard.propTypes = {

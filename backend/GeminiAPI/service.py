@@ -1,8 +1,9 @@
 import os
 import json
+import base64
 from dotenv import load_dotenv
 from google import genai
-from google.genai.types import GenerateContentConfig, GoogleSearch, Tool
+from google.genai.types import GenerateContentConfig, GoogleSearch, Tool, Part
 
 load_dotenv()
 
@@ -13,6 +14,58 @@ class GeminiService:
         if not api_key:
             raise RuntimeError("GEMINI_API_KEY not set")
         self.client = genai.Client(api_key=api_key)
+
+    def extract_bill_from_pdf(self, pdf_bytes: bytes) -> dict:
+        """
+        Given raw PDF bytes of a utility bill, use Gemini to extract:
+        month, year, totalAmount, usageKwh, utility (company name).
+        """
+        prompt = """You are an expert at reading utility/electricity bills.
+Analyze this PDF of a utility bill and extract the following information.
+
+Return a JSON object with exactly these fields (no other text, no markdown):
+- "month": number (1-12), the billing month
+- "year": number (e.g. 2025), the billing year
+- "totalAmount": number, the total amount due in dollars (e.g. 127.40)
+- "usageKwh": number or null, the total energy usage in kWh if shown on the bill
+- "utility": string, the utility company name
+
+If you cannot determine a value, use null for optional fields (usageKwh) or your best guess for required fields (month, year, totalAmount, utility).
+
+Return only valid JSON, no code block or explanation."""
+
+        pdf_part = Part.from_bytes(data=pdf_bytes, mime_type="application/pdf")
+
+        try:
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=[pdf_part, prompt],
+            )
+            text = response.text
+            if not text:
+                raise RuntimeError("Gemini returned empty response")
+
+            text = text.strip()
+            if text.startswith("```"):
+                lines = text.split("\n")
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].strip() == "```":
+                    lines = lines[:-1]
+                text = "\n".join(lines)
+
+            data = json.loads(text)
+            return {
+                "month": int(data.get("month") or 1),
+                "year": int(data.get("year") or 2025),
+                "totalAmount": float(data.get("totalAmount") or 0),
+                "usageKwh": int(data["usageKwh"]) if data.get("usageKwh") is not None else None,
+                "utility": str(data.get("utility") or "Unknown"),
+            }
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Gemini returned invalid JSON: {e}")
+        except Exception as e:
+            raise RuntimeError(f"Failed to extract bill data: {e}")
 
     def enrich_device(self, name: str, brand: str, model: str) -> dict:
         """

@@ -42,7 +42,8 @@ AreaGradient.propTypes = {
 
 function StatCard({ title, value, interval, trend, data }) {
   const theme = useTheme();
-  const daysInWeek = getDaysInMonth(4, 2024);
+  const now = new Date();
+  const daysInWeek = getDaysInMonth(now.getMonth() + 1, now.getFullYear());
 
   const trendColors = {
     up:

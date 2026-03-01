@@ -1,17 +1,15 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useAuth0 } from '@auth0/auth0-react';
 import Copyright from '../internals/components/Copyright';
 import ChartUserByCountry from './ChartUserByCountry';
-import HighlightedCard from './HighlightedCard';
 import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard from './StatCard';
-import { getDevices, getUserProfile, getMonthlyRates } from '../../api';
+import { getDevices, getUserProfile, getMonthlyRates, getBills } from '../../api';
 import { useLocation } from '../context/LocationContext';
 
 function categorizeType(type) {
@@ -30,11 +28,17 @@ function dayVariation(dayIndex, seed) {
   return (x - Math.floor(x)) * 0.3 + 0.85;
 }
 
-function computeDashboardData(devices, ratesByMonth) {
+function computeDashboardData(devices, ratesByMonth, bills) {
   const now = new Date();
   const currentMonth = now.getMonth() + 1;
   const currentYear = now.getFullYear();
   const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+  // Build a lookup of bill totals keyed by "year-month"
+  const billByMonth = {};
+  for (const b of bills) {
+    billByMonth[`${b.year}-${b.month}`] = b.totalAmount;
+  }
 
   const typeEnergy = { HVAC: 0, Appliances: 0, Lighting: 0, Other: 0 };
   for (const d of devices) {
@@ -52,20 +56,45 @@ function computeDashboardData(devices, ratesByMonth) {
 
   // --- StatCards ---
   const todaysUsage = Math.round(totalDailyEnergy * 10) / 10;
-  const monthlyCost = Math.round(totalDailyEnergy * daysInMonth * avgRate * 100) / 100;
+  const currentBill = billByMonth[`${currentYear}-${currentMonth}`];
+  const monthlyCost = currentBill != null
+    ? Math.round(currentBill * 100) / 100
+    : Math.round(totalDailyEnergy * daysInMonth * avgRate * 100) / 100;
 
   const usageSparkline = Array.from({ length: 30 }, (_, i) =>
     Math.round(totalDailyEnergy * dayVariation(i, 1) * 10) / 10,
   );
-  const costSparkline = Array.from({ length: 30 }, (_, i) =>
-    Math.round(totalDailyEnergy * dayVariation(i, 2) * avgRate * 100) / 100,
-  );
+
+  // Cost sparkline: use real bills for recent months, estimates for gaps
+  const costSparkline = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+    const mKey = `${d.getFullYear()}-${d.getMonth() + 1}`;
+    const bill = billByMonth[mKey];
+    if (bill != null) {
+      const daysM = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+      costSparkline.push(Math.round((bill / daysM) * 100) / 100);
+    } else {
+      costSparkline.push(
+        Math.round(totalDailyEnergy * dayVariation(30 - i, 2) * avgRate * 100) / 100,
+      );
+    }
+  }
+
   const deviceSparkline = Array.from({ length: 30 }, () => devices.length);
 
   const usageTrend =
     usageSparkline[29] < usageSparkline[0] ? 'down' : usageSparkline[29] > usageSparkline[0] ? 'up' : 'neutral';
-  const costTrend =
-    costSparkline[29] < costSparkline[0] ? 'down' : costSparkline[29] > costSparkline[0] ? 'up' : 'neutral';
+
+  const prevMonthBill = billByMonth[
+    `${currentMonth === 1 ? currentYear - 1 : currentYear}-${currentMonth === 1 ? 12 : currentMonth - 1}`
+  ];
+  let costTrend = 'neutral';
+  if (prevMonthBill != null && monthlyCost > 0) {
+    costTrend = monthlyCost < prevMonthBill ? 'down' : monthlyCost > prevMonthBill ? 'up' : 'neutral';
+  } else {
+    costTrend = costSparkline[29] < costSparkline[0] ? 'down' : costSparkline[29] > costSparkline[0] ? 'up' : 'neutral';
+  }
 
   const statCards = [
     {
@@ -74,13 +103,6 @@ function computeDashboardData(devices, ratesByMonth) {
       interval: 'Last 30 days',
       trend: usageTrend,
       data: usageSparkline,
-    },
-    {
-      title: 'Monthly Cost',
-      value: `$${monthlyCost.toFixed(2)}`,
-      interval: 'Last 30 days',
-      trend: costTrend,
-      data: costSparkline,
     },
     {
       title: 'Active Devices',
@@ -124,58 +146,40 @@ function computeDashboardData(devices, ratesByMonth) {
     totalMonthlyEnergy,
   };
 
-  // --- Monthly cost bar chart ---
-  const monthKeys = Object.keys(ratesByMonth).sort((a, b) => {
-    const [ya, ma] = a.split('-').map(Number);
-    const [yb, mb] = b.split('-').map(Number);
-    return ya !== yb ? ya - yb : ma - mb;
-  });
+  // --- Monthly cost bar chart (uses real bills when available) ---
+  const barMonths = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    barMonths.push({ m: d.getMonth() + 1, y: d.getFullYear() });
+  }
 
   const barLabels = [];
-  const barOffPeak = [];
-  const barMidPeak = [];
-  const barOnPeak = [];
+  const barCosts = [];
 
-  for (const key of monthKeys) {
-    const rates = ratesByMonth[key];
-    const [y, m] = key.split('-').map(Number);
+  for (const { m, y } of barMonths) {
     barLabels.push(new Date(y, m - 1).toLocaleDateString('en-US', { month: 'short' }));
+    const key = `${y}-${m}`;
+    const realBill = billByMonth[key];
 
-    const periods = {};
-    for (const r of rates) {
-      const p = r.periodLabel || 'Standard';
-      if (!periods[p]) periods[p] = { totalRate: 0, hours: 0 };
-      periods[p].totalRate += r.totalRate;
-      periods[p].hours += 1;
+    if (realBill != null) {
+      barCosts.push(Math.round(realBill * 100) / 100);
+    } else {
+      const rates = ratesByMonth[key];
+      if (rates && rates.length > 0) {
+        const avg = rates.reduce((s, r) => s + r.totalRate, 0) / rates.length;
+        const daysM = new Date(y, m, 0).getDate();
+        barCosts.push(Math.round(totalDailyEnergy * daysM * avg * 100) / 100);
+      } else {
+        barCosts.push(0);
+      }
     }
-
-    const totalHours = rates.length || 1;
-    const daysM = new Date(y, m, 0).getDate();
-    const sorted = Object.keys(periods)
-      .map((p) => ({
-        avgRate: periods[p].totalRate / periods[p].hours,
-        hours: periods[p].hours,
-      }))
-      .sort((a, b) => a.avgRate - b.avgRate);
-
-    let off = 0, mid = 0, on = 0;
-    for (let i = 0; i < sorted.length; i++) {
-      const frac = sorted[i].hours / totalHours;
-      const cost = Math.round(totalDailyEnergy * daysM * frac * sorted[i].avgRate * 100) / 100;
-      if (sorted.length === 1) { off = cost; }
-      else if (sorted.length === 2) { if (i === 0) off = cost; else on = cost; }
-      else { if (i === 0) off = cost; else if (i === sorted.length - 1) on += cost; else mid += cost; }
-    }
-    barOffPeak.push(off);
-    barMidPeak.push(mid);
-    barOnPeak.push(on);
   }
 
   const costBarData = {
     labels: barLabels,
-    offPeak: barOffPeak,
-    midPeak: barMidPeak,
-    onPeak: barOnPeak,
+    offPeak: barCosts,
+    midPeak: barLabels.map(() => 0),
+    onPeak: barLabels.map(() => 0),
     monthlyCost,
   };
 
@@ -206,9 +210,10 @@ export default function MainGrid() {
     async function load() {
       try {
         const token = await getAccessTokenSilently();
-        const [allDevices, profile] = await Promise.all([
+        const [allDevices, profile, bills] = await Promise.all([
           getDevices(token),
           getUserProfile(token),
+          getBills(token).catch(() => []),
         ]);
         const devices = selectedLocationId
           ? allDevices.filter((d) => d.locationId === selectedLocationId)
@@ -235,7 +240,7 @@ export default function MainGrid() {
         }
 
         if (!cancelled) {
-          setDashData(computeDashboardData(devices, ratesByMonth));
+          setDashData(computeDashboardData(devices, ratesByMonth, bills));
           setLoading(false);
         }
       } catch (e) {
@@ -273,31 +278,18 @@ export default function MainGrid() {
             <StatCard {...card} />
           </Grid>
         ))}
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <HighlightedCard />
+        <Grid size={{ xs: 12, sm: 12, lg: 6 }}>
+          <PageViewsBarChart data={data.costBarData} />
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           <SessionsChart data={data.sessionsData} />
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
-          <PageViewsBarChart data={data.costBarData} />
-        </Grid>
-      </Grid>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Breakdown
-      </Typography>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 4 }}>
           <ChartUserByCountry
             data={data.pieData}
             categories={data.pieCategories}
             totalEnergy={data.totalMonthlyEnergy}
           />
-        </Grid>
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <Stack gap={2}>
-            <HighlightedCard variant="savings" />
-          </Stack>
         </Grid>
       </Grid>
       <Copyright sx={{ my: 4 }} />

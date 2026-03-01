@@ -58,7 +58,12 @@ model Device {
 model BillHistory {
   id          String   @id @default(uuid()) @map("bill_id")
   userId      String   @map("user_id")
+  month       Int
+  year        Int
   billTotal   Decimal  @map("bill_total") @db.Decimal(12, 2)
+  usageKwh    Int?     @map("usage_kwh")
+  utility     String?
+  locationId  String?  @map("location_id")
   createdDate DateTime @default(now()) @map("created_date") @db.Timestamptz(6)
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

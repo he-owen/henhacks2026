@@ -416,6 +416,106 @@ async def delete_location(location_id: str, user_id: str) -> bool:
     return result.rowcount > 0
 
 
+# ---------------------------------------------------------------------------
+# Bill history
+# ---------------------------------------------------------------------------
+
+async def get_bills_by_user(user_id: str) -> list[dict]:
+    async with async_session() as session:
+        result = await session.execute(
+            text("""
+                SELECT bill_id, user_id, month, year, bill_total,
+                       usage_kwh, utility, location_id, created_date
+                FROM bill_history
+                WHERE user_id = :user_id
+                ORDER BY year DESC, month DESC
+            """),
+            {"user_id": user_id},
+        )
+        return [dict(r) for r in result.mappings().all()]
+
+
+async def create_bill(
+    user_id: str,
+    month: int,
+    year: int,
+    bill_total: float,
+    usage_kwh: int | None = None,
+    utility: str | None = None,
+    location_id: str | None = None,
+) -> dict | None:
+    bill_id = str(uuid.uuid4())
+    try:
+        async with async_session() as session:
+            result = await session.execute(
+                text("""
+                    INSERT INTO bill_history
+                        (bill_id, user_id, month, year, bill_total, usage_kwh, utility, location_id)
+                    VALUES
+                        (:bill_id, :user_id, :month, :year, :bill_total, :usage_kwh, :utility, :location_id)
+                    RETURNING bill_id, user_id, month, year, bill_total, usage_kwh, utility, location_id, created_date
+                """),
+                {
+                    "bill_id": bill_id,
+                    "user_id": user_id,
+                    "month": month,
+                    "year": year,
+                    "bill_total": bill_total,
+                    "usage_kwh": usage_kwh,
+                    "utility": utility,
+                    "location_id": location_id,
+                },
+            )
+            row = result.mappings().first()
+            await session.commit()
+            return dict(row) if row else None
+    except Exception as e:
+        logger.warning("Create bill failed: %s", e, exc_info=True)
+        return None
+
+
+async def update_bill(
+    bill_id: str,
+    user_id: str,
+    month: int,
+    year: int,
+    bill_total: float,
+) -> dict | None:
+    try:
+        async with async_session() as session:
+            result = await session.execute(
+                text("""
+                    UPDATE bill_history
+                    SET month = :month, year = :year, bill_total = :bill_total
+                    WHERE bill_id = :bill_id AND user_id = :user_id
+                    RETURNING bill_id, user_id, month, year, bill_total, usage_kwh, utility, location_id, created_date
+                """),
+                {
+                    "bill_id": bill_id,
+                    "user_id": user_id,
+                    "month": month,
+                    "year": year,
+                    "bill_total": bill_total,
+                },
+            )
+            row = result.mappings().first()
+            await session.commit()
+            return dict(row) if row else None
+    except Exception as e:
+        logger.warning("Update bill failed: %s", e, exc_info=True)
+        return None
+
+
+async def delete_bill(bill_id: str, user_id: str) -> bool:
+    async with async_session() as session:
+        result = await session.execute(
+            text("DELETE FROM bill_history WHERE bill_id = :bill_id AND user_id = :user_id"),
+            {"bill_id": bill_id, "user_id": user_id},
+        )
+        await session.commit()
+    return result.rowcount > 0
+
+
 async def set_user_provider(user_id: str, provider_id: str | None) -> bool:
     try:
         async with async_session() as session:

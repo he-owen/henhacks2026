@@ -153,7 +153,12 @@ exports.Prisma.DeviceScalarFieldEnum = {
 exports.Prisma.BillHistoryScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  month: 'month',
+  year: 'year',
   billTotal: 'billTotal',
+  usageKwh: 'usageKwh',
+  utility: 'utility',
+  locationId: 'locationId',
   createdDate: 'createdDate'
 };
 

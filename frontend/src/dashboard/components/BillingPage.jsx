@@ -30,10 +30,12 @@ import Collapse from '@mui/material/Collapse';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid } from '@mui/x-data-grid';
 import { useAuth0 } from '@auth0/auth0-react';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
+import UploadFileRoundedIcon from '@mui/icons-material/UploadFileRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -42,6 +44,11 @@ import Copyright from '../internals/components/Copyright';
 import {
   getUserProfile,
   getMonthlyRates,
+  getBills,
+  createBill,
+  updateBill,
+  extractBillFromPdf,
+  deleteBill,
 } from '../../api';
 
 const MONTHS = [
@@ -51,37 +58,13 @@ const MONTHS = [
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const initialHistory = [
-  { id: '1', month: 1, year: 2025, totalAmount: 127.40, usageKwh: 842, utility: 'Local Electric Co' },
-  { id: '2', month: 12, year: 2024, totalAmount: 118.20, usageKwh: 785, utility: 'Local Electric Co' },
-  { id: '3', month: 11, year: 2024, totalAmount: 142.80, usageKwh: 920, utility: 'Local Electric Co' },
-  { id: '4', month: 10, year: 2024, totalAmount: 98.50, usageKwh: 652, utility: 'Local Electric Co' },
-  { id: '5', month: 9, year: 2024, totalAmount: 135.00, usageKwh: 891, utility: 'Local Electric Co' },
-  { id: '6', month: 8, year: 2024, totalAmount: 168.90, usageKwh: 1102, utility: 'Local Electric Co' },
-  { id: '7', month: 7, year: 2024, totalAmount: 172.30, usageKwh: 1145, utility: 'Local Electric Co' },
-  { id: '8', month: 6, year: 2024, totalAmount: 145.60, usageKwh: 958, utility: 'Local Electric Co' },
-];
-
 function renderAmount(params) {
   if (params.value == null) return '—';
   return `$${params.value.toFixed(2)}`;
 }
 
-function renderUsage(params) {
-  if (params.value == null) return '—';
-  return `${params.value.toLocaleString()} kWh`;
-}
-
 function renderPeriod(params) {
   return `${MONTHS[params.row.month - 1]} ${params.row.year}`;
-}
-
-function renderTrend(params) {
-  if (params.value == null) return null;
-  const val = params.value;
-  if (val > 150) return <Chip label="High" color="error" size="small" variant="outlined" />;
-  if (val > 120) return <Chip label="Average" color="warning" size="small" variant="outlined" />;
-  return <Chip label="Low" color="success" size="small" variant="outlined" />;
 }
 
 function a11yProps(index) {
@@ -95,9 +78,6 @@ const emptyForm = {
   month: new Date().getMonth() + 1,
   year: new Date().getFullYear(),
   totalAmount: '',
-  usageKwh: '',
-  utility: '',
-  notes: '',
 };
 
 function formatHour(h) {
@@ -251,7 +231,6 @@ function UtilityRatesView() {
   const [expandedDay, setExpandedDay] = React.useState(null);
   const [noProvider, setNoProvider] = React.useState(false);
 
-  // Effect 1: fetch user profile to get the selected provider
   React.useEffect(() => {
     if (!isAuthenticated) return;
     let cancelled = false;
@@ -275,7 +254,6 @@ function UtilityRatesView() {
     return () => { cancelled = true; };
   }, [isAuthenticated, getAccessTokenSilently]);
 
-  // Effect 2: load rates whenever providerId, month, or year changes
   React.useEffect(() => {
     if (!providerId) return;
     let cancelled = false;
@@ -389,94 +367,181 @@ function UtilityRatesView() {
 }
 
 export default function BillingPage() {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [editingBill, setEditingBill] = React.useState(null);
   const [tab, setTab] = React.useState(0);
-  const [history, setHistory] = React.useState(initialHistory);
+  const [history, setHistory] = React.useState([]);
   const [form, setForm] = React.useState(emptyForm);
-  const [uploadPreview, setUploadPreview] = React.useState(null);
   const [uploadFile, setUploadFile] = React.useState(null);
+  const [extracting, setExtracting] = React.useState(false);
+  const [extractedData, setExtractedData] = React.useState(null);
+  const [extractError, setExtractError] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [saving, setSaving] = React.useState(false);
+  const [error, setError] = React.useState(null);
+
+  const loadBills = React.useCallback(async () => {
+    if (!isAuthenticated) return;
+    try {
+      const token = await getAccessTokenSilently();
+      const bills = await getBills(token);
+      setHistory(bills);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
+
+  React.useEffect(() => {
+    loadBills();
+  }, [loadBills]);
 
   const handleOpenDialog = () => {
     setDialogOpen(true);
+    setEditingBill(null);
     setTab(0);
     setForm(emptyForm);
-    setUploadPreview(null);
     setUploadFile(null);
+    setExtractedData(null);
+    setExtractError(null);
+    setExtracting(false);
+  };
+
+  const handleEditBill = (bill) => {
+    setDialogOpen(true);
+    setEditingBill(bill);
+    setTab(0);
+    setForm({
+      month: bill.month,
+      year: bill.year,
+      totalAmount: bill.totalAmount ?? '',
+    });
+    setUploadFile(null);
+    setExtractedData(null);
+    setExtractError(null);
+    setExtracting(false);
   };
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
-    setUploadPreview(null);
+    setEditingBill(null);
     setUploadFile(null);
+    setExtractedData(null);
+    setExtractError(null);
+    setExtracting(false);
   };
 
   const handleTabChange = (_, newValue) => {
     setTab(newValue);
-    setUploadPreview(null);
     setUploadFile(null);
+    setExtractedData(null);
+    setExtractError(null);
+    setExtracting(false);
   };
 
   const handleFormChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleSubmitManual = (e) => {
+  const handleSubmitManual = async (e) => {
     e.preventDefault();
-    const newBill = {
-      id: crypto.randomUUID(),
-      month: Number(form.month),
-      year: Number(form.year),
-      totalAmount: parseFloat(form.totalAmount) || 0,
-      usageKwh: parseInt(form.usageKwh, 10) || 0,
-      utility: form.utility || '—',
-    };
-    setHistory((prev) => [newBill, ...prev]);
-    handleCloseDialog();
+    setSaving(true);
+    try {
+      const token = await getAccessTokenSilently();
+      const payload = {
+        month: Number(form.month),
+        year: Number(form.year),
+        totalAmount: parseFloat(form.totalAmount) || 0,
+      };
+      if (editingBill) {
+        const updated = await updateBill(token, editingBill.id, payload);
+        setHistory((prev) => prev.map((b) => (b.id === editingBill.id ? updated : b)));
+      } else {
+        const bill = await createBill(token, payload);
+        setHistory((prev) => [bill, ...prev]);
+      }
+      handleCloseDialog();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type === 'application/pdf') {
       setUploadFile(file);
-      const reader = new FileReader();
-      reader.onload = () => setUploadPreview(reader.result);
-      reader.readAsDataURL(file);
+      setExtractedData(null);
+      setExtractError(null);
     }
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer?.files?.[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type === 'application/pdf') {
       setUploadFile(file);
-      const reader = new FileReader();
-      reader.onload = () => setUploadPreview(reader.result);
-      reader.readAsDataURL(file);
+      setExtractedData(null);
+      setExtractError(null);
     }
   };
 
-  const handleAddFromUpload = () => {
+  const handleExtract = async () => {
     if (!uploadFile) return;
-    const newBill = {
-      id: crypto.randomUUID(),
-      month: new Date().getMonth() + 1,
-      year: new Date().getFullYear(),
-      totalAmount: null,
-      usageKwh: null,
-      utility: 'From upload',
-    };
-    setHistory((prev) => [newBill, ...prev]);
-    handleCloseDialog();
+    setExtracting(true);
+    setExtractError(null);
+    try {
+      const token = await getAccessTokenSilently();
+      const data = await extractBillFromPdf(token, uploadFile);
+      setExtractedData(data);
+    } catch (err) {
+      setExtractError(err.message);
+    } finally {
+      setExtracting(false);
+    }
   };
 
-  const handleDeleteBill = (id) => {
-    setHistory((prev) => prev.filter((b) => b.id !== id));
+  const handleExtractedFormChange = (field) => (e) => {
+    setExtractedData((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleSaveExtracted = async () => {
+    if (!extractedData) return;
+    setSaving(true);
+    try {
+      const token = await getAccessTokenSilently();
+      const bill = await createBill(token, {
+        month: Number(extractedData.month),
+        year: Number(extractedData.year),
+        totalAmount: parseFloat(extractedData.totalAmount) || 0,
+      });
+      setHistory((prev) => [bill, ...prev]);
+      handleCloseDialog();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteBill = async (id) => {
+    try {
+      const token = await getAccessTokenSilently();
+      await deleteBill(token, id);
+      setHistory((prev) => prev.filter((b) => b.id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const columns = [
     {
       field: 'period',
-      headerName: 'Period',
+      headerName: 'Month',
       flex: 1.2,
       minWidth: 150,
       renderCell: renderPeriod,
@@ -488,49 +553,39 @@ export default function BillingPage() {
     },
     {
       field: 'totalAmount',
-      headerName: 'Amount',
-      flex: 0.8,
-      minWidth: 100,
+      headerName: 'Price',
+      flex: 1,
+      minWidth: 120,
       headerAlign: 'right',
       align: 'right',
       renderCell: renderAmount,
     },
     {
-      field: 'usageKwh',
-      headerName: 'Usage',
-      flex: 0.8,
-      minWidth: 110,
-      headerAlign: 'right',
-      align: 'right',
-      renderCell: renderUsage,
-    },
-    {
-      field: 'trend',
-      headerName: 'Level',
-      flex: 0.6,
-      minWidth: 90,
-      valueGetter: (value, row) => row.totalAmount,
-      renderCell: renderTrend,
-      sortable: false,
-    },
-    { field: 'utility', headerName: 'Utility', flex: 1, minWidth: 140 },
-    {
       field: 'actions',
-      headerName: 'Actions',
-      flex: 0.5,
-      minWidth: 70,
+      headerName: '',
+      width: 90,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
-        <Tooltip title="Delete">
-          <IconButton
-            size="small"
-            color="error"
-            onClick={() => handleDeleteBill(params.row.id)}
-          >
-            <DeleteRoundedIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
+        <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', height: '100%' }}>
+          <Tooltip title="Edit">
+            <IconButton
+              size="small"
+              onClick={() => handleEditBill(params.row)}
+            >
+              <EditRoundedIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton
+              size="small"
+              color="error"
+              onClick={() => handleDeleteBill(params.row.id)}
+            >
+              <DeleteRoundedIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Stack>
       ),
     },
   ];
@@ -541,6 +596,11 @@ export default function BillingPage() {
         Billing
       </Typography>
 
+      {error && (
+        <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
       <Stack
         direction="row"
         sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
@@ -557,41 +617,48 @@ export default function BillingPage() {
           Add Bill
         </Button>
       </Stack>
-      <DataGrid
-        rows={history}
-        columns={columns}
-        getRowClassName={(params) =>
-          params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
-        }
-        initialState={{
-          pagination: { paginationModel: { pageSize: 20 } },
-          sorting: { sortModel: [{ field: 'period', sort: 'desc' }] },
-        }}
-        pageSizeOptions={[10, 20, 50]}
-        disableColumnResize
-        density="compact"
-        disableRowSelectionOnClick
-        slotProps={{
-          filterPanel: {
-            filterFormProps: {
-              logicOperatorInputProps: { variant: 'outlined', size: 'small' },
-              columnInputProps: {
-                variant: 'outlined',
-                size: 'small',
-                sx: { mt: 'auto' },
-              },
-              operatorInputProps: {
-                variant: 'outlined',
-                size: 'small',
-                sx: { mt: 'auto' },
-              },
-              valueInputProps: {
-                InputComponentProps: { variant: 'outlined', size: 'small' },
+
+      {loading ? (
+        <Stack alignItems="center" sx={{ py: 4 }}>
+          <CircularProgress />
+        </Stack>
+      ) : (
+        <DataGrid
+          rows={history}
+          columns={columns}
+          getRowClassName={(params) =>
+            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+          }
+          initialState={{
+            pagination: { paginationModel: { pageSize: 20 } },
+            sorting: { sortModel: [{ field: 'period', sort: 'desc' }] },
+          }}
+          pageSizeOptions={[10, 20, 50]}
+          disableColumnResize
+          density="compact"
+          disableRowSelectionOnClick
+          slotProps={{
+            filterPanel: {
+              filterFormProps: {
+                logicOperatorInputProps: { variant: 'outlined', size: 'small' },
+                columnInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                  sx: { mt: 'auto' },
+                },
+                operatorInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                  sx: { mt: 'auto' },
+                },
+                valueInputProps: {
+                  InputComponentProps: { variant: 'outlined', size: 'small' },
+                },
               },
             },
-          },
-        }}
-      />
+          }}
+        />
+      )}
 
       <Accordion defaultExpanded={false} sx={{ mt: 3 }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -605,11 +672,13 @@ export default function BillingPage() {
       </Accordion>
 
       <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>Add utility bill</DialogTitle>
-        <Tabs value={tab} onChange={handleTabChange} aria-label="Add bill method" sx={{ px: 2 }}>
-          <Tab label="Enter manually" {...a11yProps(0)} />
-          <Tab label="Upload image" {...a11yProps(1)} />
-        </Tabs>
+        <DialogTitle>{editingBill ? 'Edit bill' : 'Add utility bill'}</DialogTitle>
+        {!editingBill && (
+          <Tabs value={tab} onChange={handleTabChange} aria-label="Add bill method" sx={{ px: 2 }}>
+            <Tab label="Enter manually" {...a11yProps(0)} />
+            <Tab label="Upload PDF" {...a11yProps(1)} />
+          </Tabs>
+        )}
         <DialogContent>
           {tab === 0 && (
             <Box component="form" id="bill-form" onSubmit={handleSubmitManual}>
@@ -643,71 +712,49 @@ export default function BillingPage() {
                   inputProps={{ min: 0, step: 0.01 }}
                   placeholder="e.g. 127.40"
                 />
-                <TextField
-                  type="number"
-                  label="Usage (kWh)"
-                  value={form.usageKwh}
-                  onChange={handleFormChange('usageKwh')}
-                  inputProps={{ min: 0 }}
-                  placeholder="e.g. 842"
-                />
-                <TextField
-                  label="Utility company"
-                  value={form.utility}
-                  onChange={handleFormChange('utility')}
-                  placeholder="e.g. Local Electric Co"
-                />
-                <TextField
-                  label="Notes (optional)"
-                  value={form.notes}
-                  onChange={handleFormChange('notes')}
-                  multiline
-                  rows={2}
-                  placeholder="Meter reading, plan name, etc."
-                />
               </Stack>
             </Box>
           )}
-          {tab === 1 && (
+          {tab === 1 && !editingBill && (
             <Stack spacing={2} sx={{ pt: 1 }}>
               <Box
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
                 sx={{
                   border: '2px dashed',
-                  borderColor: 'divider',
+                  borderColor: uploadFile ? 'primary.main' : 'divider',
                   borderRadius: 2,
                   p: 3,
                   textAlign: 'center',
                   bgcolor: 'action.hover',
                   cursor: 'pointer',
+                  transition: 'border-color 0.2s',
                 }}
                 onClick={() => document.getElementById('bill-file-input').click()}
               >
                 <input
                   id="bill-file-input"
                   type="file"
-                  accept="image/*"
+                  accept="application/pdf"
                   hidden
                   onChange={handleFileChange}
                 />
-                {uploadPreview ? (
+                {uploadFile ? (
                   <Stack alignItems="center" spacing={1}>
-                    <Box
-                      component="img"
-                      src={uploadPreview}
-                      alt="Bill preview"
-                      sx={{ maxHeight: 180, maxWidth: '100%', borderRadius: 1 }}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {uploadFile?.name}
+                    <UploadFileRoundedIcon sx={{ fontSize: 40, color: 'primary.main' }} />
+                    <Typography variant="body2" fontWeight={500}>
+                      {uploadFile.name}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {(uploadFile.size / 1024).toFixed(0)} KB
                     </Typography>
                     <Button
                       size="small"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setUploadPreview(null);
                         setUploadFile(null);
+                        setExtractedData(null);
+                        setExtractError(null);
                       }}
                     >
                       Remove
@@ -715,35 +762,97 @@ export default function BillingPage() {
                   </Stack>
                 ) : (
                   <>
-                    <AddPhotoAlternateRoundedIcon sx={{ fontSize: 40, color: 'text.secondary' }} />
+                    <UploadFileRoundedIcon sx={{ fontSize: 40, color: 'text.secondary' }} />
                     <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                       Drag and drop or click to browse
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      PNG, JPG
+                      PDF files only
                     </Typography>
                   </>
                 )}
               </Box>
-              <Typography variant="caption" color="text.secondary">
-                Bill data can be extracted later. This saves the entry to your history.
-              </Typography>
+
+              {uploadFile && !extractedData && !extracting && (
+                <Button
+                  variant="outlined"
+                  onClick={handleExtract}
+                  startIcon={<UploadFileRoundedIcon />}
+                >
+                  Extract bill data with AI
+                </Button>
+              )}
+
+              {extracting && (
+                <Stack spacing={1}>
+                  <Typography variant="body2" color="text.secondary">
+                    Analyzing your bill with AI...
+                  </Typography>
+                  <LinearProgress />
+                </Stack>
+              )}
+
+              {extractError && (
+                <Alert severity="error" onClose={() => setExtractError(null)}>
+                  {extractError}
+                </Alert>
+              )}
+
+              {extractedData && (
+                <Card variant="outlined">
+                  <CardContent>
+                    <Typography variant="subtitle2" sx={{ mb: 2 }} fontWeight={600}>
+                      Extracted Data — Review & Save
+                    </Typography>
+                    <Stack spacing={2}>
+                      <Stack direction="row" spacing={2}>
+                        <TextField
+                          select
+                          fullWidth
+                          label="Month"
+                          value={extractedData.month}
+                          onChange={handleExtractedFormChange('month')}
+                        >
+                          {MONTHS.map((m, i) => (
+                            <MenuItem key={m} value={i + 1}>{m}</MenuItem>
+                          ))}
+                        </TextField>
+                        <TextField
+                          type="number"
+                          label="Year"
+                          value={extractedData.year}
+                          onChange={handleExtractedFormChange('year')}
+                          inputProps={{ min: 2020, max: 2035 }}
+                          sx={{ width: 120 }}
+                        />
+                      </Stack>
+                      <TextField
+                        type="number"
+                        label="Total amount ($)"
+                        value={extractedData.totalAmount ?? ''}
+                        onChange={handleExtractedFormChange('totalAmount')}
+                        inputProps={{ min: 0, step: 0.01 }}
+                      />
+                    </Stack>
+                  </CardContent>
+                </Card>
+              )}
             </Stack>
           )}
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          {tab === 0 ? (
-            <Button type="submit" form="bill-form" variant="contained">
-              Add to history
+          {tab === 0 || editingBill ? (
+            <Button type="submit" form="bill-form" variant="contained" disabled={saving}>
+              {saving ? 'Saving...' : editingBill ? 'Update' : 'Add to history'}
             </Button>
           ) : (
             <Button
               variant="contained"
-              disabled={!uploadFile}
-              onClick={handleAddFromUpload}
+              disabled={!extractedData || saving}
+              onClick={handleSaveExtracted}
             >
-              Save to history
+              {saving ? 'Saving...' : 'Save to history'}
             </Button>
           )}
         </DialogActions>

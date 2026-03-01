@@ -179,6 +179,79 @@ export async function deleteLocation(accessToken, locationId) {
   return res.json();
 }
 
+// ---------------------------------------------------------------------------
+// Bills
+// ---------------------------------------------------------------------------
+
+/** List bills for the current user. */
+export async function getBills(accessToken) {
+  const res = await fetch(`${API_BASE}/api/bills`, {
+    headers: authHeaders(accessToken),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to load bills");
+  }
+  return res.json();
+}
+
+/** Create a bill manually. */
+export async function createBill(accessToken, data) {
+  const res = await fetch(`${API_BASE}/api/bills`, {
+    method: "POST",
+    headers: authHeaders(accessToken),
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to create bill");
+  }
+  return res.json();
+}
+
+/** Update a bill. */
+export async function updateBill(accessToken, billId, data) {
+  const res = await fetch(`${API_BASE}/api/bills/${encodeURIComponent(billId)}`, {
+    method: "PUT",
+    headers: authHeaders(accessToken),
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to update bill");
+  }
+  return res.json();
+}
+
+/** Upload a PDF bill and extract data via Gemini. Returns extracted fields (not saved yet). */
+export async function extractBillFromPdf(accessToken, file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch(`${API_BASE}/api/bills/extract`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: formData,
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to extract bill data");
+  }
+  return res.json();
+}
+
+/** Delete a bill. */
+export async function deleteBill(accessToken, billId) {
+  const res = await fetch(`${API_BASE}/api/bills/${encodeURIComponent(billId)}`, {
+    method: "DELETE",
+    headers: authHeaders(accessToken),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to delete bill");
+  }
+  return res.json();
+}
+
 /** Get the current user's profile (selectedProviderId, zip, etc.). */
 export async function getUserProfile(accessToken) {
   const res = await fetch(`${API_BASE}/api/users/me/profile`, {
