@@ -10,7 +10,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-appdb}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-appdb}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -34,11 +38,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+        VITE_API_URL: ${VITE_API_URL:- https://henhacks2026.onrender.com}
     ports:
       - "5173:80"
     environment:
-      VITE_API_URL: http://localhost:8000
+      VITE_API_URL: https://henhacks2026.onrender.com
+
     depends_on:
       - backend
 

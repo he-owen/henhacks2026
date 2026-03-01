@@ -17,6 +17,8 @@ const emptyDevice = {
   model: '',
   locationId: '',
   isSmart: false,
+  hourlyEnergy: '',
+  runDurationMinutes: '',
   quantity: 1,
 };
 
@@ -32,6 +34,8 @@ export default function DeviceFormDialog({ open, onClose, onSave, device, saving
         model: device.model || '',
         locationId: device.locationId || '',
         isSmart: device.isSmart ?? false,
+        hourlyEnergy: device.hourlyEnergy ?? '',
+        runDurationMinutes: device.runDurationMinutes ?? '',
         quantity: 1,
       });
     } else {
@@ -48,14 +52,21 @@ export default function DeviceFormDialog({ open, onClose, onSave, device, saving
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({
+    const payload = {
       name: form.name.trim(),
       brand: form.brand.trim(),
       model: form.model.trim(),
       locationId: form.locationId || null,
       isSmart: form.isSmart,
       quantity: isEdit ? 1 : Math.max(1, parseInt(form.quantity, 10) || 1),
-    });
+    };
+    if (form.hourlyEnergy !== '' && form.hourlyEnergy != null) {
+      payload.hourlyEnergy = parseFloat(form.hourlyEnergy);
+    }
+    if (form.runDurationMinutes !== '' && form.runDurationMinutes != null) {
+      payload.runDurationMinutes = parseInt(form.runDurationMinutes, 10);
+    }
+    onSave(payload);
   };
 
   return (
@@ -105,6 +116,24 @@ export default function DeviceFormDialog({ open, onClose, onSave, device, saving
               />
             }
             label="Smart Device"
+          />
+          <TextField
+            type="number"
+            label="Hourly Energy (kWh)"
+            value={form.hourlyEnergy}
+            onChange={handleChange('hourlyEnergy')}
+            inputProps={{ min: 0, step: 0.01 }}
+            fullWidth
+            helperText="Leave blank to auto-detect via AI"
+          />
+          <TextField
+            type="number"
+            label="Daily Run Time (minutes)"
+            value={form.runDurationMinutes}
+            onChange={handleChange('runDurationMinutes')}
+            inputProps={{ min: 0, step: 1 }}
+            fullWidth
+            helperText="Leave blank to auto-detect via AI"
           />
           {!isEdit && (
             <TextField

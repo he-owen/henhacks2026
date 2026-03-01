@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_URL || ' https://henhacks2026.onrender.com';
 
 /**
  * When the user is authenticated with Auth0, syncs their profile to the backend users table

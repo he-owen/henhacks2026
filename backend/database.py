@@ -484,13 +484,19 @@ async def update_bill(
     month: int,
     year: int,
     bill_total: float,
+    usage_kwh: int | None = None,
+    utility: str | None = None,
+    location_id: str | None = None,
 ) -> dict | None:
     try:
         async with async_session() as session:
             result = await session.execute(
                 text("""
                     UPDATE bill_history
-                    SET month = :month, year = :year, bill_total = :bill_total
+                    SET month = :month, year = :year, bill_total = :bill_total,
+                        usage_kwh = COALESCE(:usage_kwh, usage_kwh),
+                        utility = COALESCE(:utility, utility),
+                        location_id = COALESCE(:location_id, location_id)
                     WHERE bill_id = :bill_id AND user_id = :user_id
                     RETURNING bill_id, user_id, month, year, bill_total, usage_kwh, utility, location_id, created_date
                 """),
@@ -500,6 +506,9 @@ async def update_bill(
                     "month": month,
                     "year": year,
                     "bill_total": bill_total,
+                    "usage_kwh": usage_kwh,
+                    "utility": utility,
+                    "location_id": location_id,
                 },
             )
             row = result.mappings().first()

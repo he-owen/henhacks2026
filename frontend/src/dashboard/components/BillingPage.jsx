@@ -79,6 +79,7 @@ const emptyForm = {
   month: new Date().getMonth() + 1,
   year: new Date().getFullYear(),
   totalAmount: '',
+  usageKwh: '',
 };
 
 function formatHour(h) {
@@ -420,6 +421,7 @@ export default function BillingPage() {
       month: bill.month,
       year: bill.year,
       totalAmount: bill.totalAmount ?? '',
+      usageKwh: bill.usageKwh != null ? String(bill.usageKwh) : '',
     });
     setUploadFile(null);
     setExtractedData(null);
@@ -457,6 +459,7 @@ export default function BillingPage() {
         month: Number(form.month),
         year: Number(form.year),
         totalAmount: parseFloat(form.totalAmount) || 0,
+        usageKwh: form.usageKwh !== '' && form.usageKwh != null ? parseInt(form.usageKwh, 10) : null,
       };
       if (editingBill) {
         const updated = await updateBill(token, editingBill.id, payload);
@@ -526,6 +529,8 @@ export default function BillingPage() {
         month: Number(extractedData.month),
         year: Number(extractedData.year),
         totalAmount: parseFloat(extractedData.totalAmount) || 0,
+        usageKwh: extractedData.usageKwh != null ? Number(extractedData.usageKwh) : null,
+        utility: extractedData.utility || null,
       });
       setHistory((prev) => [bill, ...prev]);
       handleCloseDialog();
@@ -567,6 +572,16 @@ export default function BillingPage() {
       headerAlign: 'right',
       align: 'right',
       renderCell: renderAmount,
+    },
+    {
+      field: 'usageKwh',
+      headerName: 'Usage (kWh)',
+      flex: 1,
+      minWidth: 110,
+      headerAlign: 'right',
+      align: 'right',
+      renderCell: (params) =>
+        params.value != null ? params.value.toLocaleString() : '—',
     },
     {
       field: 'actions',
@@ -722,6 +737,14 @@ export default function BillingPage() {
                   inputProps={{ min: 0, step: 0.01 }}
                   placeholder="e.g. 127.40"
                 />
+                <TextField
+                  type="number"
+                  label="Usage (kWh)"
+                  value={form.usageKwh}
+                  onChange={handleFormChange('usageKwh')}
+                  inputProps={{ min: 0, step: 1 }}
+                  placeholder="e.g. 980"
+                />
               </Stack>
             </Box>
           )}
@@ -842,6 +865,13 @@ export default function BillingPage() {
                         value={extractedData.totalAmount ?? ''}
                         onChange={handleExtractedFormChange('totalAmount')}
                         inputProps={{ min: 0, step: 0.01 }}
+                      />
+                      <TextField
+                        type="number"
+                        label="Usage (kWh)"
+                        value={extractedData.usageKwh ?? ''}
+                        onChange={handleExtractedFormChange('usageKwh')}
+                        inputProps={{ min: 0, step: 1 }}
                       />
                     </Stack>
                   </CardContent>

@@ -197,6 +197,10 @@ export default function DevicesPage() {
 
     try {
       const token = await getAccessTokenSilently();
+      const extraFields = {};
+      if (formData.hourlyEnergy != null) extraFields.hourlyEnergy = formData.hourlyEnergy;
+      if (formData.runDurationMinutes != null) extraFields.runDurationMinutes = formData.runDurationMinutes;
+
       if (quantity > 1) {
         const createdDevices = await createDeviceBatch(token, {
           name: formData.name,
@@ -205,6 +209,7 @@ export default function DevicesPage() {
           locationId: effectiveLocationId,
           isSmart: formData.isSmart,
           quantity,
+          ...extraFields,
         });
         setAllDevices((prev) => {
           let updated = [...prev];
@@ -221,6 +226,7 @@ export default function DevicesPage() {
           model: formData.model,
           locationId: effectiveLocationId,
           isSmart: formData.isSmart,
+          ...extraFields,
         });
         created.locationName = matchedLoc?.name || null;
         setAllDevices((prev) =>
@@ -234,6 +240,29 @@ export default function DevicesPage() {
       setSaving(false);
     }
   };
+
+  const processRowUpdate = React.useCallback(async (newRow) => {
+    const token = await getAccessTokenSilently();
+    const payload = {
+      name: newRow.name,
+      brand: newRow.brand,
+      model: newRow.model,
+      type: newRow.type,
+      locationId: newRow.locationId || null,
+      isSmart: newRow.isSmart,
+      hourlyEnergy: newRow.hourlyEnergy != null ? parseFloat(newRow.hourlyEnergy) : null,
+      runDurationMinutes: newRow.runDurationMinutes != null ? parseInt(newRow.runDurationMinutes, 10) : null,
+    };
+    const updated = await updateDevice(token, newRow.id, payload);
+    const loc = locations.find((l) => l.id === updated.locationId);
+    updated.locationName = loc?.name || null;
+    setAllDevices((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
+    return updated;
+  }, [getAccessTokenSilently, locations]);
+
+  const handleProcessRowUpdateError = React.useCallback((error) => {
+    setError(error?.isUnauthorized ? SESSION_EXPIRED_MESSAGE : (error?.message ?? 'Failed to update device'));
+  }, []);
 
   const devices = selectedLocationId
     ? allDevices.filter((d) => d.locationId === selectedLocationId)
@@ -256,15 +285,23 @@ export default function DevicesPage() {
     ...(isAllView
       ? [
           {
-            field: 'locationName',
+            field: 'locationId',
             headerName: 'Location',
             flex: 0.8,
-            minWidth: 100,
+            minWidth: 120,
             headerAlign: 'center',
             align: 'center',
+            editable: true,
+            type: 'singleSelect',
+            valueOptions: [
+              { value: '', label: 'No location' },
+              ...locations.map((l) => ({ value: l.id, label: `${l.name} — ${l.zip}` })),
+            ],
+            valueGetter: (value) => value || '',
             renderCell: (params) => {
               if (params.row._pending) return <Box sx={PENDING_CELL_WRAPPER_SX}>{PENDING_SPINNER}</Box>;
-              return params.value || '—';
+              const loc = locations.find((l) => l.id === params.row.locationId);
+              return loc ? loc.name : '—';
             },
           },
         ]
@@ -296,11 +333,13 @@ export default function DevicesPage() {
     },
     {
       field: 'hourlyEnergy',
-      headerName: 'Hourly Energy',
+      headerName: 'Energy (kWh)',
       flex: 0.8,
       minWidth: 110,
       headerAlign: 'center',
       align: 'center',
+      editable: true,
+      type: 'number',
       renderCell: formatEnergy,
     },
     {
@@ -314,11 +353,13 @@ export default function DevicesPage() {
     },
     {
       field: 'runDurationMinutes',
-      headerName: 'Daily Run Time',
+      headerName: 'Run Time (min)',
       flex: 0.8,
       minWidth: 110,
       headerAlign: 'center',
       align: 'center',
+      editable: true,
+      type: 'number',
       renderCell: formatDuration,
     },
     {
@@ -418,9 +459,16 @@ export default function DevicesPage() {
         rows={devices}
         columns={columns}
         getRowId={(row) => row.id}
+        processRowUpdate={processRowUpdate}
+        onProcessRowUpdateError={handleProcessRowUpdateError}
+        isCellEditable={(params) => !params.row._pending}
         sx={{
           '& .MuiDataGrid-cell': { position: 'relative' },
           '& .MuiDataGrid-cellContent': { height: '100%', width: '100%' },
+          '& .MuiDataGrid-cell--editable': {
+            cursor: 'pointer',
+            '&:hover': { bgcolor: 'action.hover' },
+          },
         }}
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
@@ -460,7 +508,7 @@ export default function DevicesPage() {
         onSave={handleSave}
         device={editingDevice}
         saving={saving}
-        locations={isAllView ? locations : []}
+        locations={locations}
         defaultLocationId={selectedLocationId}
       />
       <Copyright sx={{ my: 4 }} />

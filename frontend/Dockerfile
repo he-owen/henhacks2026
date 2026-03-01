@@ -1,11 +1,13 @@
-ARG VITE_API_URL=http://localhost:8000
+ARG VITE_API_URL=https://henhacks2026.onrender.com
+
 ENV VITE_API_URL=$VITE_API_URL
 
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-ARG VITE_API_URL=http://localhost:8000
+ARG VITE_API_URL=https://henhacks2026.onrender.com
+
 ENV VITE_API_URL=$VITE_API_URL
 
 COPY package.json package-lock.json* ./

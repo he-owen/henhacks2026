@@ -734,12 +734,16 @@ async def update_bill_endpoint(bill_id: str, request: Request, userinfo: dict = 
     total_amount = body.get("totalAmount")
     if month is None or year is None or total_amount is None:
         raise HTTPException(status_code=400, detail="month, year, and totalAmount are required")
+    usage_kwh = int(body["usageKwh"]) if body.get("usageKwh") is not None else None
     row = await db_update_bill(
         bill_id=bill_id,
         user_id=user_id,
         month=int(month),
         year=int(year),
         bill_total=float(total_amount),
+        usage_kwh=usage_kwh,
+        utility=body.get("utility") or None,
+        location_id=body.get("locationId") or None,
     )
     if not row:
         raise HTTPException(status_code=404, detail="Bill not found or access denied")

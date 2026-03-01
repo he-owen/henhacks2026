@@ -63,13 +63,9 @@ model BillHistory {
   createdDate DateTime @default(now()) @map("created_date") @db.Timestamptz(6)
   locationId  String?  @map("location_id")
   month       Int
-  createdDate DateTime @default(now()) @map("created_date") @db.Timestamptz(6)
-  locationId  String?  @map("location_id")
-  month       Int
+  year        Int
   usageKwh    Int?     @map("usage_kwh")
   utility     String?
-  year        Int
-  year        Int
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
