@@ -16,7 +16,7 @@ const emptyDevice = {
   locationId: '',
 };
 
-export default function DeviceFormDialog({ open, onClose, onSave, device, saving = false, locations = [] }) {
+export default function DeviceFormDialog({ open, onClose, onSave, device, saving = false, locations = [], defaultLocationId = null }) {
   const [form, setForm] = React.useState(emptyDevice);
   const isEdit = Boolean(device);
 
@@ -31,10 +31,10 @@ export default function DeviceFormDialog({ open, onClose, onSave, device, saving
     } else {
       setForm({
         ...emptyDevice,
-        locationId: locations.length === 1 ? locations[0].id : '',
+        locationId: defaultLocationId || (locations.length === 1 ? locations[0].id : ''),
       });
     }
-  }, [device, open, locations]);
+  }, [device, open, locations, defaultLocationId]);
 
   const handleChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -131,4 +131,5 @@ DeviceFormDialog.propTypes = {
       zip: PropTypes.string,
     }),
   ),
+  defaultLocationId: PropTypes.string,
 };

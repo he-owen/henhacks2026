@@ -32,11 +32,11 @@ import {
   getUserProfile,
   getUserPreferences,
   saveUserPreferences,
-  getLocations,
   createLocation,
   updateLocation,
   deleteLocation,
 } from '../../api';
+import { useLocation } from '../context/LocationContext';
 import Copyright from '../internals/components/Copyright';
 
 const DEFAULT_DAY = { homeStart: '17:00', homeEnd: '08:00', awakeStart: '06:00', awakeEnd: '23:00' };
@@ -51,6 +51,7 @@ function buildDefaultSchedule() {
 
 export default function PreferencesPage() {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const { locations, refreshLocations } = useLocation();
 
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
@@ -58,7 +59,6 @@ export default function PreferencesPage() {
   const [success, setSuccess] = React.useState(null);
 
   const [profileInfo, setProfileInfo] = React.useState(null);
-  const [locations, setLocations] = React.useState([]);
   const [locDialogOpen, setLocDialogOpen] = React.useState(false);
   const [editingLoc, setEditingLoc] = React.useState(null);
   const [locForm, setLocForm] = React.useState({ name: '', zip: '' });
@@ -88,14 +88,12 @@ export default function PreferencesPage() {
     (async () => {
       try {
         const token = await getAccessTokenSilently();
-        const [profile, prefs, locs] = await Promise.all([
+        const [profile, prefs] = await Promise.all([
           getUserProfile(token),
           getUserPreferences(token),
-          getLocations(token),
         ]);
         if (cancelled) return;
         setProfileInfo(profile);
-        setLocations(locs);
         if (prefs) {
           if (prefs.weeklySchedule) {
             const loaded = prefs.weeklySchedule;
@@ -153,7 +151,7 @@ export default function PreferencesPage() {
     try {
       const token = await getAccessTokenSilently();
       await deleteLocation(token, locId);
-      setLocations((prev) => prev.filter((l) => l.id !== locId));
+      await refreshLocations();
     } catch (e) {
       setError(e?.message ?? 'Failed to delete location');
     }
@@ -168,12 +166,11 @@ export default function PreferencesPage() {
     try {
       const token = await getAccessTokenSilently();
       if (editingLoc) {
-        const updated = await updateLocation(token, editingLoc.id, { name, zip });
-        setLocations((prev) => prev.map((l) => (l.id === editingLoc.id ? updated : l)));
+        await updateLocation(token, editingLoc.id, { name, zip });
       } else {
-        const created = await createLocation(token, { name, zip });
-        setLocations((prev) => [...prev, created]);
+        await createLocation(token, { name, zip });
       }
+      await refreshLocations();
       setLocDialogOpen(false);
     } catch (e) {
       setError(e?.message ?? 'Failed to save location');

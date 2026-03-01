@@ -12,6 +12,7 @@ import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard from './StatCard';
 import { getDevices, getUserProfile, getMonthlyRates } from '../../api';
+import { useLocation } from '../context/LocationContext';
 
 function categorizeType(type) {
   const t = (type || '').toLowerCase();
@@ -196,6 +197,7 @@ const EMPTY_DATA = {
 
 export default function MainGrid() {
   const { getAccessTokenSilently } = useAuth0();
+  const { selectedLocationId } = useLocation();
   const [loading, setLoading] = React.useState(true);
   const [dashData, setDashData] = React.useState(null);
 
@@ -204,10 +206,13 @@ export default function MainGrid() {
     async function load() {
       try {
         const token = await getAccessTokenSilently();
-        const [devices, profile] = await Promise.all([
+        const [allDevices, profile] = await Promise.all([
           getDevices(token),
           getUserProfile(token),
         ]);
+        const devices = selectedLocationId
+          ? allDevices.filter((d) => d.locationId === selectedLocationId)
+          : allDevices;
 
         const ratesByMonth = {};
         if (profile.selectedProviderId) {
@@ -240,7 +245,7 @@ export default function MainGrid() {
     }
     load();
     return () => { cancelled = true; };
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, selectedLocationId]);
 
   if (loading) {
     return (

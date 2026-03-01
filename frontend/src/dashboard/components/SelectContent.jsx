@@ -7,6 +7,8 @@ import Select, { selectClasses } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded';
+import PlaceRoundedIcon from '@mui/icons-material/PlaceRounded';
+import { useLocation } from '../context/LocationContext';
 
 const Avatar = styled(MuiAvatar)(({ theme }) => ({
   width: 28,
@@ -21,18 +23,23 @@ const ListItemAvatar = styled(MuiListItemAvatar)({
   marginRight: 12,
 });
 
+const ALL_PROPERTIES = '__all__';
+
 export default function SelectContent() {
-  const [home, setHome] = React.useState('');
+  const { locations, selectedLocationId, setSelectedLocationId } = useLocation();
+
+  const value = selectedLocationId || ALL_PROPERTIES;
 
   const handleChange = (event) => {
-    setHome(event.target.value);
+    const v = event.target.value;
+    setSelectedLocationId(v === ALL_PROPERTIES ? null : v);
   };
 
   return (
     <Select
       labelId="home-select"
       id="home-simple-select"
-      value={home}
+      value={value}
       onChange={handleChange}
       displayEmpty
       inputProps={{ 'aria-label': 'Select property' }}
@@ -49,22 +56,28 @@ export default function SelectContent() {
         },
       }}
     >
-      <MenuItem value="">
+      <MenuItem value={ALL_PROPERTIES}>
         <ListItemAvatar>
-          <Avatar alt="My Home">
-            <HomeRoundedIcon sx={{ fontSize: '1rem' }} />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary="My Home" secondary="Primary residence" />
-      </MenuItem>
-      <MenuItem value={10}>
-        <ListItemAvatar>
-          <Avatar alt="Energy Overview">
+          <Avatar alt="All Properties">
             <BoltRoundedIcon sx={{ fontSize: '1rem' }} />
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary="All Properties" secondary="Combined view" />
       </MenuItem>
+      {locations.map((loc) => (
+        <MenuItem key={loc.id} value={loc.id}>
+          <ListItemAvatar>
+            <Avatar alt={loc.name}>
+              {loc.name.toLowerCase() === 'home' ? (
+                <HomeRoundedIcon sx={{ fontSize: '1rem' }} />
+              ) : (
+                <PlaceRoundedIcon sx={{ fontSize: '1rem' }} />
+              )}
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={loc.name} secondary={loc.zip} />
+        </MenuItem>
+      ))}
     </Select>
   );
 }

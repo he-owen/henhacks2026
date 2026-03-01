@@ -9,6 +9,7 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
+import SelectContent from './SelectContent';
 
 function SideMenuMobile({ open, toggleDrawer }) {
   return (
@@ -48,6 +49,10 @@ function SideMenuMobile({ open, toggleDrawer }) {
           <MenuButton showBadge>
             <NotificationsRoundedIcon />
           </MenuButton>
+        </Stack>
+        <Divider />
+        <Stack sx={{ p: 1.5 }}>
+          <SelectContent />
         </Stack>
         <Divider />
         <Stack sx={{ flexGrow: 1 }}>
