@@ -16,7 +16,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useAuth0 } from '@auth0/auth0-react';
 import Copyright from '../internals/components/Copyright';
 import DeviceFormDialog from './DeviceFormDialog';
-import { getDevices, createDevice, updateDevice, deleteDevice } from '../../api';
+import { getDevices, createDevice, createDeviceBatch, updateDevice, deleteDevice } from '../../api';
 import { useLocation } from '../context/LocationContext';
 import { useScrollHighlight } from '../hooks/useScrollHighlight';
 
@@ -165,40 +165,71 @@ export default function DevicesPage() {
       return;
     }
 
-    const pendingId = `pending-${Date.now()}`;
+    const quantity = formData.quantity || 1;
     const effectiveLocationId = formData.locationId || selectedLocationId || null;
-    const finalFormData = { ...formData, locationId: effectiveLocationId };
     const matchedLoc = locations.find((l) => l.id === effectiveLocationId);
-    const optimisticRow = {
-      id: pendingId,
-      name: formData.name,
-      brand: formData.brand,
-      model: formData.model,
-      locationId: effectiveLocationId,
-      locationName: matchedLoc?.name || null,
-      type: '',
-      hourlyEnergy: 0,
-      isSmart: false,
-      runDurationMinutes: 0,
-      _pending: true,
-    };
+
+    const pendingIds = [];
+    const optimisticRows = [];
+    for (let i = 0; i < quantity; i++) {
+      const pid = `pending-${Date.now()}-${i}`;
+      pendingIds.push(pid);
+      optimisticRows.push({
+        id: pid,
+        name: quantity > 1 ? `${formData.name} (${i + 1})` : formData.name,
+        brand: formData.brand,
+        model: formData.model,
+        locationId: effectiveLocationId,
+        locationName: matchedLoc?.name || null,
+        type: '',
+        hourlyEnergy: 0,
+        isSmart: formData.isSmart ?? false,
+        runDurationMinutes: 0,
+        _pending: true,
+      });
+    }
 
     flushSync(() => {
-      setAllDevices((prev) => [...prev, optimisticRow]);
+      setAllDevices((prev) => [...prev, ...optimisticRows]);
       setDialogOpen(false);
       setSaving(true);
     });
 
     try {
       const token = await getAccessTokenSilently();
-      const created = await createDevice(token, finalFormData);
-      created.locationName = matchedLoc?.name || null;
-      setAllDevices((prev) =>
-        prev.map((d) => (d.id === pendingId ? created : d)),
-      );
+      if (quantity > 1) {
+        const createdDevices = await createDeviceBatch(token, {
+          name: formData.name,
+          brand: formData.brand,
+          model: formData.model,
+          locationId: effectiveLocationId,
+          isSmart: formData.isSmart,
+          quantity,
+        });
+        setAllDevices((prev) => {
+          let updated = [...prev];
+          createdDevices.forEach((created, i) => {
+            created.locationName = matchedLoc?.name || null;
+            updated = updated.map((d) => (d.id === pendingIds[i] ? created : d));
+          });
+          return updated;
+        });
+      } else {
+        const created = await createDevice(token, {
+          name: formData.name,
+          brand: formData.brand,
+          model: formData.model,
+          locationId: effectiveLocationId,
+          isSmart: formData.isSmart,
+        });
+        created.locationName = matchedLoc?.name || null;
+        setAllDevices((prev) =>
+          prev.map((d) => (d.id === pendingIds[0] ? created : d)),
+        );
+      }
     } catch (e) {
-      setAllDevices((prev) => prev.filter((d) => d.id !== pendingId));
-      setError(e?.message ?? 'Failed to add device');
+      setAllDevices((prev) => prev.filter((d) => !pendingIds.includes(d.id)));
+      setError(e?.isUnauthorized ? SESSION_EXPIRED_MESSAGE : (e?.message ?? 'Failed to add devices'));
     } finally {
       setSaving(false);
     }

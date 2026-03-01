@@ -44,6 +44,22 @@ export async function createDevice(accessToken, data) {
   return res.json();
 }
 
+/** Create multiple identical devices in one call (Gemini enrichment happens once). Returns array. */
+export async function createDeviceBatch(accessToken, data) {
+  const res = await fetch(`${API_BASE}/api/devices/batch`, {
+    method: "POST",
+    headers: authHeaders(accessToken),
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const e = new Error(err.detail || "Failed to create devices");
+    if (res.status === 401) e.isUnauthorized = true;
+    throw e;
+  }
+  return res.json();
+}
+
 /** Update a device. Requires accessToken. Throws with isUnauthorized: true on 401. */
 export async function updateDevice(accessToken, deviceId, data) {
   const res = await fetch(`${API_BASE}/api/devices/${encodeURIComponent(deviceId)}`, {

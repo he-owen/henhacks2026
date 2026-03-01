@@ -7,6 +7,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import Stack from '@mui/material/Stack';
 
 const emptyDevice = {
@@ -14,6 +16,8 @@ const emptyDevice = {
   brand: '',
   model: '',
   locationId: '',
+  isSmart: false,
+  quantity: 1,
 };
 
 export default function DeviceFormDialog({ open, onClose, onSave, device, saving = false, locations = [], defaultLocationId = null }) {
@@ -27,6 +31,8 @@ export default function DeviceFormDialog({ open, onClose, onSave, device, saving
         brand: device.brand || '',
         model: device.model || '',
         locationId: device.locationId || '',
+        isSmart: device.isSmart ?? false,
+        quantity: 1,
       });
     } else {
       setForm({
@@ -47,6 +53,8 @@ export default function DeviceFormDialog({ open, onClose, onSave, device, saving
       brand: form.brand.trim(),
       model: form.model.trim(),
       locationId: form.locationId || null,
+      isSmart: form.isSmart,
+      quantity: isEdit ? 1 : Math.max(1, parseInt(form.quantity, 10) || 1),
     });
   };
 
@@ -87,6 +95,28 @@ export default function DeviceFormDialog({ open, onClose, onSave, device, saving
             fullWidth
             placeholder="e.g. WindFree 2.0"
           />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={form.isSmart}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, isSmart: e.target.checked }))
+                }
+              />
+            }
+            label="Smart Device"
+          />
+          {!isEdit && (
+            <TextField
+              type="number"
+              label="Quantity"
+              value={form.quantity}
+              onChange={handleChange('quantity')}
+              inputProps={{ min: 1, max: 50 }}
+              fullWidth
+              helperText="Number of this device to add"
+            />
+          )}
           {locations.length > 0 && (
             <TextField
               select

@@ -400,6 +400,74 @@ def _device_response(row: dict):
     }
 
 
+@app.post("/api/devices/batch")
+async def create_devices_batch_endpoint(request: Request, userinfo: dict = Depends(_require_user)):
+    """Create multiple identical devices in one call. Gemini is invoked only once."""
+    body = await request.json()
+    user_id = userinfo["sub"]
+    name = (body.get("name") or "").strip()
+    brand = (body.get("brand") or "").strip()
+    model = (body.get("model") or "").strip()
+    quantity = int(body.get("quantity", 1))
+    if not name or not brand or not model:
+        raise HTTPException(status_code=400, detail="name, brand, and model are required")
+    if quantity < 1 or quantity > 50:
+        raise HTTPException(status_code=400, detail="quantity must be between 1 and 50")
+
+    location_id = body.get("locationId") or None
+    type_ = body.get("type") or ""
+    hourly_energy = body.get("hourlyEnergy")
+    is_smart = body.get("isSmart")
+    run_duration_minutes = body.get("runDurationMinutes")
+
+    if _gemini and (not type_ or hourly_energy is None or is_smart is None or run_duration_minutes is None):
+        logger.info("Enriching device via Gemini (batch=%d): name=%r, brand=%r, model=%r", quantity, name, brand, model)
+        try:
+            enriched = await asyncio.to_thread(
+                _gemini.enrich_device, name, brand or "", model or ""
+            )
+            logger.info("Gemini enrichment result: %s", enriched)
+            type_ = type_ or enriched.get("type", "Other")
+            if hourly_energy is None:
+                hourly_energy = enriched.get("hourlyEnergy", 0.0)
+            if is_smart is None:
+                is_smart = enriched.get("isSmart", False)
+            if run_duration_minutes is None:
+                run_duration_minutes = enriched.get("runDurationMinutes", 60)
+        except Exception as e:
+            logger.exception("Gemini enrichment failed")
+            raise HTTPException(
+                status_code=502,
+                detail=f"Failed to enrich device with Gemini: {getattr(e, 'message', str(e))}",
+            )
+    type_ = type_ or "Other"
+    if hourly_energy is None:
+        hourly_energy = 0.0
+    if is_smart is None:
+        is_smart = False
+    if run_duration_minutes is None:
+        run_duration_minutes = 60
+
+    results = []
+    for i in range(quantity):
+        device_name = f"{name} ({i + 1})" if quantity > 1 else name
+        row = await db_create_device(
+            user_id=user_id,
+            name=device_name,
+            type_=type_,
+            brand=brand or None,
+            model=model or None,
+            hourly_energy=float(hourly_energy),
+            is_smart=bool(is_smart),
+            run_duration_minutes=int(run_duration_minutes),
+            location_id=location_id,
+        )
+        if not row:
+            raise HTTPException(status_code=500, detail=f"Failed to create device {i + 1}")
+        results.append(_device_response(row))
+    return results
+
+
 @app.put("/api/devices/{device_id}")
 async def update_device_endpoint(
     device_id: str,
