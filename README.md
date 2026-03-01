@@ -8,7 +8,7 @@ Smart energy management for your home. Monitor your devices, optimize electricit
 
 ## Features
 
-### Optimization Engine
+### Custom Optimization Engine
 - MILP solver (PuLP/CBC) takes your devices, utility hourly rates, and weekly schedule to find the cheapest way to run everything across 24 hours
 - Cycle appliances (washers, dryers, dishwashers) are scheduled in contiguous blocks
 - HVAC modeled with pre-cooling/pre-heating before you arrive home
@@ -40,19 +40,9 @@ Smart energy management for your home. Monitor your devices, optimize electricit
 - Responses feed into compliance rate and cumulative savings
 - 14-day schedule history on the optimization page
 
-### Notifications
-- Upcoming device run windows (next 2 hours)
-- Peak rate alerts
-- Cheapest off-peak hour today
-- Bill reminder if nothing logged for the current month
-
 ### Google Home Script Generator
 - Generates YAML automation scripts from optimization results
 - Copy to clipboard for Google Home routines
-
-### Onboarding
-- 3-step setup: ZIP code, utility provider/rate plan selection, weekly schedule and thermostat preferences
-- Creates your first location and generates rates automatically
 
 ### Preferences
 - Per-day home/awake hours and thermostat temperatures
@@ -62,8 +52,6 @@ Smart energy management for your home. Monitor your devices, optimize electricit
 ### Other
 - Multi-location support with per-location device filtering across all views
 - Auth0 authentication with protected routes and automatic backend user sync
-- Dark/light mode toggle
-- Landing page with feature overview, how-it-works flow, FAQ, and dashboard preview
 
 ---
 
