@@ -1,27 +1,13 @@
 import asyncio
 import logging
+import traceback
+
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from typing import Any
-
-from database import check_database
-from daily_optimizer import run_optimization_hybrid
-from weekly_scheduler import find_optimal_day_for_appliances
-
-
-class DailyOptimizeRequest(BaseModel):
-    appliances: list[dict[str, Any]]
-    prices_by_day: list[list[float]]
-    day_of_week: str
-    user_preferences: dict[str, Any]
-
-
-class WeeklyScheduleRequest(BaseModel):
-    appliances: list[dict[str, Any]]
-    prices_by_day: list[list[float]]
-    user_preferences: dict[str, Any]
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from auth0_userinfo import get_userinfo
 from config import CORS_ORIGINS
@@ -37,7 +23,23 @@ from database import (
     set_user_provider as db_set_user_provider,
     get_user_profile as db_get_user_profile,
 )
+from daily_optimizer import run_optimization_hybrid
+from weekly_scheduler import find_optimal_day_for_appliances
 from rate_service import fetch_and_store_providers, generate_monthly_rates
+
+
+class DailyOptimizeRequest(BaseModel):
+    appliances: list[dict[str, Any]]
+    prices_by_day: list[list[float]]
+    day_of_week: str
+    user_preferences: dict[str, Any]
+
+
+class WeeklyScheduleRequest(BaseModel):
+    appliances: list[dict[str, Any]]
+    prices_by_day: list[list[float]]
+    user_preferences: dict[str, Any]
+
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +62,16 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
+
+
+@app.exception_handler(Exception)
+async def _global_exception_handler(request: Request, exc: Exception):
+    """Catch-all so unhandled errors return JSON (CORS middleware can then add headers)."""
+    logger.error("Unhandled exception on %s %s: %s", request.method, request.url.path, exc, exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error"},
+    )
 
 
 @app.get("/")

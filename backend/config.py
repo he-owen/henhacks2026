@@ -21,14 +21,19 @@ HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", "8000"))
 
 # Comma-separated origins allowed by CORS (e.g. http://localhost:5173,https://app.example.com)
-CORS_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv(
-        "CORS_ORIGINS",
-        "http://localhost:5173,http://127.0.0.1:5173,https://henhacks2026.vercel.app",
-    ).split(",")
-    if origin.strip()
-]
+_REQUIRED_ORIGINS = {
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://henhacks2026.vercel.app",
+}
+CORS_ORIGINS = list(
+    _REQUIRED_ORIGINS
+    | {
+        origin.strip()
+        for origin in os.getenv("CORS_ORIGINS", "").split(",")
+        if origin.strip()
+    }
+)
 
 # Auth0 (for validating sync requests via userinfo). Backend reads AUTH0_DOMAIN or VITE_AUTH0_DOMAIN.
 AUTH0_DOMAIN = (

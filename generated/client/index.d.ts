@@ -43,6 +43,11 @@ export type UtilityProvider = $Result.DefaultSelection<Prisma.$UtilityProviderPa
  * 
  */
 export type HourlyRate = $Result.DefaultSelection<Prisma.$HourlyRatePayload>
+/**
+ * Model user_preferences
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type user_preferences = $Result.DefaultSelection<Prisma.$user_preferencesPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -221,6 +226,16 @@ export class PrismaClient<
     * ```
     */
   get hourlyRate(): Prisma.HourlyRateDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.user_preferences`: Exposes CRUD operations for the **user_preferences** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more User_preferences
+    * const user_preferences = await prisma.user_preferences.findMany()
+    * ```
+    */
+  get user_preferences(): Prisma.user_preferencesDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -667,7 +682,8 @@ export namespace Prisma {
     Device: 'Device',
     BillHistory: 'BillHistory',
     UtilityProvider: 'UtilityProvider',
-    HourlyRate: 'HourlyRate'
+    HourlyRate: 'HourlyRate',
+    user_preferences: 'user_preferences'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -686,7 +702,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "location" | "device" | "billHistory" | "utilityProvider" | "hourlyRate"
+      modelProps: "user" | "location" | "device" | "billHistory" | "utilityProvider" | "hourlyRate" | "user_preferences"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1134,6 +1150,80 @@ export namespace Prisma {
           }
         }
       }
+      user_preferences: {
+        payload: Prisma.$user_preferencesPayload<ExtArgs>
+        fields: Prisma.user_preferencesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.user_preferencesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.user_preferencesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload>
+          }
+          findFirst: {
+            args: Prisma.user_preferencesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.user_preferencesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload>
+          }
+          findMany: {
+            args: Prisma.user_preferencesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload>[]
+          }
+          create: {
+            args: Prisma.user_preferencesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload>
+          }
+          createMany: {
+            args: Prisma.user_preferencesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.user_preferencesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload>[]
+          }
+          delete: {
+            args: Prisma.user_preferencesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload>
+          }
+          update: {
+            args: Prisma.user_preferencesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload>
+          }
+          deleteMany: {
+            args: Prisma.user_preferencesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.user_preferencesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.user_preferencesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload>[]
+          }
+          upsert: {
+            args: Prisma.user_preferencesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_preferencesPayload>
+          }
+          aggregate: {
+            args: Prisma.User_preferencesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUser_preferences>
+          }
+          groupBy: {
+            args: Prisma.user_preferencesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<User_preferencesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.user_preferencesCountArgs<ExtArgs>
+            result: $Utils.Optional<User_preferencesCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1236,6 +1326,7 @@ export namespace Prisma {
     billHistory?: BillHistoryOmit
     utilityProvider?: UtilityProviderOmit
     hourlyRate?: HourlyRateOmit
+    user_preferences?: user_preferencesOmit
   }
 
   /* Types for Logging */
@@ -1316,15 +1407,15 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    locations: number
     billHistory: number
     devices: number
+    locations: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    locations?: boolean | UserCountOutputTypeCountLocationsArgs
     billHistory?: boolean | UserCountOutputTypeCountBillHistoryArgs
     devices?: boolean | UserCountOutputTypeCountDevicesArgs
+    locations?: boolean | UserCountOutputTypeCountLocationsArgs
   }
 
   // Custom InputTypes
@@ -1341,13 +1432,6 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountLocationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LocationWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
   export type UserCountOutputTypeCountBillHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BillHistoryWhereInput
   }
@@ -1357,6 +1441,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDevicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DeviceWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountLocationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LocationWhereInput
   }
 
 
@@ -1560,10 +1651,11 @@ export namespace Prisma {
     email?: boolean
     utilityProv?: boolean
     selectedProviderId?: boolean
-    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
-    locations?: boolean | User$locationsArgs<ExtArgs>
     billHistory?: boolean | User$billHistoryArgs<ExtArgs>
     devices?: boolean | User$devicesArgs<ExtArgs>
+    locations?: boolean | User$locationsArgs<ExtArgs>
+    user_preferences?: boolean | User$user_preferencesArgs<ExtArgs>
+    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1592,10 +1684,11 @@ export namespace Prisma {
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "utilityProv" | "selectedProviderId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
-    locations?: boolean | User$locationsArgs<ExtArgs>
     billHistory?: boolean | User$billHistoryArgs<ExtArgs>
     devices?: boolean | User$devicesArgs<ExtArgs>
+    locations?: boolean | User$locationsArgs<ExtArgs>
+    user_preferences?: boolean | User$user_preferencesArgs<ExtArgs>
+    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1608,10 +1701,11 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      selectedProvider: Prisma.$UtilityProviderPayload<ExtArgs> | null
-      locations: Prisma.$LocationPayload<ExtArgs>[]
       billHistory: Prisma.$BillHistoryPayload<ExtArgs>[]
       devices: Prisma.$DevicePayload<ExtArgs>[]
+      locations: Prisma.$LocationPayload<ExtArgs>[]
+      user_preferences: Prisma.$user_preferencesPayload<ExtArgs> | null
+      selectedProvider: Prisma.$UtilityProviderPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2012,10 +2106,11 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    selectedProvider<T extends User$selectedProviderArgs<ExtArgs> = {}>(args?: Subset<T, User$selectedProviderArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    locations<T extends User$locationsArgs<ExtArgs> = {}>(args?: Subset<T, User$locationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     billHistory<T extends User$billHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$billHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     devices<T extends User$devicesArgs<ExtArgs> = {}>(args?: Subset<T, User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    locations<T extends User$locationsArgs<ExtArgs> = {}>(args?: Subset<T, User$locationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user_preferences<T extends User$user_preferencesArgs<ExtArgs> = {}>(args?: Subset<T, User$user_preferencesArgs<ExtArgs>>): Prisma__user_preferencesClient<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    selectedProvider<T extends User$selectedProviderArgs<ExtArgs> = {}>(args?: Subset<T, User$selectedProviderArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2445,49 +2540,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.selectedProvider
-   */
-  export type User$selectedProviderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UtilityProvider
-     */
-    select?: UtilityProviderSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UtilityProvider
-     */
-    omit?: UtilityProviderOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UtilityProviderInclude<ExtArgs> | null
-    where?: UtilityProviderWhereInput
-  }
-
-  /**
-   * User.locations
-   */
-  export type User$locationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Location
-     */
-    select?: LocationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Location
-     */
-    omit?: LocationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LocationInclude<ExtArgs> | null
-    where?: LocationWhereInput
-    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
-    cursor?: LocationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
-  }
-
-  /**
    * User.billHistory
    */
   export type User$billHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2533,6 +2585,68 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DeviceScalarFieldEnum | DeviceScalarFieldEnum[]
+  }
+
+  /**
+   * User.locations
+   */
+  export type User$locationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Location
+     */
+    select?: LocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Location
+     */
+    omit?: LocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LocationInclude<ExtArgs> | null
+    where?: LocationWhereInput
+    orderBy?: LocationOrderByWithRelationInput | LocationOrderByWithRelationInput[]
+    cursor?: LocationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LocationScalarFieldEnum | LocationScalarFieldEnum[]
+  }
+
+  /**
+   * User.user_preferences
+   */
+  export type User$user_preferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    where?: user_preferencesWhereInput
+  }
+
+  /**
+   * User.selectedProvider
+   */
+  export type User$selectedProviderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    where?: UtilityProviderWhereInput
   }
 
   /**
@@ -3600,16 +3714,16 @@ export namespace Prisma {
 
   export type DeviceAvgAggregateOutputType = {
     hourlyEnergy: number | null
-    standbyEnergy: number | null
-    activeEnergy: number | null
     runDurationMinutes: number | null
+    activeEnergy: number | null
+    standbyEnergy: number | null
   }
 
   export type DeviceSumAggregateOutputType = {
     hourlyEnergy: number | null
-    standbyEnergy: number | null
-    activeEnergy: number | null
     runDurationMinutes: number | null
+    activeEnergy: number | null
+    standbyEnergy: number | null
   }
 
   export type DeviceMinAggregateOutputType = {
@@ -3620,10 +3734,10 @@ export namespace Prisma {
     brand: string | null
     model: string | null
     hourlyEnergy: number | null
-    standbyEnergy: number | null
-    activeEnergy: number | null
     isSmart: boolean | null
     runDurationMinutes: number | null
+    activeEnergy: number | null
+    standbyEnergy: number | null
   }
 
   export type DeviceMaxAggregateOutputType = {
@@ -3634,10 +3748,10 @@ export namespace Prisma {
     brand: string | null
     model: string | null
     hourlyEnergy: number | null
-    standbyEnergy: number | null
-    activeEnergy: number | null
     isSmart: boolean | null
     runDurationMinutes: number | null
+    activeEnergy: number | null
+    standbyEnergy: number | null
   }
 
   export type DeviceCountAggregateOutputType = {
@@ -3648,26 +3762,26 @@ export namespace Prisma {
     brand: number
     model: number
     hourlyEnergy: number
-    standbyEnergy: number
-    activeEnergy: number
     isSmart: number
     runDurationMinutes: number
+    activeEnergy: number
+    standbyEnergy: number
     _all: number
   }
 
 
   export type DeviceAvgAggregateInputType = {
     hourlyEnergy?: true
-    standbyEnergy?: true
-    activeEnergy?: true
     runDurationMinutes?: true
+    activeEnergy?: true
+    standbyEnergy?: true
   }
 
   export type DeviceSumAggregateInputType = {
     hourlyEnergy?: true
-    standbyEnergy?: true
-    activeEnergy?: true
     runDurationMinutes?: true
+    activeEnergy?: true
+    standbyEnergy?: true
   }
 
   export type DeviceMinAggregateInputType = {
@@ -3678,10 +3792,10 @@ export namespace Prisma {
     brand?: true
     model?: true
     hourlyEnergy?: true
-    standbyEnergy?: true
-    activeEnergy?: true
     isSmart?: true
     runDurationMinutes?: true
+    activeEnergy?: true
+    standbyEnergy?: true
   }
 
   export type DeviceMaxAggregateInputType = {
@@ -3692,10 +3806,10 @@ export namespace Prisma {
     brand?: true
     model?: true
     hourlyEnergy?: true
-    standbyEnergy?: true
-    activeEnergy?: true
     isSmart?: true
     runDurationMinutes?: true
+    activeEnergy?: true
+    standbyEnergy?: true
   }
 
   export type DeviceCountAggregateInputType = {
@@ -3706,10 +3820,10 @@ export namespace Prisma {
     brand?: true
     model?: true
     hourlyEnergy?: true
-    standbyEnergy?: true
-    activeEnergy?: true
     isSmart?: true
     runDurationMinutes?: true
+    activeEnergy?: true
+    standbyEnergy?: true
     _all?: true
   }
 
@@ -3807,10 +3921,10 @@ export namespace Prisma {
     brand: string | null
     model: string | null
     hourlyEnergy: number | null
-    standbyEnergy: number | null
-    activeEnergy: number | null
     isSmart: boolean
     runDurationMinutes: number | null
+    activeEnergy: number | null
+    standbyEnergy: number | null
     _count: DeviceCountAggregateOutputType | null
     _avg: DeviceAvgAggregateOutputType | null
     _sum: DeviceSumAggregateOutputType | null
@@ -3840,10 +3954,10 @@ export namespace Prisma {
     brand?: boolean
     model?: boolean
     hourlyEnergy?: boolean
-    standbyEnergy?: boolean
-    activeEnergy?: boolean
     isSmart?: boolean
     runDurationMinutes?: boolean
+    activeEnergy?: boolean
+    standbyEnergy?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["device"]>
 
@@ -3855,10 +3969,10 @@ export namespace Prisma {
     brand?: boolean
     model?: boolean
     hourlyEnergy?: boolean
-    standbyEnergy?: boolean
-    activeEnergy?: boolean
     isSmart?: boolean
     runDurationMinutes?: boolean
+    activeEnergy?: boolean
+    standbyEnergy?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["device"]>
 
@@ -3870,10 +3984,10 @@ export namespace Prisma {
     brand?: boolean
     model?: boolean
     hourlyEnergy?: boolean
-    standbyEnergy?: boolean
-    activeEnergy?: boolean
     isSmart?: boolean
     runDurationMinutes?: boolean
+    activeEnergy?: boolean
+    standbyEnergy?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["device"]>
 
@@ -3885,13 +3999,13 @@ export namespace Prisma {
     brand?: boolean
     model?: boolean
     hourlyEnergy?: boolean
-    standbyEnergy?: boolean
-    activeEnergy?: boolean
     isSmart?: boolean
     runDurationMinutes?: boolean
+    activeEnergy?: boolean
+    standbyEnergy?: boolean
   }
 
-  export type DeviceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "type" | "brand" | "model" | "hourlyEnergy" | "standbyEnergy" | "activeEnergy" | "isSmart" | "runDurationMinutes", ExtArgs["result"]["device"]>
+  export type DeviceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "type" | "brand" | "model" | "hourlyEnergy" | "isSmart" | "runDurationMinutes" | "activeEnergy" | "standbyEnergy", ExtArgs["result"]["device"]>
   export type DeviceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -3915,10 +4029,10 @@ export namespace Prisma {
       brand: string | null
       model: string | null
       hourlyEnergy: number | null
-      standbyEnergy: number | null
-      activeEnergy: number | null
       isSmart: boolean
       runDurationMinutes: number | null
+      activeEnergy: number | null
+      standbyEnergy: number | null
     }, ExtArgs["result"]["device"]>
     composites: {}
   }
@@ -4350,10 +4464,10 @@ export namespace Prisma {
     readonly brand: FieldRef<"Device", 'String'>
     readonly model: FieldRef<"Device", 'String'>
     readonly hourlyEnergy: FieldRef<"Device", 'Float'>
-    readonly standbyEnergy: FieldRef<"Device", 'Float'>
-    readonly activeEnergy: FieldRef<"Device", 'Float'>
     readonly isSmart: FieldRef<"Device", 'Boolean'>
     readonly runDurationMinutes: FieldRef<"Device", 'Int'>
+    readonly activeEnergy: FieldRef<"Device", 'Float'>
+    readonly standbyEnergy: FieldRef<"Device", 'Float'>
   }
     
 
@@ -8155,6 +8269,1098 @@ export namespace Prisma {
 
 
   /**
+   * Model user_preferences
+   */
+
+  export type AggregateUser_preferences = {
+    _count: User_preferencesCountAggregateOutputType | null
+    _avg: User_preferencesAvgAggregateOutputType | null
+    _sum: User_preferencesSumAggregateOutputType | null
+    _min: User_preferencesMinAggregateOutputType | null
+    _max: User_preferencesMaxAggregateOutputType | null
+  }
+
+  export type User_preferencesAvgAggregateOutputType = {
+    temp_awake: number | null
+    temp_sleeping: number | null
+  }
+
+  export type User_preferencesSumAggregateOutputType = {
+    temp_awake: number | null
+    temp_sleeping: number | null
+  }
+
+  export type User_preferencesMinAggregateOutputType = {
+    preference_id: string | null
+    user_id: string | null
+    temp_awake: number | null
+    temp_sleeping: number | null
+  }
+
+  export type User_preferencesMaxAggregateOutputType = {
+    preference_id: string | null
+    user_id: string | null
+    temp_awake: number | null
+    temp_sleeping: number | null
+  }
+
+  export type User_preferencesCountAggregateOutputType = {
+    preference_id: number
+    user_id: number
+    weekly_schedule: number
+    temp_awake: number
+    temp_sleeping: number
+    _all: number
+  }
+
+
+  export type User_preferencesAvgAggregateInputType = {
+    temp_awake?: true
+    temp_sleeping?: true
+  }
+
+  export type User_preferencesSumAggregateInputType = {
+    temp_awake?: true
+    temp_sleeping?: true
+  }
+
+  export type User_preferencesMinAggregateInputType = {
+    preference_id?: true
+    user_id?: true
+    temp_awake?: true
+    temp_sleeping?: true
+  }
+
+  export type User_preferencesMaxAggregateInputType = {
+    preference_id?: true
+    user_id?: true
+    temp_awake?: true
+    temp_sleeping?: true
+  }
+
+  export type User_preferencesCountAggregateInputType = {
+    preference_id?: true
+    user_id?: true
+    weekly_schedule?: true
+    temp_awake?: true
+    temp_sleeping?: true
+    _all?: true
+  }
+
+  export type User_preferencesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which user_preferences to aggregate.
+     */
+    where?: user_preferencesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_preferences to fetch.
+     */
+    orderBy?: user_preferencesOrderByWithRelationInput | user_preferencesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: user_preferencesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_preferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_preferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned user_preferences
+    **/
+    _count?: true | User_preferencesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: User_preferencesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: User_preferencesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: User_preferencesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: User_preferencesMaxAggregateInputType
+  }
+
+  export type GetUser_preferencesAggregateType<T extends User_preferencesAggregateArgs> = {
+        [P in keyof T & keyof AggregateUser_preferences]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUser_preferences[P]>
+      : GetScalarType<T[P], AggregateUser_preferences[P]>
+  }
+
+
+
+
+  export type user_preferencesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: user_preferencesWhereInput
+    orderBy?: user_preferencesOrderByWithAggregationInput | user_preferencesOrderByWithAggregationInput[]
+    by: User_preferencesScalarFieldEnum[] | User_preferencesScalarFieldEnum
+    having?: user_preferencesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: User_preferencesCountAggregateInputType | true
+    _avg?: User_preferencesAvgAggregateInputType
+    _sum?: User_preferencesSumAggregateInputType
+    _min?: User_preferencesMinAggregateInputType
+    _max?: User_preferencesMaxAggregateInputType
+  }
+
+  export type User_preferencesGroupByOutputType = {
+    preference_id: string
+    user_id: string
+    weekly_schedule: JsonValue
+    temp_awake: number
+    temp_sleeping: number
+    _count: User_preferencesCountAggregateOutputType | null
+    _avg: User_preferencesAvgAggregateOutputType | null
+    _sum: User_preferencesSumAggregateOutputType | null
+    _min: User_preferencesMinAggregateOutputType | null
+    _max: User_preferencesMaxAggregateOutputType | null
+  }
+
+  type GetUser_preferencesGroupByPayload<T extends user_preferencesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<User_preferencesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof User_preferencesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], User_preferencesGroupByOutputType[P]>
+            : GetScalarType<T[P], User_preferencesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type user_preferencesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    preference_id?: boolean
+    user_id?: boolean
+    weekly_schedule?: boolean
+    temp_awake?: boolean
+    temp_sleeping?: boolean
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user_preferences"]>
+
+  export type user_preferencesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    preference_id?: boolean
+    user_id?: boolean
+    weekly_schedule?: boolean
+    temp_awake?: boolean
+    temp_sleeping?: boolean
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user_preferences"]>
+
+  export type user_preferencesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    preference_id?: boolean
+    user_id?: boolean
+    weekly_schedule?: boolean
+    temp_awake?: boolean
+    temp_sleeping?: boolean
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user_preferences"]>
+
+  export type user_preferencesSelectScalar = {
+    preference_id?: boolean
+    user_id?: boolean
+    weekly_schedule?: boolean
+    temp_awake?: boolean
+    temp_sleeping?: boolean
+  }
+
+  export type user_preferencesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"preference_id" | "user_id" | "weekly_schedule" | "temp_awake" | "temp_sleeping", ExtArgs["result"]["user_preferences"]>
+  export type user_preferencesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type user_preferencesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type user_preferencesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $user_preferencesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "user_preferences"
+    objects: {
+      users: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      preference_id: string
+      user_id: string
+      weekly_schedule: Prisma.JsonValue
+      temp_awake: number
+      temp_sleeping: number
+    }, ExtArgs["result"]["user_preferences"]>
+    composites: {}
+  }
+
+  type user_preferencesGetPayload<S extends boolean | null | undefined | user_preferencesDefaultArgs> = $Result.GetResult<Prisma.$user_preferencesPayload, S>
+
+  type user_preferencesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<user_preferencesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: User_preferencesCountAggregateInputType | true
+    }
+
+  export interface user_preferencesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['user_preferences'], meta: { name: 'user_preferences' } }
+    /**
+     * Find zero or one User_preferences that matches the filter.
+     * @param {user_preferencesFindUniqueArgs} args - Arguments to find a User_preferences
+     * @example
+     * // Get one User_preferences
+     * const user_preferences = await prisma.user_preferences.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends user_preferencesFindUniqueArgs>(args: SelectSubset<T, user_preferencesFindUniqueArgs<ExtArgs>>): Prisma__user_preferencesClient<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one User_preferences that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {user_preferencesFindUniqueOrThrowArgs} args - Arguments to find a User_preferences
+     * @example
+     * // Get one User_preferences
+     * const user_preferences = await prisma.user_preferences.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends user_preferencesFindUniqueOrThrowArgs>(args: SelectSubset<T, user_preferencesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__user_preferencesClient<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first User_preferences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_preferencesFindFirstArgs} args - Arguments to find a User_preferences
+     * @example
+     * // Get one User_preferences
+     * const user_preferences = await prisma.user_preferences.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends user_preferencesFindFirstArgs>(args?: SelectSubset<T, user_preferencesFindFirstArgs<ExtArgs>>): Prisma__user_preferencesClient<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first User_preferences that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_preferencesFindFirstOrThrowArgs} args - Arguments to find a User_preferences
+     * @example
+     * // Get one User_preferences
+     * const user_preferences = await prisma.user_preferences.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends user_preferencesFindFirstOrThrowArgs>(args?: SelectSubset<T, user_preferencesFindFirstOrThrowArgs<ExtArgs>>): Prisma__user_preferencesClient<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more User_preferences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_preferencesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all User_preferences
+     * const user_preferences = await prisma.user_preferences.findMany()
+     * 
+     * // Get first 10 User_preferences
+     * const user_preferences = await prisma.user_preferences.findMany({ take: 10 })
+     * 
+     * // Only select the `preference_id`
+     * const user_preferencesWithPreference_idOnly = await prisma.user_preferences.findMany({ select: { preference_id: true } })
+     * 
+     */
+    findMany<T extends user_preferencesFindManyArgs>(args?: SelectSubset<T, user_preferencesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a User_preferences.
+     * @param {user_preferencesCreateArgs} args - Arguments to create a User_preferences.
+     * @example
+     * // Create one User_preferences
+     * const User_preferences = await prisma.user_preferences.create({
+     *   data: {
+     *     // ... data to create a User_preferences
+     *   }
+     * })
+     * 
+     */
+    create<T extends user_preferencesCreateArgs>(args: SelectSubset<T, user_preferencesCreateArgs<ExtArgs>>): Prisma__user_preferencesClient<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many User_preferences.
+     * @param {user_preferencesCreateManyArgs} args - Arguments to create many User_preferences.
+     * @example
+     * // Create many User_preferences
+     * const user_preferences = await prisma.user_preferences.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends user_preferencesCreateManyArgs>(args?: SelectSubset<T, user_preferencesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many User_preferences and returns the data saved in the database.
+     * @param {user_preferencesCreateManyAndReturnArgs} args - Arguments to create many User_preferences.
+     * @example
+     * // Create many User_preferences
+     * const user_preferences = await prisma.user_preferences.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many User_preferences and only return the `preference_id`
+     * const user_preferencesWithPreference_idOnly = await prisma.user_preferences.createManyAndReturn({
+     *   select: { preference_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends user_preferencesCreateManyAndReturnArgs>(args?: SelectSubset<T, user_preferencesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a User_preferences.
+     * @param {user_preferencesDeleteArgs} args - Arguments to delete one User_preferences.
+     * @example
+     * // Delete one User_preferences
+     * const User_preferences = await prisma.user_preferences.delete({
+     *   where: {
+     *     // ... filter to delete one User_preferences
+     *   }
+     * })
+     * 
+     */
+    delete<T extends user_preferencesDeleteArgs>(args: SelectSubset<T, user_preferencesDeleteArgs<ExtArgs>>): Prisma__user_preferencesClient<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one User_preferences.
+     * @param {user_preferencesUpdateArgs} args - Arguments to update one User_preferences.
+     * @example
+     * // Update one User_preferences
+     * const user_preferences = await prisma.user_preferences.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends user_preferencesUpdateArgs>(args: SelectSubset<T, user_preferencesUpdateArgs<ExtArgs>>): Prisma__user_preferencesClient<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more User_preferences.
+     * @param {user_preferencesDeleteManyArgs} args - Arguments to filter User_preferences to delete.
+     * @example
+     * // Delete a few User_preferences
+     * const { count } = await prisma.user_preferences.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends user_preferencesDeleteManyArgs>(args?: SelectSubset<T, user_preferencesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more User_preferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_preferencesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many User_preferences
+     * const user_preferences = await prisma.user_preferences.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends user_preferencesUpdateManyArgs>(args: SelectSubset<T, user_preferencesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more User_preferences and returns the data updated in the database.
+     * @param {user_preferencesUpdateManyAndReturnArgs} args - Arguments to update many User_preferences.
+     * @example
+     * // Update many User_preferences
+     * const user_preferences = await prisma.user_preferences.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more User_preferences and only return the `preference_id`
+     * const user_preferencesWithPreference_idOnly = await prisma.user_preferences.updateManyAndReturn({
+     *   select: { preference_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends user_preferencesUpdateManyAndReturnArgs>(args: SelectSubset<T, user_preferencesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one User_preferences.
+     * @param {user_preferencesUpsertArgs} args - Arguments to update or create a User_preferences.
+     * @example
+     * // Update or create a User_preferences
+     * const user_preferences = await prisma.user_preferences.upsert({
+     *   create: {
+     *     // ... data to create a User_preferences
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the User_preferences we want to update
+     *   }
+     * })
+     */
+    upsert<T extends user_preferencesUpsertArgs>(args: SelectSubset<T, user_preferencesUpsertArgs<ExtArgs>>): Prisma__user_preferencesClient<$Result.GetResult<Prisma.$user_preferencesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of User_preferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_preferencesCountArgs} args - Arguments to filter User_preferences to count.
+     * @example
+     * // Count the number of User_preferences
+     * const count = await prisma.user_preferences.count({
+     *   where: {
+     *     // ... the filter for the User_preferences we want to count
+     *   }
+     * })
+    **/
+    count<T extends user_preferencesCountArgs>(
+      args?: Subset<T, user_preferencesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], User_preferencesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a User_preferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {User_preferencesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends User_preferencesAggregateArgs>(args: Subset<T, User_preferencesAggregateArgs>): Prisma.PrismaPromise<GetUser_preferencesAggregateType<T>>
+
+    /**
+     * Group by User_preferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_preferencesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends user_preferencesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: user_preferencesGroupByArgs['orderBy'] }
+        : { orderBy?: user_preferencesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, user_preferencesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUser_preferencesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the user_preferences model
+   */
+  readonly fields: user_preferencesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for user_preferences.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__user_preferencesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    users<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the user_preferences model
+   */
+  interface user_preferencesFieldRefs {
+    readonly preference_id: FieldRef<"user_preferences", 'String'>
+    readonly user_id: FieldRef<"user_preferences", 'String'>
+    readonly weekly_schedule: FieldRef<"user_preferences", 'Json'>
+    readonly temp_awake: FieldRef<"user_preferences", 'Float'>
+    readonly temp_sleeping: FieldRef<"user_preferences", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * user_preferences findUnique
+   */
+  export type user_preferencesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_preferences to fetch.
+     */
+    where: user_preferencesWhereUniqueInput
+  }
+
+  /**
+   * user_preferences findUniqueOrThrow
+   */
+  export type user_preferencesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_preferences to fetch.
+     */
+    where: user_preferencesWhereUniqueInput
+  }
+
+  /**
+   * user_preferences findFirst
+   */
+  export type user_preferencesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_preferences to fetch.
+     */
+    where?: user_preferencesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_preferences to fetch.
+     */
+    orderBy?: user_preferencesOrderByWithRelationInput | user_preferencesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for user_preferences.
+     */
+    cursor?: user_preferencesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_preferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_preferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of user_preferences.
+     */
+    distinct?: User_preferencesScalarFieldEnum | User_preferencesScalarFieldEnum[]
+  }
+
+  /**
+   * user_preferences findFirstOrThrow
+   */
+  export type user_preferencesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_preferences to fetch.
+     */
+    where?: user_preferencesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_preferences to fetch.
+     */
+    orderBy?: user_preferencesOrderByWithRelationInput | user_preferencesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for user_preferences.
+     */
+    cursor?: user_preferencesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_preferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_preferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of user_preferences.
+     */
+    distinct?: User_preferencesScalarFieldEnum | User_preferencesScalarFieldEnum[]
+  }
+
+  /**
+   * user_preferences findMany
+   */
+  export type user_preferencesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_preferences to fetch.
+     */
+    where?: user_preferencesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_preferences to fetch.
+     */
+    orderBy?: user_preferencesOrderByWithRelationInput | user_preferencesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing user_preferences.
+     */
+    cursor?: user_preferencesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_preferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_preferences.
+     */
+    skip?: number
+    distinct?: User_preferencesScalarFieldEnum | User_preferencesScalarFieldEnum[]
+  }
+
+  /**
+   * user_preferences create
+   */
+  export type user_preferencesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a user_preferences.
+     */
+    data: XOR<user_preferencesCreateInput, user_preferencesUncheckedCreateInput>
+  }
+
+  /**
+   * user_preferences createMany
+   */
+  export type user_preferencesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many user_preferences.
+     */
+    data: user_preferencesCreateManyInput | user_preferencesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * user_preferences createManyAndReturn
+   */
+  export type user_preferencesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * The data used to create many user_preferences.
+     */
+    data: user_preferencesCreateManyInput | user_preferencesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * user_preferences update
+   */
+  export type user_preferencesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a user_preferences.
+     */
+    data: XOR<user_preferencesUpdateInput, user_preferencesUncheckedUpdateInput>
+    /**
+     * Choose, which user_preferences to update.
+     */
+    where: user_preferencesWhereUniqueInput
+  }
+
+  /**
+   * user_preferences updateMany
+   */
+  export type user_preferencesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update user_preferences.
+     */
+    data: XOR<user_preferencesUpdateManyMutationInput, user_preferencesUncheckedUpdateManyInput>
+    /**
+     * Filter which user_preferences to update
+     */
+    where?: user_preferencesWhereInput
+    /**
+     * Limit how many user_preferences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * user_preferences updateManyAndReturn
+   */
+  export type user_preferencesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * The data used to update user_preferences.
+     */
+    data: XOR<user_preferencesUpdateManyMutationInput, user_preferencesUncheckedUpdateManyInput>
+    /**
+     * Filter which user_preferences to update
+     */
+    where?: user_preferencesWhereInput
+    /**
+     * Limit how many user_preferences to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * user_preferences upsert
+   */
+  export type user_preferencesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the user_preferences to update in case it exists.
+     */
+    where: user_preferencesWhereUniqueInput
+    /**
+     * In case the user_preferences found by the `where` argument doesn't exist, create a new user_preferences with this data.
+     */
+    create: XOR<user_preferencesCreateInput, user_preferencesUncheckedCreateInput>
+    /**
+     * In case the user_preferences was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<user_preferencesUpdateInput, user_preferencesUncheckedUpdateInput>
+  }
+
+  /**
+   * user_preferences delete
+   */
+  export type user_preferencesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+    /**
+     * Filter which user_preferences to delete.
+     */
+    where: user_preferencesWhereUniqueInput
+  }
+
+  /**
+   * user_preferences deleteMany
+   */
+  export type user_preferencesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which user_preferences to delete
+     */
+    where?: user_preferencesWhereInput
+    /**
+     * Limit how many user_preferences to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * user_preferences without action
+   */
+  export type user_preferencesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_preferences
+     */
+    select?: user_preferencesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_preferences
+     */
+    omit?: user_preferencesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_preferencesInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8195,10 +9401,10 @@ export namespace Prisma {
     brand: 'brand',
     model: 'model',
     hourlyEnergy: 'hourlyEnergy',
-    standbyEnergy: 'standbyEnergy',
-    activeEnergy: 'activeEnergy',
     isSmart: 'isSmart',
-    runDurationMinutes: 'runDurationMinutes'
+    runDurationMinutes: 'runDurationMinutes',
+    activeEnergy: 'activeEnergy',
+    standbyEnergy: 'standbyEnergy'
   };
 
   export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof DeviceScalarFieldEnum]
@@ -8245,6 +9451,17 @@ export namespace Prisma {
   export type HourlyRateScalarFieldEnum = (typeof HourlyRateScalarFieldEnum)[keyof typeof HourlyRateScalarFieldEnum]
 
 
+  export const User_preferencesScalarFieldEnum: {
+    preference_id: 'preference_id',
+    user_id: 'user_id',
+    weekly_schedule: 'weekly_schedule',
+    temp_awake: 'temp_awake',
+    temp_sleeping: 'temp_sleeping'
+  };
+
+  export type User_preferencesScalarFieldEnum = (typeof User_preferencesScalarFieldEnum)[keyof typeof User_preferencesScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -8259,6 +9476,13 @@ export namespace Prisma {
   };
 
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -8393,10 +9617,11 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     utilityProv?: StringNullableFilter<"User"> | string | null
     selectedProviderId?: StringNullableFilter<"User"> | string | null
-    selectedProvider?: XOR<UtilityProviderNullableScalarRelationFilter, UtilityProviderWhereInput> | null
-    locations?: LocationListRelationFilter
     billHistory?: BillHistoryListRelationFilter
     devices?: DeviceListRelationFilter
+    locations?: LocationListRelationFilter
+    user_preferences?: XOR<User_preferencesNullableScalarRelationFilter, user_preferencesWhereInput> | null
+    selectedProvider?: XOR<UtilityProviderNullableScalarRelationFilter, UtilityProviderWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -8404,10 +9629,11 @@ export namespace Prisma {
     email?: SortOrder
     utilityProv?: SortOrderInput | SortOrder
     selectedProviderId?: SortOrderInput | SortOrder
-    selectedProvider?: UtilityProviderOrderByWithRelationInput
-    locations?: LocationOrderByRelationAggregateInput
     billHistory?: BillHistoryOrderByRelationAggregateInput
     devices?: DeviceOrderByRelationAggregateInput
+    locations?: LocationOrderByRelationAggregateInput
+    user_preferences?: user_preferencesOrderByWithRelationInput
+    selectedProvider?: UtilityProviderOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -8418,10 +9644,11 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     utilityProv?: StringNullableFilter<"User"> | string | null
     selectedProviderId?: StringNullableFilter<"User"> | string | null
-    selectedProvider?: XOR<UtilityProviderNullableScalarRelationFilter, UtilityProviderWhereInput> | null
-    locations?: LocationListRelationFilter
     billHistory?: BillHistoryListRelationFilter
     devices?: DeviceListRelationFilter
+    locations?: LocationListRelationFilter
+    user_preferences?: XOR<User_preferencesNullableScalarRelationFilter, user_preferencesWhereInput> | null
+    selectedProvider?: XOR<UtilityProviderNullableScalarRelationFilter, UtilityProviderWhereInput> | null
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -8500,10 +9727,10 @@ export namespace Prisma {
     brand?: StringNullableFilter<"Device"> | string | null
     model?: StringNullableFilter<"Device"> | string | null
     hourlyEnergy?: FloatNullableFilter<"Device"> | number | null
-    standbyEnergy?: FloatNullableFilter<"Device"> | number | null
-    activeEnergy?: FloatNullableFilter<"Device"> | number | null
     isSmart?: BoolFilter<"Device"> | boolean
     runDurationMinutes?: IntNullableFilter<"Device"> | number | null
+    activeEnergy?: FloatNullableFilter<"Device"> | number | null
+    standbyEnergy?: FloatNullableFilter<"Device"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -8515,10 +9742,10 @@ export namespace Prisma {
     brand?: SortOrderInput | SortOrder
     model?: SortOrderInput | SortOrder
     hourlyEnergy?: SortOrderInput | SortOrder
-    standbyEnergy?: SortOrderInput | SortOrder
-    activeEnergy?: SortOrderInput | SortOrder
     isSmart?: SortOrder
     runDurationMinutes?: SortOrderInput | SortOrder
+    activeEnergy?: SortOrderInput | SortOrder
+    standbyEnergy?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
   }
 
@@ -8533,10 +9760,10 @@ export namespace Prisma {
     brand?: StringNullableFilter<"Device"> | string | null
     model?: StringNullableFilter<"Device"> | string | null
     hourlyEnergy?: FloatNullableFilter<"Device"> | number | null
-    standbyEnergy?: FloatNullableFilter<"Device"> | number | null
-    activeEnergy?: FloatNullableFilter<"Device"> | number | null
     isSmart?: BoolFilter<"Device"> | boolean
     runDurationMinutes?: IntNullableFilter<"Device"> | number | null
+    activeEnergy?: FloatNullableFilter<"Device"> | number | null
+    standbyEnergy?: FloatNullableFilter<"Device"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
@@ -8548,10 +9775,10 @@ export namespace Prisma {
     brand?: SortOrderInput | SortOrder
     model?: SortOrderInput | SortOrder
     hourlyEnergy?: SortOrderInput | SortOrder
-    standbyEnergy?: SortOrderInput | SortOrder
-    activeEnergy?: SortOrderInput | SortOrder
     isSmart?: SortOrder
     runDurationMinutes?: SortOrderInput | SortOrder
+    activeEnergy?: SortOrderInput | SortOrder
+    standbyEnergy?: SortOrderInput | SortOrder
     _count?: DeviceCountOrderByAggregateInput
     _avg?: DeviceAvgOrderByAggregateInput
     _max?: DeviceMaxOrderByAggregateInput
@@ -8570,10 +9797,10 @@ export namespace Prisma {
     brand?: StringNullableWithAggregatesFilter<"Device"> | string | null
     model?: StringNullableWithAggregatesFilter<"Device"> | string | null
     hourlyEnergy?: FloatNullableWithAggregatesFilter<"Device"> | number | null
-    standbyEnergy?: FloatNullableWithAggregatesFilter<"Device"> | number | null
-    activeEnergy?: FloatNullableWithAggregatesFilter<"Device"> | number | null
     isSmart?: BoolWithAggregatesFilter<"Device"> | boolean
     runDurationMinutes?: IntNullableWithAggregatesFilter<"Device"> | number | null
+    activeEnergy?: FloatNullableWithAggregatesFilter<"Device"> | number | null
+    standbyEnergy?: FloatNullableWithAggregatesFilter<"Device"> | number | null
   }
 
   export type BillHistoryWhereInput = {
@@ -8790,14 +10017,72 @@ export namespace Prisma {
     periodLabel?: StringWithAggregatesFilter<"HourlyRate"> | string
   }
 
+  export type user_preferencesWhereInput = {
+    AND?: user_preferencesWhereInput | user_preferencesWhereInput[]
+    OR?: user_preferencesWhereInput[]
+    NOT?: user_preferencesWhereInput | user_preferencesWhereInput[]
+    preference_id?: StringFilter<"user_preferences"> | string
+    user_id?: StringFilter<"user_preferences"> | string
+    weekly_schedule?: JsonFilter<"user_preferences">
+    temp_awake?: FloatFilter<"user_preferences"> | number
+    temp_sleeping?: FloatFilter<"user_preferences"> | number
+    users?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type user_preferencesOrderByWithRelationInput = {
+    preference_id?: SortOrder
+    user_id?: SortOrder
+    weekly_schedule?: SortOrder
+    temp_awake?: SortOrder
+    temp_sleeping?: SortOrder
+    users?: UserOrderByWithRelationInput
+  }
+
+  export type user_preferencesWhereUniqueInput = Prisma.AtLeast<{
+    preference_id?: string
+    user_id?: string
+    AND?: user_preferencesWhereInput | user_preferencesWhereInput[]
+    OR?: user_preferencesWhereInput[]
+    NOT?: user_preferencesWhereInput | user_preferencesWhereInput[]
+    weekly_schedule?: JsonFilter<"user_preferences">
+    temp_awake?: FloatFilter<"user_preferences"> | number
+    temp_sleeping?: FloatFilter<"user_preferences"> | number
+    users?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "preference_id" | "user_id">
+
+  export type user_preferencesOrderByWithAggregationInput = {
+    preference_id?: SortOrder
+    user_id?: SortOrder
+    weekly_schedule?: SortOrder
+    temp_awake?: SortOrder
+    temp_sleeping?: SortOrder
+    _count?: user_preferencesCountOrderByAggregateInput
+    _avg?: user_preferencesAvgOrderByAggregateInput
+    _max?: user_preferencesMaxOrderByAggregateInput
+    _min?: user_preferencesMinOrderByAggregateInput
+    _sum?: user_preferencesSumOrderByAggregateInput
+  }
+
+  export type user_preferencesScalarWhereWithAggregatesInput = {
+    AND?: user_preferencesScalarWhereWithAggregatesInput | user_preferencesScalarWhereWithAggregatesInput[]
+    OR?: user_preferencesScalarWhereWithAggregatesInput[]
+    NOT?: user_preferencesScalarWhereWithAggregatesInput | user_preferencesScalarWhereWithAggregatesInput[]
+    preference_id?: StringWithAggregatesFilter<"user_preferences"> | string
+    user_id?: StringWithAggregatesFilter<"user_preferences"> | string
+    weekly_schedule?: JsonWithAggregatesFilter<"user_preferences">
+    temp_awake?: FloatWithAggregatesFilter<"user_preferences"> | number
+    temp_sleeping?: FloatWithAggregatesFilter<"user_preferences"> | number
+  }
+
   export type UserCreateInput = {
     id: string
     email: string
     utilityProv?: string | null
-    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
-    locations?: LocationCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryCreateNestedManyWithoutUserInput
     devices?: DeviceCreateNestedManyWithoutUserInput
+    locations?: LocationCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesCreateNestedOneWithoutUsersInput
+    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -8805,19 +10090,21 @@ export namespace Prisma {
     email: string
     utilityProv?: string | null
     selectedProviderId?: string | null
-    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesUncheckedCreateNestedOneWithoutUsersInput
   }
 
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
-    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
-    locations?: LocationUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
     devices?: DeviceUpdateManyWithoutUserNestedInput
+    locations?: LocationUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUpdateOneWithoutUsersNestedInput
+    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -8825,9 +10112,10 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
     selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
-    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUncheckedUpdateOneWithoutUsersNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -8898,10 +10186,10 @@ export namespace Prisma {
     brand?: string | null
     model?: string | null
     hourlyEnergy?: number | null
-    standbyEnergy?: number | null
-    activeEnergy?: number | null
     isSmart?: boolean
     runDurationMinutes?: number | null
+    activeEnergy?: number | null
+    standbyEnergy?: number | null
     user: UserCreateNestedOneWithoutDevicesInput
   }
 
@@ -8913,10 +10201,10 @@ export namespace Prisma {
     brand?: string | null
     model?: string | null
     hourlyEnergy?: number | null
-    standbyEnergy?: number | null
-    activeEnergy?: number | null
     isSmart?: boolean
     runDurationMinutes?: number | null
+    activeEnergy?: number | null
+    standbyEnergy?: number | null
   }
 
   export type DeviceUpdateInput = {
@@ -8926,10 +10214,10 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
     runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
     user?: UserUpdateOneRequiredWithoutDevicesNestedInput
   }
 
@@ -8941,10 +10229,10 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
     runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type DeviceCreateManyInput = {
@@ -8955,10 +10243,10 @@ export namespace Prisma {
     brand?: string | null
     model?: string | null
     hourlyEnergy?: number | null
-    standbyEnergy?: number | null
-    activeEnergy?: number | null
     isSmart?: boolean
     runDurationMinutes?: number | null
+    activeEnergy?: number | null
+    standbyEnergy?: number | null
   }
 
   export type DeviceUpdateManyMutationInput = {
@@ -8968,10 +10256,10 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
     runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type DeviceUncheckedUpdateManyInput = {
@@ -8982,10 +10270,10 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
     runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type BillHistoryCreateInput = {
@@ -9218,6 +10506,61 @@ export namespace Prisma {
     periodLabel?: StringFieldUpdateOperationsInput | string
   }
 
+  export type user_preferencesCreateInput = {
+    preference_id: string
+    weekly_schedule: JsonNullValueInput | InputJsonValue
+    temp_awake: number
+    temp_sleeping: number
+    users: UserCreateNestedOneWithoutUser_preferencesInput
+  }
+
+  export type user_preferencesUncheckedCreateInput = {
+    preference_id: string
+    user_id: string
+    weekly_schedule: JsonNullValueInput | InputJsonValue
+    temp_awake: number
+    temp_sleeping: number
+  }
+
+  export type user_preferencesUpdateInput = {
+    preference_id?: StringFieldUpdateOperationsInput | string
+    weekly_schedule?: JsonNullValueInput | InputJsonValue
+    temp_awake?: FloatFieldUpdateOperationsInput | number
+    temp_sleeping?: FloatFieldUpdateOperationsInput | number
+    users?: UserUpdateOneRequiredWithoutUser_preferencesNestedInput
+  }
+
+  export type user_preferencesUncheckedUpdateInput = {
+    preference_id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    weekly_schedule?: JsonNullValueInput | InputJsonValue
+    temp_awake?: FloatFieldUpdateOperationsInput | number
+    temp_sleeping?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type user_preferencesCreateManyInput = {
+    preference_id: string
+    user_id: string
+    weekly_schedule: JsonNullValueInput | InputJsonValue
+    temp_awake: number
+    temp_sleeping: number
+  }
+
+  export type user_preferencesUpdateManyMutationInput = {
+    preference_id?: StringFieldUpdateOperationsInput | string
+    weekly_schedule?: JsonNullValueInput | InputJsonValue
+    temp_awake?: FloatFieldUpdateOperationsInput | number
+    temp_sleeping?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type user_preferencesUncheckedUpdateManyInput = {
+    preference_id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    weekly_schedule?: JsonNullValueInput | InputJsonValue
+    temp_awake?: FloatFieldUpdateOperationsInput | number
+    temp_sleeping?: FloatFieldUpdateOperationsInput | number
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -9248,17 +10591,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type UtilityProviderNullableScalarRelationFilter = {
-    is?: UtilityProviderWhereInput | null
-    isNot?: UtilityProviderWhereInput | null
-  }
-
-  export type LocationListRelationFilter = {
-    every?: LocationWhereInput
-    some?: LocationWhereInput
-    none?: LocationWhereInput
-  }
-
   export type BillHistoryListRelationFilter = {
     every?: BillHistoryWhereInput
     some?: BillHistoryWhereInput
@@ -9271,13 +10603,25 @@ export namespace Prisma {
     none?: DeviceWhereInput
   }
 
+  export type LocationListRelationFilter = {
+    every?: LocationWhereInput
+    some?: LocationWhereInput
+    none?: LocationWhereInput
+  }
+
+  export type User_preferencesNullableScalarRelationFilter = {
+    is?: user_preferencesWhereInput | null
+    isNot?: user_preferencesWhereInput | null
+  }
+
+  export type UtilityProviderNullableScalarRelationFilter = {
+    is?: UtilityProviderWhereInput | null
+    isNot?: UtilityProviderWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
-  }
-
-  export type LocationOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type BillHistoryOrderByRelationAggregateInput = {
@@ -9285,6 +10629,10 @@ export namespace Prisma {
   }
 
   export type DeviceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LocationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9403,17 +10751,17 @@ export namespace Prisma {
     brand?: SortOrder
     model?: SortOrder
     hourlyEnergy?: SortOrder
-    standbyEnergy?: SortOrder
-    activeEnergy?: SortOrder
     isSmart?: SortOrder
     runDurationMinutes?: SortOrder
+    activeEnergy?: SortOrder
+    standbyEnergy?: SortOrder
   }
 
   export type DeviceAvgOrderByAggregateInput = {
     hourlyEnergy?: SortOrder
-    standbyEnergy?: SortOrder
-    activeEnergy?: SortOrder
     runDurationMinutes?: SortOrder
+    activeEnergy?: SortOrder
+    standbyEnergy?: SortOrder
   }
 
   export type DeviceMaxOrderByAggregateInput = {
@@ -9424,10 +10772,10 @@ export namespace Prisma {
     brand?: SortOrder
     model?: SortOrder
     hourlyEnergy?: SortOrder
-    standbyEnergy?: SortOrder
-    activeEnergy?: SortOrder
     isSmart?: SortOrder
     runDurationMinutes?: SortOrder
+    activeEnergy?: SortOrder
+    standbyEnergy?: SortOrder
   }
 
   export type DeviceMinOrderByAggregateInput = {
@@ -9438,17 +10786,17 @@ export namespace Prisma {
     brand?: SortOrder
     model?: SortOrder
     hourlyEnergy?: SortOrder
-    standbyEnergy?: SortOrder
-    activeEnergy?: SortOrder
     isSmart?: SortOrder
     runDurationMinutes?: SortOrder
+    activeEnergy?: SortOrder
+    standbyEnergy?: SortOrder
   }
 
   export type DeviceSumOrderByAggregateInput = {
     hourlyEnergy?: SortOrder
-    standbyEnergy?: SortOrder
-    activeEnergy?: SortOrder
     runDurationMinutes?: SortOrder
+    activeEnergy?: SortOrder
+    standbyEnergy?: SortOrder
   }
 
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -9767,18 +11115,113 @@ export namespace Prisma {
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
   }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
 
-  export type UtilityProviderCreateNestedOneWithoutUsersInput = {
-    create?: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: UtilityProviderCreateOrConnectWithoutUsersInput
-    connect?: UtilityProviderWhereUniqueInput
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type LocationCreateNestedManyWithoutUserInput = {
-    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
-    createMany?: LocationCreateManyUserInputEnvelope
-    connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type user_preferencesCountOrderByAggregateInput = {
+    preference_id?: SortOrder
+    user_id?: SortOrder
+    weekly_schedule?: SortOrder
+    temp_awake?: SortOrder
+    temp_sleeping?: SortOrder
+  }
+
+  export type user_preferencesAvgOrderByAggregateInput = {
+    temp_awake?: SortOrder
+    temp_sleeping?: SortOrder
+  }
+
+  export type user_preferencesMaxOrderByAggregateInput = {
+    preference_id?: SortOrder
+    user_id?: SortOrder
+    temp_awake?: SortOrder
+    temp_sleeping?: SortOrder
+  }
+
+  export type user_preferencesMinOrderByAggregateInput = {
+    preference_id?: SortOrder
+    user_id?: SortOrder
+    temp_awake?: SortOrder
+    temp_sleeping?: SortOrder
+  }
+
+  export type user_preferencesSumOrderByAggregateInput = {
+    temp_awake?: SortOrder
+    temp_sleeping?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type BillHistoryCreateNestedManyWithoutUserInput = {
@@ -9795,11 +11238,23 @@ export namespace Prisma {
     connect?: DeviceWhereUniqueInput | DeviceWhereUniqueInput[]
   }
 
-  export type LocationUncheckedCreateNestedManyWithoutUserInput = {
+  export type LocationCreateNestedManyWithoutUserInput = {
     create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
     createMany?: LocationCreateManyUserInputEnvelope
     connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+  }
+
+  export type user_preferencesCreateNestedOneWithoutUsersInput = {
+    create?: XOR<user_preferencesCreateWithoutUsersInput, user_preferencesUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: user_preferencesCreateOrConnectWithoutUsersInput
+    connect?: user_preferencesWhereUniqueInput
+  }
+
+  export type UtilityProviderCreateNestedOneWithoutUsersInput = {
+    create?: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: UtilityProviderCreateOrConnectWithoutUsersInput
+    connect?: UtilityProviderWhereUniqueInput
   }
 
   export type BillHistoryUncheckedCreateNestedManyWithoutUserInput = {
@@ -9816,36 +11271,25 @@ export namespace Prisma {
     connect?: DeviceWhereUniqueInput | DeviceWhereUniqueInput[]
   }
 
+  export type LocationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
+    createMany?: LocationCreateManyUserInputEnvelope
+    connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+  }
+
+  export type user_preferencesUncheckedCreateNestedOneWithoutUsersInput = {
+    create?: XOR<user_preferencesCreateWithoutUsersInput, user_preferencesUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: user_preferencesCreateOrConnectWithoutUsersInput
+    connect?: user_preferencesWhereUniqueInput
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
-  }
-
-  export type UtilityProviderUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: UtilityProviderCreateOrConnectWithoutUsersInput
-    upsert?: UtilityProviderUpsertWithoutUsersInput
-    disconnect?: UtilityProviderWhereInput | boolean
-    delete?: UtilityProviderWhereInput | boolean
-    connect?: UtilityProviderWhereUniqueInput
-    update?: XOR<XOR<UtilityProviderUpdateToOneWithWhereWithoutUsersInput, UtilityProviderUpdateWithoutUsersInput>, UtilityProviderUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type LocationUpdateManyWithoutUserNestedInput = {
-    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
-    upsert?: LocationUpsertWithWhereUniqueWithoutUserInput | LocationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: LocationCreateManyUserInputEnvelope
-    set?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
-    disconnect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
-    delete?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
-    connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
-    update?: LocationUpdateWithWhereUniqueWithoutUserInput | LocationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: LocationUpdateManyWithWhereWithoutUserInput | LocationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: LocationScalarWhereInput | LocationScalarWhereInput[]
   }
 
   export type BillHistoryUpdateManyWithoutUserNestedInput = {
@@ -9876,7 +11320,7 @@ export namespace Prisma {
     deleteMany?: DeviceScalarWhereInput | DeviceScalarWhereInput[]
   }
 
-  export type LocationUncheckedUpdateManyWithoutUserNestedInput = {
+  export type LocationUpdateManyWithoutUserNestedInput = {
     create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
     upsert?: LocationUpsertWithWhereUniqueWithoutUserInput | LocationUpsertWithWhereUniqueWithoutUserInput[]
@@ -9888,6 +11332,26 @@ export namespace Prisma {
     update?: LocationUpdateWithWhereUniqueWithoutUserInput | LocationUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: LocationUpdateManyWithWhereWithoutUserInput | LocationUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: LocationScalarWhereInput | LocationScalarWhereInput[]
+  }
+
+  export type user_preferencesUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<user_preferencesCreateWithoutUsersInput, user_preferencesUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: user_preferencesCreateOrConnectWithoutUsersInput
+    upsert?: user_preferencesUpsertWithoutUsersInput
+    disconnect?: user_preferencesWhereInput | boolean
+    delete?: user_preferencesWhereInput | boolean
+    connect?: user_preferencesWhereUniqueInput
+    update?: XOR<XOR<user_preferencesUpdateToOneWithWhereWithoutUsersInput, user_preferencesUpdateWithoutUsersInput>, user_preferencesUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type UtilityProviderUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: UtilityProviderCreateOrConnectWithoutUsersInput
+    upsert?: UtilityProviderUpsertWithoutUsersInput
+    disconnect?: UtilityProviderWhereInput | boolean
+    delete?: UtilityProviderWhereInput | boolean
+    connect?: UtilityProviderWhereUniqueInput
+    update?: XOR<XOR<UtilityProviderUpdateToOneWithWhereWithoutUsersInput, UtilityProviderUpdateWithoutUsersInput>, UtilityProviderUncheckedUpdateWithoutUsersInput>
   }
 
   export type BillHistoryUncheckedUpdateManyWithoutUserNestedInput = {
@@ -9916,6 +11380,30 @@ export namespace Prisma {
     update?: DeviceUpdateWithWhereUniqueWithoutUserInput | DeviceUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DeviceUpdateManyWithWhereWithoutUserInput | DeviceUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DeviceScalarWhereInput | DeviceScalarWhereInput[]
+  }
+
+  export type LocationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LocationCreateOrConnectWithoutUserInput | LocationCreateOrConnectWithoutUserInput[]
+    upsert?: LocationUpsertWithWhereUniqueWithoutUserInput | LocationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LocationCreateManyUserInputEnvelope
+    set?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    disconnect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    delete?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    connect?: LocationWhereUniqueInput | LocationWhereUniqueInput[]
+    update?: LocationUpdateWithWhereUniqueWithoutUserInput | LocationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LocationUpdateManyWithWhereWithoutUserInput | LocationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LocationScalarWhereInput | LocationScalarWhereInput[]
+  }
+
+  export type user_preferencesUncheckedUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<user_preferencesCreateWithoutUsersInput, user_preferencesUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: user_preferencesCreateOrConnectWithoutUsersInput
+    upsert?: user_preferencesUpsertWithoutUsersInput
+    disconnect?: user_preferencesWhereInput | boolean
+    delete?: user_preferencesWhereInput | boolean
+    connect?: user_preferencesWhereUniqueInput
+    update?: XOR<XOR<user_preferencesUpdateToOneWithWhereWithoutUsersInput, user_preferencesUpdateWithoutUsersInput>, user_preferencesUncheckedUpdateWithoutUsersInput>
   }
 
   export type UserCreateNestedOneWithoutLocationsInput = {
@@ -10096,6 +11584,28 @@ export namespace Prisma {
     upsert?: UtilityProviderUpsertWithoutHourlyRatesInput
     connect?: UtilityProviderWhereUniqueInput
     update?: XOR<XOR<UtilityProviderUpdateToOneWithWhereWithoutHourlyRatesInput, UtilityProviderUpdateWithoutHourlyRatesInput>, UtilityProviderUncheckedUpdateWithoutHourlyRatesInput>
+  }
+
+  export type UserCreateNestedOneWithoutUser_preferencesInput = {
+    create?: XOR<UserCreateWithoutUser_preferencesInput, UserUncheckedCreateWithoutUser_preferencesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUser_preferencesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutUser_preferencesNestedInput = {
+    create?: XOR<UserCreateWithoutUser_preferencesInput, UserUncheckedCreateWithoutUser_preferencesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUser_preferencesInput
+    upsert?: UserUpsertWithoutUser_preferencesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUser_preferencesInput, UserUpdateWithoutUser_preferencesInput>, UserUncheckedUpdateWithoutUser_preferencesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -10339,6 +11849,142 @@ export namespace Prisma {
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
   }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type BillHistoryCreateWithoutUserInput = {
+    id?: string
+    billTotal: Decimal | DecimalJsLike | number | string
+    createdDate?: Date | string
+  }
+
+  export type BillHistoryUncheckedCreateWithoutUserInput = {
+    id?: string
+    billTotal: Decimal | DecimalJsLike | number | string
+    createdDate?: Date | string
+  }
+
+  export type BillHistoryCreateOrConnectWithoutUserInput = {
+    where: BillHistoryWhereUniqueInput
+    create: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type BillHistoryCreateManyUserInputEnvelope = {
+    data: BillHistoryCreateManyUserInput | BillHistoryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DeviceCreateWithoutUserInput = {
+    id?: string
+    name: string
+    type: string
+    brand?: string | null
+    model?: string | null
+    hourlyEnergy?: number | null
+    isSmart?: boolean
+    runDurationMinutes?: number | null
+    activeEnergy?: number | null
+    standbyEnergy?: number | null
+  }
+
+  export type DeviceUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    type: string
+    brand?: string | null
+    model?: string | null
+    hourlyEnergy?: number | null
+    isSmart?: boolean
+    runDurationMinutes?: number | null
+    activeEnergy?: number | null
+    standbyEnergy?: number | null
+  }
+
+  export type DeviceCreateOrConnectWithoutUserInput = {
+    where: DeviceWhereUniqueInput
+    create: XOR<DeviceCreateWithoutUserInput, DeviceUncheckedCreateWithoutUserInput>
+  }
+
+  export type DeviceCreateManyUserInputEnvelope = {
+    data: DeviceCreateManyUserInput | DeviceCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LocationCreateWithoutUserInput = {
+    id?: string
+    zip: string
+  }
+
+  export type LocationUncheckedCreateWithoutUserInput = {
+    id?: string
+    zip: string
+  }
+
+  export type LocationCreateOrConnectWithoutUserInput = {
+    where: LocationWhereUniqueInput
+    create: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
+  }
+
+  export type LocationCreateManyUserInputEnvelope = {
+    data: LocationCreateManyUserInput | LocationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type user_preferencesCreateWithoutUsersInput = {
+    preference_id: string
+    weekly_schedule: JsonNullValueInput | InputJsonValue
+    temp_awake: number
+    temp_sleeping: number
+  }
+
+  export type user_preferencesUncheckedCreateWithoutUsersInput = {
+    preference_id: string
+    weekly_schedule: JsonNullValueInput | InputJsonValue
+    temp_awake: number
+    temp_sleeping: number
+  }
+
+  export type user_preferencesCreateOrConnectWithoutUsersInput = {
+    where: user_preferencesWhereUniqueInput
+    create: XOR<user_preferencesCreateWithoutUsersInput, user_preferencesUncheckedCreateWithoutUsersInput>
+  }
 
   export type UtilityProviderCreateWithoutUsersInput = {
     id?: string
@@ -10371,148 +12017,6 @@ export namespace Prisma {
   export type UtilityProviderCreateOrConnectWithoutUsersInput = {
     where: UtilityProviderWhereUniqueInput
     create: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
-  }
-
-  export type LocationCreateWithoutUserInput = {
-    id?: string
-    zip: string
-  }
-
-  export type LocationUncheckedCreateWithoutUserInput = {
-    id?: string
-    zip: string
-  }
-
-  export type LocationCreateOrConnectWithoutUserInput = {
-    where: LocationWhereUniqueInput
-    create: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
-  }
-
-  export type LocationCreateManyUserInputEnvelope = {
-    data: LocationCreateManyUserInput | LocationCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type BillHistoryCreateWithoutUserInput = {
-    id?: string
-    billTotal: Decimal | DecimalJsLike | number | string
-    createdDate?: Date | string
-  }
-
-  export type BillHistoryUncheckedCreateWithoutUserInput = {
-    id?: string
-    billTotal: Decimal | DecimalJsLike | number | string
-    createdDate?: Date | string
-  }
-
-  export type BillHistoryCreateOrConnectWithoutUserInput = {
-    where: BillHistoryWhereUniqueInput
-    create: XOR<BillHistoryCreateWithoutUserInput, BillHistoryUncheckedCreateWithoutUserInput>
-  }
-
-  export type BillHistoryCreateManyUserInputEnvelope = {
-    data: BillHistoryCreateManyUserInput | BillHistoryCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type DeviceCreateWithoutUserInput = {
-    id?: string
-    name: string
-    type: string
-    brand?: string | null
-    model?: string | null
-    hourlyEnergy?: number | null
-    standbyEnergy?: number | null
-    activeEnergy?: number | null
-    isSmart?: boolean
-    runDurationMinutes?: number | null
-  }
-
-  export type DeviceUncheckedCreateWithoutUserInput = {
-    id?: string
-    name: string
-    type: string
-    brand?: string | null
-    model?: string | null
-    hourlyEnergy?: number | null
-    standbyEnergy?: number | null
-    activeEnergy?: number | null
-    isSmart?: boolean
-    runDurationMinutes?: number | null
-  }
-
-  export type DeviceCreateOrConnectWithoutUserInput = {
-    where: DeviceWhereUniqueInput
-    create: XOR<DeviceCreateWithoutUserInput, DeviceUncheckedCreateWithoutUserInput>
-  }
-
-  export type DeviceCreateManyUserInputEnvelope = {
-    data: DeviceCreateManyUserInput | DeviceCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UtilityProviderUpsertWithoutUsersInput = {
-    update: XOR<UtilityProviderUpdateWithoutUsersInput, UtilityProviderUncheckedUpdateWithoutUsersInput>
-    create: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
-    where?: UtilityProviderWhereInput
-  }
-
-  export type UtilityProviderUpdateToOneWithWhereWithoutUsersInput = {
-    where?: UtilityProviderWhereInput
-    data: XOR<UtilityProviderUpdateWithoutUsersInput, UtilityProviderUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type UtilityProviderUpdateWithoutUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    zipCode?: StringFieldUpdateOperationsInput | string
-    utilityName?: StringFieldUpdateOperationsInput | string
-    rateName?: StringFieldUpdateOperationsInput | string
-    sector?: StringFieldUpdateOperationsInput | string
-    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
-    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
-    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
-    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
-    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    hourlyRates?: HourlyRateUpdateManyWithoutProviderNestedInput
-  }
-
-  export type UtilityProviderUncheckedUpdateWithoutUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    zipCode?: StringFieldUpdateOperationsInput | string
-    utilityName?: StringFieldUpdateOperationsInput | string
-    rateName?: StringFieldUpdateOperationsInput | string
-    sector?: StringFieldUpdateOperationsInput | string
-    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
-    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
-    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
-    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
-    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    hourlyRates?: HourlyRateUncheckedUpdateManyWithoutProviderNestedInput
-  }
-
-  export type LocationUpsertWithWhereUniqueWithoutUserInput = {
-    where: LocationWhereUniqueInput
-    update: XOR<LocationUpdateWithoutUserInput, LocationUncheckedUpdateWithoutUserInput>
-    create: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
-  }
-
-  export type LocationUpdateWithWhereUniqueWithoutUserInput = {
-    where: LocationWhereUniqueInput
-    data: XOR<LocationUpdateWithoutUserInput, LocationUncheckedUpdateWithoutUserInput>
-  }
-
-  export type LocationUpdateManyWithWhereWithoutUserInput = {
-    where: LocationScalarWhereInput
-    data: XOR<LocationUpdateManyMutationInput, LocationUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type LocationScalarWhereInput = {
-    AND?: LocationScalarWhereInput | LocationScalarWhereInput[]
-    OR?: LocationScalarWhereInput[]
-    NOT?: LocationScalarWhereInput | LocationScalarWhereInput[]
-    id?: StringFilter<"Location"> | string
-    userId?: StringFilter<"Location"> | string
-    zip?: StringFilter<"Location"> | string
   }
 
   export type BillHistoryUpsertWithWhereUniqueWithoutUserInput = {
@@ -10568,19 +12072,109 @@ export namespace Prisma {
     brand?: StringNullableFilter<"Device"> | string | null
     model?: StringNullableFilter<"Device"> | string | null
     hourlyEnergy?: FloatNullableFilter<"Device"> | number | null
-    standbyEnergy?: FloatNullableFilter<"Device"> | number | null
-    activeEnergy?: FloatNullableFilter<"Device"> | number | null
     isSmart?: BoolFilter<"Device"> | boolean
     runDurationMinutes?: IntNullableFilter<"Device"> | number | null
+    activeEnergy?: FloatNullableFilter<"Device"> | number | null
+    standbyEnergy?: FloatNullableFilter<"Device"> | number | null
+  }
+
+  export type LocationUpsertWithWhereUniqueWithoutUserInput = {
+    where: LocationWhereUniqueInput
+    update: XOR<LocationUpdateWithoutUserInput, LocationUncheckedUpdateWithoutUserInput>
+    create: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput>
+  }
+
+  export type LocationUpdateWithWhereUniqueWithoutUserInput = {
+    where: LocationWhereUniqueInput
+    data: XOR<LocationUpdateWithoutUserInput, LocationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LocationUpdateManyWithWhereWithoutUserInput = {
+    where: LocationScalarWhereInput
+    data: XOR<LocationUpdateManyMutationInput, LocationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type LocationScalarWhereInput = {
+    AND?: LocationScalarWhereInput | LocationScalarWhereInput[]
+    OR?: LocationScalarWhereInput[]
+    NOT?: LocationScalarWhereInput | LocationScalarWhereInput[]
+    id?: StringFilter<"Location"> | string
+    userId?: StringFilter<"Location"> | string
+    zip?: StringFilter<"Location"> | string
+  }
+
+  export type user_preferencesUpsertWithoutUsersInput = {
+    update: XOR<user_preferencesUpdateWithoutUsersInput, user_preferencesUncheckedUpdateWithoutUsersInput>
+    create: XOR<user_preferencesCreateWithoutUsersInput, user_preferencesUncheckedCreateWithoutUsersInput>
+    where?: user_preferencesWhereInput
+  }
+
+  export type user_preferencesUpdateToOneWithWhereWithoutUsersInput = {
+    where?: user_preferencesWhereInput
+    data: XOR<user_preferencesUpdateWithoutUsersInput, user_preferencesUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type user_preferencesUpdateWithoutUsersInput = {
+    preference_id?: StringFieldUpdateOperationsInput | string
+    weekly_schedule?: JsonNullValueInput | InputJsonValue
+    temp_awake?: FloatFieldUpdateOperationsInput | number
+    temp_sleeping?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type user_preferencesUncheckedUpdateWithoutUsersInput = {
+    preference_id?: StringFieldUpdateOperationsInput | string
+    weekly_schedule?: JsonNullValueInput | InputJsonValue
+    temp_awake?: FloatFieldUpdateOperationsInput | number
+    temp_sleeping?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type UtilityProviderUpsertWithoutUsersInput = {
+    update: XOR<UtilityProviderUpdateWithoutUsersInput, UtilityProviderUncheckedUpdateWithoutUsersInput>
+    create: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
+    where?: UtilityProviderWhereInput
+  }
+
+  export type UtilityProviderUpdateToOneWithWhereWithoutUsersInput = {
+    where?: UtilityProviderWhereInput
+    data: XOR<UtilityProviderUpdateWithoutUsersInput, UtilityProviderUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type UtilityProviderUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hourlyRates?: HourlyRateUpdateManyWithoutProviderNestedInput
+  }
+
+  export type UtilityProviderUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hourlyRates?: HourlyRateUncheckedUpdateManyWithoutProviderNestedInput
   }
 
   export type UserCreateWithoutLocationsInput = {
     id: string
     email: string
     utilityProv?: string | null
-    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
     billHistory?: BillHistoryCreateNestedManyWithoutUserInput
     devices?: DeviceCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesCreateNestedOneWithoutUsersInput
+    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutLocationsInput = {
@@ -10590,6 +12184,7 @@ export namespace Prisma {
     selectedProviderId?: string | null
     billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesUncheckedCreateNestedOneWithoutUsersInput
   }
 
   export type UserCreateOrConnectWithoutLocationsInput = {
@@ -10612,9 +12207,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
-    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
     billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
     devices?: DeviceUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUpdateOneWithoutUsersNestedInput
+    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLocationsInput = {
@@ -10624,15 +12220,17 @@ export namespace Prisma {
     selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
     billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUncheckedUpdateOneWithoutUsersNestedInput
   }
 
   export type UserCreateWithoutDevicesInput = {
     id: string
     email: string
     utilityProv?: string | null
-    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
-    locations?: LocationCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryCreateNestedManyWithoutUserInput
+    locations?: LocationCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesCreateNestedOneWithoutUsersInput
+    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutDevicesInput = {
@@ -10640,8 +12238,9 @@ export namespace Prisma {
     email: string
     utilityProv?: string | null
     selectedProviderId?: string | null
-    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesUncheckedCreateNestedOneWithoutUsersInput
   }
 
   export type UserCreateOrConnectWithoutDevicesInput = {
@@ -10664,9 +12263,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
-    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
-    locations?: LocationUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
+    locations?: LocationUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUpdateOneWithoutUsersNestedInput
+    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDevicesInput = {
@@ -10674,17 +12274,19 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
     selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
-    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUncheckedUpdateOneWithoutUsersNestedInput
   }
 
   export type UserCreateWithoutBillHistoryInput = {
     id: string
     email: string
     utilityProv?: string | null
-    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
-    locations?: LocationCreateNestedManyWithoutUserInput
     devices?: DeviceCreateNestedManyWithoutUserInput
+    locations?: LocationCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesCreateNestedOneWithoutUsersInput
+    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutBillHistoryInput = {
@@ -10692,8 +12294,9 @@ export namespace Prisma {
     email: string
     utilityProv?: string | null
     selectedProviderId?: string | null
-    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesUncheckedCreateNestedOneWithoutUsersInput
   }
 
   export type UserCreateOrConnectWithoutBillHistoryInput = {
@@ -10716,9 +12319,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
-    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
-    locations?: LocationUpdateManyWithoutUserNestedInput
     devices?: DeviceUpdateManyWithoutUserNestedInput
+    locations?: LocationUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUpdateOneWithoutUsersNestedInput
+    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBillHistoryInput = {
@@ -10726,8 +12330,9 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
     selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
-    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUncheckedUpdateOneWithoutUsersNestedInput
   }
 
   export type HourlyRateCreateWithoutProviderInput = {
@@ -10766,18 +12371,20 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv?: string | null
-    locations?: LocationCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryCreateNestedManyWithoutUserInput
     devices?: DeviceCreateNestedManyWithoutUserInput
+    locations?: LocationCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutSelectedProviderInput = {
     id: string
     email: string
     utilityProv?: string | null
-    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    user_preferences?: user_preferencesUncheckedCreateNestedOneWithoutUsersInput
   }
 
   export type UserCreateOrConnectWithoutSelectedProviderInput = {
@@ -10919,9 +12526,60 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutSelectedProviderNestedInput
   }
 
-  export type LocationCreateManyUserInput = {
-    id?: string
-    zip: string
+  export type UserCreateWithoutUser_preferencesInput = {
+    id: string
+    email: string
+    utilityProv?: string | null
+    billHistory?: BillHistoryCreateNestedManyWithoutUserInput
+    devices?: DeviceCreateNestedManyWithoutUserInput
+    locations?: LocationCreateNestedManyWithoutUserInput
+    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutUser_preferencesInput = {
+    id: string
+    email: string
+    utilityProv?: string | null
+    selectedProviderId?: string | null
+    billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
+    devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUser_preferencesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUser_preferencesInput, UserUncheckedCreateWithoutUser_preferencesInput>
+  }
+
+  export type UserUpsertWithoutUser_preferencesInput = {
+    update: XOR<UserUpdateWithoutUser_preferencesInput, UserUncheckedUpdateWithoutUser_preferencesInput>
+    create: XOR<UserCreateWithoutUser_preferencesInput, UserUncheckedCreateWithoutUser_preferencesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUser_preferencesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUser_preferencesInput, UserUncheckedUpdateWithoutUser_preferencesInput>
+  }
+
+  export type UserUpdateWithoutUser_preferencesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
+    devices?: DeviceUpdateManyWithoutUserNestedInput
+    locations?: LocationUpdateManyWithoutUserNestedInput
+    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUser_preferencesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
+    billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
+    devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BillHistoryCreateManyUserInput = {
@@ -10937,25 +12595,15 @@ export namespace Prisma {
     brand?: string | null
     model?: string | null
     hourlyEnergy?: number | null
-    standbyEnergy?: number | null
-    activeEnergy?: number | null
     isSmart?: boolean
     runDurationMinutes?: number | null
+    activeEnergy?: number | null
+    standbyEnergy?: number | null
   }
 
-  export type LocationUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    zip?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type LocationUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    zip?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type LocationUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    zip?: StringFieldUpdateOperationsInput | string
+  export type LocationCreateManyUserInput = {
+    id?: string
+    zip: string
   }
 
   export type BillHistoryUpdateWithoutUserInput = {
@@ -10983,10 +12631,10 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
     runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type DeviceUncheckedUpdateWithoutUserInput = {
@@ -10996,10 +12644,10 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
     runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type DeviceUncheckedUpdateManyWithoutUserInput = {
@@ -11009,10 +12657,25 @@ export namespace Prisma {
     brand?: NullableStringFieldUpdateOperationsInput | string | null
     model?: NullableStringFieldUpdateOperationsInput | string | null
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
-    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
     runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    activeEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+    standbyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type LocationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zip?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type LocationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zip?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type LocationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zip?: StringFieldUpdateOperationsInput | string
   }
 
   export type HourlyRateCreateManyProviderInput = {
@@ -11069,18 +12732,20 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
-    locations?: LocationUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
     devices?: DeviceUpdateManyWithoutUserNestedInput
+    locations?: LocationUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSelectedProviderInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
-    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    user_preferences?: user_preferencesUncheckedUpdateOneWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSelectedProviderInput = {

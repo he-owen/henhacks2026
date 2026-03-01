@@ -9,14 +9,15 @@ datasource db {
 }
 
 model User {
-  id                 String           @id
-  email              String           @unique
-  utilityProv        String?          @map("utility_prov")
-  selectedProviderId String?          @map("selected_provider_id")
-  selectedProvider   UtilityProvider? @relation(fields: [selectedProviderId], references: [id])
-  locations          Location[]
+  id                 String            @id
+  email              String            @unique
+  utilityProv        String?           @map("utility_prov")
+  selectedProviderId String?           @map("selected_provider_id")
   billHistory        BillHistory[]
   devices            Device[]
+  locations          Location[]
+  user_preferences   user_preferences?
+  selectedProvider   UtilityProvider?  @relation(fields: [selectedProviderId], references: [id])
 
   @@map("users")
 }
@@ -39,10 +40,10 @@ model Device {
   brand              String?
   model              String?
   hourlyEnergy       Float?  @map("hourly_energy")
-  standbyEnergy      Float?  @map("standby_energy")
-  activeEnergy       Float?  @map("active_energy")
   isSmart            Boolean @default(false) @map("is_smart")
   runDurationMinutes Int?    @map("run_duration_minutes")
+  activeEnergy       Float?  @map("active_energy")
+  standbyEnergy      Float?  @map("standby_energy")
   user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -94,4 +95,14 @@ model HourlyRate {
   @@unique([providerId, date, hour])
   @@index([providerId, date])
   @@map("hourly_rates")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user_preferences {
+  preference_id   String @id
+  user_id         String @unique
+  weekly_schedule Json
+  temp_awake      Float
+  temp_sleeping   Float
+  users           User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
