@@ -48,12 +48,12 @@ export default function ScheduleFeedbackDialog({ pendingSchedules, onComplete })
 
   if (!open || !current) return null;
 
-  const savings = current.costSavings ?? (current.typicalCost - current.optimizedCost);
-  const carbonSaved = current.carbonSaved ?? (current.carbonTypical - current.carbonOptimized);
-  const scheduleDate = new Date(current.scheduleDate + 'T00:00:00');
-  const dateLabel = scheduleDate.toLocaleDateString('en-US', {
-    weekday: 'long', month: 'short', day: 'numeric',
-  });
+  const savings = current.costSavings ?? (Number(current.typicalCost) - Number(current.optimizedCost));
+  const carbonSaved = current.carbonSaved ?? (Number(current.carbonTypical) - Number(current.carbonOptimized));
+  const scheduleDate = current.scheduleDate ? new Date(current.scheduleDate + 'T00:00:00') : null;
+  const dateLabel = scheduleDate && !Number.isNaN(scheduleDate.getTime())
+    ? scheduleDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+    : (current.scheduleDate || 'Unknown date');
 
   return (
     <Dialog open maxWidth="sm" fullWidth>
@@ -95,7 +95,7 @@ export default function ScheduleFeedbackDialog({ pendingSchedules, onComplete })
                 </Typography>
               </Stack>
               <Typography variant="h4" color="success.main" fontWeight={700}>
-                ${savings.toFixed(2)}
+                ${(Number(savings) || 0).toFixed(2)}
               </Typography>
               <Typography variant="caption" color="text.secondary">
                 ${current.optimizedCost?.toFixed(2)} optimized vs ${current.typicalCost?.toFixed(2)} typical
@@ -110,7 +110,7 @@ export default function ScheduleFeedbackDialog({ pendingSchedules, onComplete })
                 </Typography>
               </Stack>
               <Typography variant="h4" color="info.main" fontWeight={700}>
-                {carbonSaved.toFixed(2)}
+                {(Number(carbonSaved) || 0).toFixed(2)}
               </Typography>
               <Typography variant="caption" color="text.secondary">
                 kg CO₂ saved by shifting to off-peak hours

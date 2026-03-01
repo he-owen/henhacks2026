@@ -38,7 +38,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ${VITE_API_URL:- https://henhacks2026.onrender.com}
+        VITE_API_URL: ${VITE_API_URL:-https://henhacks2026.onrender.com}
     ports:
       - "5173:80"
     environment:

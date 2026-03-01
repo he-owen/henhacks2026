@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || " https://henhacks2026.onrender.com";
+const API_BASE = (import.meta.env.VITE_API_URL || "https://henhacks2026.onrender.com").trim();
 
 function authHeaders(accessToken) {
   return {

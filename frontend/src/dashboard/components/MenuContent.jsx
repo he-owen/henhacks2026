@@ -7,7 +7,6 @@ import Stack from '@mui/material/Stack';
 import { Link, useLocation } from 'react-router-dom';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded';
 import TrendingDownRoundedIcon from '@mui/icons-material/TrendingDownRounded';
@@ -31,8 +30,8 @@ export default function MenuContent() {
   const location = useLocation();
 
   const isSelected = (path) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname === path;
+    if (path === '/') return location.pathname === '/' || location.pathname === '';
+    return location.pathname === path || location.pathname.startsWith(path + '/');
   };
 
   return (

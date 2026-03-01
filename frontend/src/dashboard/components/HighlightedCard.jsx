@@ -56,6 +56,8 @@ export default function HighlightedCard({ variant }) {
       </Card>
     );
   }
+
+  return null;
 }
 
 HighlightedCard.propTypes = {
