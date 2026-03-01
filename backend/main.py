@@ -579,13 +579,25 @@ async def create_bill_endpoint(request: Request, userinfo: dict = Depends(_requi
 
 
 ALLOWED_BILL_MIMES = {
-    "application/pdf": "application/pdf",
-    "image/png": "image/png",
-    "image/jpeg": "image/jpeg",
-    "image/jpg": "image/jpeg",
-    "image/webp": "image/webp",
-    "image/heic": "image/heic",
+    "application/pdf", "image/png", "image/jpeg", "image/webp",
+    "image/heic", "image/heif",
 }
+
+HEIC_MIMES = {"image/heic", "image/heif"}
+
+
+def _convert_heic_to_jpeg(raw_bytes: bytes) -> tuple[bytes, str]:
+    """Convert HEIC/HEIF bytes to JPEG. Returns (jpeg_bytes, 'image/jpeg')."""
+    import io
+    from pillow_heif import register_heif_opener
+    from PIL import Image
+
+    register_heif_opener()
+    img = Image.open(io.BytesIO(raw_bytes))
+    img = img.convert("RGB")
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=90)
+    return buf.getvalue(), "image/jpeg"
 
 
 @app.post("/api/bills/extract")
@@ -603,16 +615,26 @@ async def extract_bill_endpoint(request: Request, userinfo: dict = Depends(_requ
         if not file:
             raise HTTPException(status_code=400, detail="No file uploaded")
         file_bytes = await file.read()
-        file_mime = getattr(file, "content_type", "") or ""
-        mime_type = ALLOWED_BILL_MIMES.get(file_mime, file_mime)
+        file_mime = (getattr(file, "content_type", "") or "").lower()
+        # Normalize common variants
+        if file_mime in ("image/jpg",):
+            file_mime = "image/jpeg"
+        mime_type = file_mime or "application/pdf"
     else:
         file_bytes = await request.body()
 
     if not file_bytes:
         raise HTTPException(status_code=400, detail="Empty file")
 
-    if mime_type not in ALLOWED_BILL_MIMES.values():
+    if mime_type not in ALLOWED_BILL_MIMES:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {mime_type}")
+
+    if mime_type in HEIC_MIMES:
+        try:
+            file_bytes, mime_type = await asyncio.to_thread(_convert_heic_to_jpeg, file_bytes)
+        except Exception as e:
+            logger.exception("HEIC conversion failed")
+            raise HTTPException(status_code=400, detail=f"Failed to convert HEIC image: {e}")
 
     try:
         extracted = await asyncio.to_thread(_gemini.extract_bill, file_bytes, mime_type)

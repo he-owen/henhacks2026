@@ -41,7 +41,6 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import heic2any from 'heic2any';
 import Copyright from '../internals/components/Copyright';
 import {
   getUserProfile,
@@ -474,44 +473,28 @@ export default function BillingPage() {
     }
   };
 
-  const ACCEPTED_TYPES = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp', 'image/heic'];
-  const isHeic = (file) => file.type === 'image/heic' || file.name?.toLowerCase().endsWith('.heic');
+  const ACCEPTED_TYPES = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp', 'image/heic', 'image/heif'];
+  const isAccepted = (file) =>
+    ACCEPTED_TYPES.includes(file.type) ||
+    file.name?.toLowerCase().endsWith('.heic') ||
+    file.name?.toLowerCase().endsWith('.heif');
 
-  const processFile = async (file) => {
-    if (isHeic(file)) {
-      const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
-      const converted = Array.isArray(blob) ? blob[0] : blob;
-      return new File([converted], file.name.replace(/\.heic$/i, '.jpg'), { type: 'image/jpeg' });
-    }
-    return file;
-  };
-
-  const handleFileChange = async (e) => {
-    const raw = e.target.files?.[0];
-    if (raw && (ACCEPTED_TYPES.includes(raw.type) || isHeic(raw))) {
-      try {
-        const file = await processFile(raw);
-        setUploadFile(file);
-        setExtractedData(null);
-        setExtractError(null);
-      } catch {
-        setExtractError('Failed to process HEIC image');
-      }
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file && isAccepted(file)) {
+      setUploadFile(file);
+      setExtractedData(null);
+      setExtractError(null);
     }
   };
 
-  const handleDrop = async (e) => {
+  const handleDrop = (e) => {
     e.preventDefault();
-    const raw = e.dataTransfer?.files?.[0];
-    if (raw && (ACCEPTED_TYPES.includes(raw.type) || isHeic(raw))) {
-      try {
-        const file = await processFile(raw);
-        setUploadFile(file);
-        setExtractedData(null);
-        setExtractError(null);
-      } catch {
-        setExtractError('Failed to process HEIC image');
-      }
+    const file = e.dataTransfer?.files?.[0];
+    if (file && isAccepted(file)) {
+      setUploadFile(file);
+      setExtractedData(null);
+      setExtractError(null);
     }
   };
 
@@ -762,7 +745,7 @@ export default function BillingPage() {
                 <input
                   id="bill-file-input"
                   type="file"
-                  accept="application/pdf,image/png,image/jpeg,image/webp,image/heic,.heic"
+                  accept="application/pdf,image/png,image/jpeg,image/webp,image/heic,.heic,.heif"
                   hidden
                   onChange={handleFileChange}
                 />
