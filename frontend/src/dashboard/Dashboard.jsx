@@ -13,6 +13,7 @@ import BillingPage from './components/BillingPage';
 import OptimizationPage from './components/OptimizationPage';
 import ToolsPage from './components/ToolsPage';
 import PreferencesPage from './components/PreferencesPage';
+import AboutPage from './components/AboutPage';
 import OnboardingDialog from './components/OnboardingDialog';
 import ScheduleFeedbackDialog from './components/ScheduleFeedbackDialog';
 import SideMenu from './components/SideMenu';
@@ -177,6 +178,7 @@ export default function Dashboard(props) {
                       <Route path="optimization" element={<OptimizationPage />} />
                       <Route path="tools" element={<ToolsPage />} />
                       <Route path="preferences" element={<PreferencesPage />} />
+                      <Route path="about" element={<AboutPage />} />
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </Stack>
