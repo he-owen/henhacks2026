@@ -74,15 +74,25 @@ def run_optimization_hybrid(appliances, prices_by_day, day_of_week, user_prefere
                         prob += x[i, t] == 0
 
         elif app["type"] == "intermittent":
-            prob += lpSum(x[i, t] for t in range(T)) <= app.get("max_hours", T)
             name_lower = app.get("name", "").lower()
-            is_awake_device = any(k in name_lower for k in AWAKE_ONLY_KEYWORDS)
-            # Awake devices (TV, lights) are restricted to time_awake hours;
-            # all intermittent devices are also restricted to availability hours.
+            device_type_lower = app.get("device_type", "").lower()
+            is_awake_device = (
+                any(k in name_lower for k in AWAKE_ONLY_KEYWORDS) or
+                any(k in device_type_lower for k in AWAKE_ONLY_KEYWORDS)
+            )
             allowed_hours = set(time_awake) & set(availability) if is_awake_device else set(availability)
             for t in range(T):
                 if t not in allowed_hours:
                     prob += x[i, t] == 0
+
+            max_h = app.get("max_hours", T)
+            prob += lpSum(x[i, t] for t in range(T)) <= max_h
+            # For awake-only devices (TV, lights) force them to actually run for their
+            # intended duration (capped by the available awake window size).
+            if is_awake_device:
+                target_h = min(max_h, len(allowed_hours))
+                if target_h > 0:
+                    prob += lpSum(x[i, t] for t in range(T)) >= target_h
 
         elif app["type"] == "hvac":
             return_times = []

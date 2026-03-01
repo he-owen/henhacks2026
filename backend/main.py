@@ -82,11 +82,23 @@ def device_to_appliance(row: dict) -> dict:
     is_smart = bool(row.get("is_smart", False))
     run_minutes = row.get("run_duration_minutes")  # int | None
 
+    # Keywords identifying awake-only devices — must always be intermittent
+    AWAKE_ONLY_DB_TYPES = ("tv", "television", "light", "lighting")
+    AWAKE_ONLY_NAME_KEYWORDS = ("tv", "television", "light", "lamp", "bulb")
+
     # Determine optimizer type
+    is_awake_device = (
+        db_type in AWAKE_ONLY_DB_TYPES or
+        any(k in name_lower for k in AWAKE_ONLY_NAME_KEYWORDS)
+    )
+
     if db_type in ("ac", "hvac") or any(k in name_lower for k in ("thermostat", "hvac", " ac")):
         opt_type = "hvac"
     elif db_type == "ev" or any(k in name_lower for k in ("ev charger", "charger", "electric vehicle")):
         opt_type = "cycle"
+    elif is_awake_device:
+        # TVs and lights must be intermittent so the awake-hours constraint applies
+        opt_type = "intermittent"
     elif run_minutes and run_minutes > 0:
         opt_type = "cycle"
     else:

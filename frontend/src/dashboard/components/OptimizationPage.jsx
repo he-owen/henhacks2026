@@ -30,7 +30,7 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import { useAuth0 } from '@auth0/auth0-react';
 import Copyright from '../internals/components/Copyright';
-import { runDailyOptimizationMe, runWeeklyOptimizationMe } from '../../api';
+import { runDailyOptimizationMe, runWeeklyOptimizationMe, getUserPreferences } from '../../api';
 import { usePage } from '../context/PageContext';
 
 // ---------------------------------------------------------------------------
@@ -222,6 +222,44 @@ const STATIC_RECOMMENDATIONS = [
 const PRIORITY_COLOR = { high: 'error', medium: 'warning', low: 'default' };
 
 // ---------------------------------------------------------------------------
+// Convert saved preferences → optimizer user_preferences dict
+// ---------------------------------------------------------------------------
+function timeToHour(str) {
+  return parseInt((str || '00:00').split(':')[0], 10);
+}
+
+function hoursInRange(start, end) {
+  // Builds an array of hours [start .. end] handling midnight wrap (end < start)
+  const hrs = [];
+  if (end < start) {
+    for (let h = start; h < 24; h++) hrs.push(h);
+    for (let h = 0; h <= end; h++) hrs.push(h);
+  } else {
+    for (let h = start; h <= end; h++) hrs.push(h);
+  }
+  return hrs;
+}
+
+function buildOptimizerPrefs(savedPrefs, dayName) {
+  if (!savedPrefs?.weeklySchedule) return DEFAULT_USER_PREFERENCES;
+  const dayKey = (dayName || '').toLowerCase();
+  const day = savedPrefs.weeklySchedule[dayKey] || {};
+
+  const homeStart  = timeToHour(day.homeStart  ?? '17:00');
+  const homeEnd    = timeToHour(day.homeEnd    ?? '08:00');
+  const awakeStart = timeToHour(day.awakeStart ?? '06:00');
+  const awakeEnd   = timeToHour(day.awakeEnd   ?? '23:00');
+
+  return {
+    availability:         hoursInRange(homeStart, homeEnd),
+    time_awake:           hoursInRange(awakeStart, awakeEnd),
+    thermostat_temp_home: savedPrefs.tempAwake   ?? 72,
+    thermostat_temp_away: 78,   // keep default
+    hvac_lead_time:       1,    // keep default
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 const DAY_COLORS = {
@@ -254,6 +292,30 @@ export default function OptimizationPage() {
   const [error, setError] = React.useState(null);
   const [weeklyRunning, setWeeklyRunning] = React.useState(false);
   const [weeklyError, setWeeklyError] = React.useState(null);
+  const [loadedPrefs, setLoadedPrefs] = React.useState(null);
+
+  // Load the user's saved preferences once authenticated
+  React.useEffect(() => {
+    if (!isAuthenticated) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        const prefs = await getUserPreferences(token);
+        if (!cancelled && prefs) setLoadedPrefs(prefs);
+      } catch {
+        // Silently fall back to defaults if preferences can't be loaded
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [isAuthenticated, getAccessTokenSilently]);
+
+  const todayName = DAYS[new Date().getDay()];
+  // Build optimizer prefs from saved preferences, falling back to defaults
+  const userPreferences = React.useMemo(
+    () => buildOptimizerPrefs(loadedPrefs, todayName),
+    [loadedPrefs, todayName],
+  );
 
   const handleRunWeeklySchedule = async () => {
     if (!isAuthenticated) {
@@ -266,7 +328,7 @@ export default function OptimizationPage() {
       const token = await getAccessTokenSilently();
       const data = await runWeeklyOptimizationMe(token, {
         pricesByDay: DEFAULT_PRICES_BY_DAY,
-        userPreferences: DEFAULT_USER_PREFERENCES,
+        userPreferences,
       });
       setWeeklyScheduleResults(data);
     } catch (err) {
@@ -275,8 +337,6 @@ export default function OptimizationPage() {
       setWeeklyRunning(false);
     }
   };
-
-  const todayName = DAYS[new Date().getDay()];
 
   const handleRunOptimization = async () => {
     if (!isAuthenticated) {
@@ -290,7 +350,7 @@ export default function OptimizationPage() {
       const data = await runDailyOptimizationMe(token, {
         pricesByDay: DEFAULT_PRICES_BY_DAY,
         dayOfWeek: todayName,
-        userPreferences: DEFAULT_USER_PREFERENCES,
+        userPreferences,
       });
       setResults(data);
     } catch (err) {
