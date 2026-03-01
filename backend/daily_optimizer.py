@@ -18,9 +18,14 @@ def run_optimization_hybrid(appliances, prices_by_day, day_of_week, user_prefere
     prices = prices_by_day[day_map[day_of_week]]
     T = len(prices)
     availability = user_preferences.get("availability", [])
+    # time_awake: hours the user is awake — TV and lights are restricted to these hours
+    time_awake = user_preferences.get("time_awake", list(range(T)))
     temp_home = user_preferences.get("thermostat_temp_home", 72)
     temp_away = user_preferences.get("thermostat_temp_away", 78)
     hvac_lead = user_preferences.get("hvac_lead_time", 1)
+
+    # Keywords identifying appliances that should only run while the user is awake
+    AWAKE_ONLY_KEYWORDS = ("tv", "television", "light", "lamp", "bulb")
 
     prob = LpProblem("energy_optimization", LpMinimize)
     x = {}
@@ -70,8 +75,13 @@ def run_optimization_hybrid(appliances, prices_by_day, day_of_week, user_prefere
 
         elif app["type"] == "intermittent":
             prob += lpSum(x[i, t] for t in range(T)) <= app.get("max_hours", T)
+            name_lower = app.get("name", "").lower()
+            is_awake_device = any(k in name_lower for k in AWAKE_ONLY_KEYWORDS)
+            # Awake devices (TV, lights) are restricted to time_awake hours;
+            # all intermittent devices are also restricted to availability hours.
+            allowed_hours = set(time_awake) & set(availability) if is_awake_device else set(availability)
             for t in range(T):
-                if t not in availability:
+                if t not in allowed_hours:
                     prob += x[i, t] == 0
 
         elif app["type"] == "hvac":

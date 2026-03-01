@@ -2,13 +2,27 @@ import asyncio
 import logging
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from typing import Any
 
-from database import check_database
+from auth0_userinfo import get_userinfo
+from config import CORS_ORIGINS
+from database import (
+    check_database,
+    upsert_user,
+    get_devices_by_user,
+    create_device as db_create_device,
+    update_device as db_update_device,
+    delete_device as db_delete_device,
+)
 from daily_optimizer import run_optimization_hybrid
 from weekly_scheduler import find_optimal_day_for_appliances
 
+
+# ---------------------------------------------------------------------------
+# Pydantic models
+# ---------------------------------------------------------------------------
 
 class DailyOptimizeRequest(BaseModel):
     appliances: list[dict[str, Any]]
@@ -21,18 +35,72 @@ class WeeklyScheduleRequest(BaseModel):
     appliances: list[dict[str, Any]]
     prices_by_day: list[list[float]]
     user_preferences: dict[str, Any]
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from auth0_userinfo import get_userinfo
-from config import CORS_ORIGINS
-from database import (
-    check_database,
-    upsert_user,
-    get_devices_by_user,
-    create_device as db_create_device,
-    update_device as db_update_device,
-    delete_device as db_delete_device,
-)
+
+class DailyOptimizeMeRequest(BaseModel):
+    """Prices + preferences only — appliances are loaded from the authenticated user's DB devices."""
+    prices_by_day: list[list[float]]
+    day_of_week: str
+    user_preferences: dict[str, Any]
+
+
+class WeeklyScheduleMeRequest(BaseModel):
+    """Prices + preferences only — appliances are loaded from the authenticated user's DB devices."""
+    prices_by_day: list[list[float]]
+    user_preferences: dict[str, Any]
+
+
+# ---------------------------------------------------------------------------
+# Helper: map a DB device row → optimizer appliance dict
+# ---------------------------------------------------------------------------
+
+def device_to_appliance(row: dict) -> dict:
+    """
+    Convert a DB device row (snake_case keys) to the appliance format
+    expected by run_optimization_hybrid.
+
+    DB type → optimizer type mapping:
+      - "AC" / name contains "thermostat" or "hvac"  → "hvac"
+      - "EV" / name contains "ev" or "charger"        → "cycle"
+      - run_duration_minutes is set and > 0            → "cycle"
+      - otherwise                                      → "intermittent"
+    """
+    db_type = (row.get("type") or "").lower()
+    name = row.get("name") or ""
+    name_lower = name.lower()
+    power = float(row.get("hourly_energy") or 0.0)
+    is_smart = bool(row.get("is_smart", False))
+    run_minutes = row.get("run_duration_minutes")  # int | None
+
+    # Determine optimizer type
+    if db_type in ("ac", "hvac") or any(k in name_lower for k in ("thermostat", "hvac", " ac")):
+        opt_type = "hvac"
+    elif db_type == "ev" or any(k in name_lower for k in ("ev charger", "charger", "electric vehicle")):
+        opt_type = "cycle"
+    elif run_minutes and run_minutes > 0:
+        opt_type = "cycle"
+    else:
+        opt_type = "intermittent"
+
+    appliance: dict[str, Any] = {
+        "name": name,
+        "power": power,
+        "type": opt_type,        # optimizer type: hvac / cycle / intermittent
+        "device_type": row.get("type") or "Other",  # original DB type for frontend grouping
+        "smart_enabled": is_smart,
+    }
+
+    if opt_type == "cycle":
+        duration_hours = max(1, round((run_minutes or 60) / 60))
+        appliance["duration"] = duration_hours
+        # EV chargers need a departure_hour; default to 8 AM
+        if db_type == "ev" or any(k in name_lower for k in ("ev charger", "charger", "electric vehicle")):
+            appliance["departure_hour"] = row.get("departure_hour", 8)
+    elif opt_type == "intermittent":
+        max_hours = max(1, round((run_minutes or 240) / 60))
+        appliance["max_hours"] = max_hours
+
+    return appliance
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +123,18 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
+
+
+async def _require_user(credentials: HTTPAuthorizationCredentials | None = Depends(security)):
+    """Dependency: return userinfo from Bearer token or raise 401."""
+    if not credentials or not credentials.credentials:
+        raise HTTPException(status_code=401, detail="Missing or invalid authorization")
+    userinfo = await get_userinfo(credentials.credentials)
+    if not userinfo:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    if not userinfo.get("sub"):
+        raise HTTPException(status_code=400, detail="User profile missing id")
+    return userinfo
 
 
 @app.get("/")
@@ -95,6 +175,70 @@ async def optimize_weekly(request: WeeklyScheduleRequest):
         request.prices_by_day,
     )
     return result
+
+
+@app.post("/api/optimize/daily/me")
+async def optimize_daily_me(
+    request: DailyOptimizeMeRequest,
+    userinfo: dict = Depends(_require_user),
+):
+    """
+    Run the daily optimizer using the authenticated user's devices from the DB.
+    Body: prices_by_day (7×24 floats), day_of_week, user_preferences.
+    """
+    user_id = userinfo["sub"]
+    rows = await get_devices_by_user(user_id)
+    if not rows:
+        raise HTTPException(status_code=404, detail="No devices found for this user")
+
+    appliances = [device_to_appliance(r) for r in rows]
+
+    result = run_optimization_hybrid(
+        appliances,
+        request.prices_by_day,
+        request.day_of_week,
+        request.user_preferences,
+    )
+    return {**result, "appliances_used": appliances}
+
+
+@app.post("/api/optimize/weekly/me")
+async def optimize_weekly_me(
+    request: WeeklyScheduleMeRequest,
+    userinfo: dict = Depends(_require_user),
+):
+    """
+    Run the weekly scheduler using the authenticated user's devices from the DB.
+    Body: prices_by_day (7×24 floats), user_preferences.
+    """
+    user_id = userinfo["sub"]
+    rows = await get_devices_by_user(user_id)
+    if not rows:
+        raise HTTPException(status_code=404, detail="No devices found for this user")
+
+    # Only schedule devices relevant for weekly best-day planning
+    WEEKLY_TYPE_KEYWORDS = {"washer", "washing machine", "dryer", "dishwasher", "ev", "electric vehicle", "ev charger", "charger"}
+    WEEKLY_NAME_KEYWORDS = ("wash", "dryer", "laundry", "dishwash", "ev", "charger", "electric vehicle")
+
+    def _is_weekly_device(row: dict) -> bool:
+        db_type = (row.get("type") or "").lower().strip()
+        name = (row.get("name") or "").lower().strip()
+        return db_type in WEEKLY_TYPE_KEYWORDS or any(k in name for k in WEEKLY_NAME_KEYWORDS)
+
+    weekly_rows = [r for r in rows if _is_weekly_device(r)]
+    if not weekly_rows:
+        raise HTTPException(status_code=404, detail="No washer, dryer, dishwasher, or EV charger found")
+
+    appliances = [device_to_appliance(r) for r in weekly_rows]
+
+    result = find_optimal_day_for_appliances(
+        appliances,
+        request.user_preferences,
+        request.prices_by_day,
+    )
+    return result
+
+
 @app.post("/api/users/me")
 async def sync_me(credentials: HTTPAuthorizationCredentials | None = Depends(security)):
     """Sync the current Auth0 user to the users table. Call with Authorization: Bearer <access_token>."""
@@ -112,18 +256,6 @@ async def sync_me(credentials: HTTPAuthorizationCredentials | None = Depends(sec
     if not ok:
         raise HTTPException(status_code=500, detail="Failed to sync user")
     return {"id": user_id, "email": email, "synced": True}
-
-
-async def _require_user(credentials: HTTPAuthorizationCredentials | None = Depends(security)):
-    """Dependency: return userinfo from Bearer token or raise 401."""
-    if not credentials or not credentials.credentials:
-        raise HTTPException(status_code=401, detail="Missing or invalid authorization")
-    userinfo = await get_userinfo(credentials.credentials)
-    if not userinfo:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
-    if not userinfo.get("sub"):
-        raise HTTPException(status_code=400, detail="User profile missing id")
-    return userinfo
 
 
 @app.get("/api/devices")
