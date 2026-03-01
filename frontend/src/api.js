@@ -65,3 +65,91 @@ export async function deleteDevice(accessToken, deviceId) {
   }
   return res.json();
 }
+
+/** Get the current user's profile (selectedProviderId, zip, etc.). */
+export async function getUserProfile(accessToken) {
+  const res = await fetch(`${API_BASE}/api/users/me/profile`, {
+    headers: authHeaders(accessToken),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to get profile");
+  }
+  return res.json();
+}
+
+// ---------------------------------------------------------------------------
+// Utility rates
+// ---------------------------------------------------------------------------
+
+/** Fetch utility providers from OpenEI for a zip code. */
+export async function fetchRateProviders(accessToken, zip) {
+  const res = await fetch(`${API_BASE}/api/rates/fetch`, {
+    method: "POST",
+    headers: authHeaders(accessToken),
+    body: JSON.stringify({ zip }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to fetch providers");
+  }
+  return res.json();
+}
+
+/** Get cached utility providers for a zip code. */
+export async function getRateProviders(accessToken, zip) {
+  const res = await fetch(
+    `${API_BASE}/api/rates/providers?zip=${encodeURIComponent(zip)}`,
+    { headers: authHeaders(accessToken) },
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to get providers");
+  }
+  return res.json();
+}
+
+/** Generate hourly rates for a provider/month/year. */
+export async function generateMonthlyRates(accessToken, providerId, month, year) {
+  const res = await fetch(`${API_BASE}/api/rates/generate`, {
+    method: "POST",
+    headers: authHeaders(accessToken),
+    body: JSON.stringify({ provider_id: providerId, month, year }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to generate rates");
+  }
+  return res.json();
+}
+
+/** Get hourly rates for a provider/month/year. */
+export async function getMonthlyRates(accessToken, providerId, month, year) {
+  const qs = new URLSearchParams({
+    provider_id: providerId,
+    month: String(month),
+    year: String(year),
+  });
+  const res = await fetch(`${API_BASE}/api/rates/monthly?${qs}`, {
+    headers: authHeaders(accessToken),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to get monthly rates");
+  }
+  return res.json();
+}
+
+/** Set the user's selected utility provider. */
+export async function setUserProvider(accessToken, providerId) {
+  const res = await fetch(`${API_BASE}/api/users/me/provider`, {
+    method: "PUT",
+    headers: authHeaders(accessToken),
+    body: JSON.stringify({ provider_id: providerId }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to set provider");
+  }
+  return res.json();
+}

@@ -124,7 +124,8 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  utilityProv: 'utilityProv'
+  utilityProv: 'utilityProv',
+  selectedProviderId: 'selectedProviderId'
 };
 
 exports.Prisma.LocationScalarFieldEnum = {
@@ -152,9 +153,39 @@ exports.Prisma.BillHistoryScalarFieldEnum = {
   createdDate: 'createdDate'
 };
 
+exports.Prisma.UtilityProviderScalarFieldEnum = {
+  id: 'id',
+  zipCode: 'zipCode',
+  utilityName: 'utilityName',
+  rateName: 'rateName',
+  sector: 'sector',
+  rateStructureJson: 'rateStructureJson',
+  weekdayScheduleJson: 'weekdayScheduleJson',
+  weekendScheduleJson: 'weekendScheduleJson',
+  fuelAdjustmentsJson: 'fuelAdjustmentsJson',
+  fetchedAt: 'fetchedAt'
+};
+
+exports.Prisma.HourlyRateScalarFieldEnum = {
+  id: 'id',
+  providerId: 'providerId',
+  date: 'date',
+  hour: 'hour',
+  baseRate: 'baseRate',
+  deliveryCost: 'deliveryCost',
+  totalRate: 'totalRate',
+  periodIndex: 'periodIndex',
+  periodLabel: 'periodLabel'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -167,12 +198,20 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
   Location: 'Location',
   Device: 'Device',
-  BillHistory: 'BillHistory'
+  BillHistory: 'BillHistory',
+  UtilityProvider: 'UtilityProvider',
+  HourlyRate: 'HourlyRate'
 };
 
 /**

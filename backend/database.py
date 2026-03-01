@@ -169,3 +169,187 @@ async def delete_device(device_id: str, user_id: str) -> bool:
         )
         await session.commit()
     return result.rowcount > 0
+
+
+# ---------------------------------------------------------------------------
+# Utility providers & hourly rates
+# ---------------------------------------------------------------------------
+
+async def upsert_utility_provider(
+    zip_code: str,
+    utility_name: str,
+    rate_name: str,
+    sector: str = "Residential",
+    rate_structure_json: str | None = None,
+    weekday_schedule_json: str | None = None,
+    weekend_schedule_json: str | None = None,
+    fuel_adjustments_json: str | None = None,
+) -> dict | None:
+    try:
+        async with async_session() as session:
+            result = await session.execute(
+                text("""
+                    INSERT INTO utility_providers
+                        (provider_id, zip_code, utility_name, rate_name, sector,
+                         rate_structure_json, weekday_schedule_json,
+                         weekend_schedule_json, fuel_adjustments_json, fetched_at)
+                    VALUES
+                        (gen_random_uuid(), :zip_code, :utility_name, :rate_name, :sector,
+                         CAST(:rate_structure_json AS jsonb), CAST(:weekday_schedule_json AS jsonb),
+                         CAST(:weekend_schedule_json AS jsonb), CAST(:fuel_adjustments_json AS jsonb), NOW())
+                    ON CONFLICT (zip_code, utility_name, rate_name) DO UPDATE SET
+                        sector = EXCLUDED.sector,
+                        rate_structure_json = EXCLUDED.rate_structure_json,
+                        weekday_schedule_json = EXCLUDED.weekday_schedule_json,
+                        weekend_schedule_json = EXCLUDED.weekend_schedule_json,
+                        fuel_adjustments_json = EXCLUDED.fuel_adjustments_json,
+                        fetched_at = NOW()
+                    RETURNING provider_id, zip_code, utility_name, rate_name, sector, fetched_at
+                """),
+                {
+                    "zip_code": zip_code,
+                    "utility_name": utility_name,
+                    "rate_name": rate_name,
+                    "sector": sector,
+                    "rate_structure_json": rate_structure_json,
+                    "weekday_schedule_json": weekday_schedule_json,
+                    "weekend_schedule_json": weekend_schedule_json,
+                    "fuel_adjustments_json": fuel_adjustments_json,
+                },
+            )
+            row = result.mappings().first()
+            await session.commit()
+            return dict(row) if row else None
+    except Exception as e:
+        logger.warning("Upsert utility provider failed: %s", e, exc_info=True)
+        return None
+
+
+async def get_providers_by_zip(zip_code: str) -> list[dict]:
+    async with async_session() as session:
+        result = await session.execute(
+            text("""
+                SELECT provider_id, zip_code, utility_name, rate_name, sector, fetched_at
+                FROM utility_providers
+                WHERE zip_code = :zip_code
+                ORDER BY utility_name, rate_name
+            """),
+            {"zip_code": zip_code},
+        )
+        return [dict(r) for r in result.mappings().all()]
+
+
+async def get_provider_by_id(provider_id: str) -> dict | None:
+    async with async_session() as session:
+        result = await session.execute(
+            text("""
+                SELECT provider_id, zip_code, utility_name, rate_name, sector,
+                       rate_structure_json, weekday_schedule_json,
+                       weekend_schedule_json, fuel_adjustments_json, fetched_at
+                FROM utility_providers
+                WHERE provider_id = :provider_id
+            """),
+            {"provider_id": provider_id},
+        )
+        row = result.mappings().first()
+        return dict(row) if row else None
+
+
+async def bulk_insert_hourly_rates(provider_id: str, month: int, year: int, rates: list[dict]) -> int:
+    """Delete existing rates for the provider/month then insert new ones. Returns inserted count."""
+    try:
+        async with async_session() as session:
+            await session.execute(
+                text("""
+                    DELETE FROM hourly_rates
+                    WHERE provider_id = :provider_id
+                      AND EXTRACT(MONTH FROM date) = :month
+                      AND EXTRACT(YEAR FROM date) = :year
+                """),
+                {"provider_id": provider_id, "month": month, "year": year},
+            )
+            if rates:
+                values_parts = []
+                params = {"provider_id": provider_id}
+                for i, r in enumerate(rates):
+                    values_parts.append(
+                        f"(gen_random_uuid(), :provider_id, :date_{i}, :hour_{i}, :base_rate_{i}, "
+                        f":delivery_cost_{i}, :total_rate_{i}, :period_index_{i}, :period_label_{i})"
+                    )
+                    params[f"date_{i}"] = r["date"]
+                    params[f"hour_{i}"] = r["hour"]
+                    params[f"base_rate_{i}"] = r["base_rate"]
+                    params[f"delivery_cost_{i}"] = r["delivery_cost"]
+                    params[f"total_rate_{i}"] = r["total_rate"]
+                    params[f"period_index_{i}"] = r["period_index"]
+                    params[f"period_label_{i}"] = r["period_label"]
+                values_sql = ",\n".join(values_parts)
+                await session.execute(
+                    text(f"""
+                        INSERT INTO hourly_rates
+                            (rate_id, provider_id, date, hour, base_rate, delivery_cost,
+                             total_rate, period_index, period_label)
+                        VALUES {values_sql}
+                        ON CONFLICT (provider_id, date, hour) DO UPDATE SET
+                            base_rate = EXCLUDED.base_rate,
+                            delivery_cost = EXCLUDED.delivery_cost,
+                            total_rate = EXCLUDED.total_rate,
+                            period_index = EXCLUDED.period_index,
+                            period_label = EXCLUDED.period_label
+                    """),
+                    params,
+                )
+            await session.commit()
+            return len(rates)
+    except Exception as e:
+        logger.warning("Bulk insert hourly rates failed: %s", e, exc_info=True)
+        return 0
+
+
+async def get_hourly_rates(provider_id: str, month: int, year: int) -> list[dict]:
+    async with async_session() as session:
+        result = await session.execute(
+            text("""
+                SELECT rate_id, provider_id, date, hour, base_rate,
+                       delivery_cost, total_rate, period_index, period_label
+                FROM hourly_rates
+                WHERE provider_id = :provider_id
+                  AND EXTRACT(MONTH FROM date) = :month
+                  AND EXTRACT(YEAR FROM date) = :year
+                ORDER BY date, hour
+            """),
+            {"provider_id": provider_id, "month": month, "year": year},
+        )
+        return [dict(r) for r in result.mappings().all()]
+
+
+async def get_user_profile(user_id: str) -> dict | None:
+    async with async_session() as session:
+        result = await session.execute(
+            text("""
+                SELECT u.id, u.email, u.selected_provider_id,
+                       (SELECT l.zip FROM locations l WHERE l.user_id = u.id LIMIT 1) AS zip
+                FROM users u
+                WHERE u.id = :user_id
+            """),
+            {"user_id": user_id},
+        )
+        row = result.mappings().first()
+        return dict(row) if row else None
+
+
+async def set_user_provider(user_id: str, provider_id: str | None) -> bool:
+    try:
+        async with async_session() as session:
+            await session.execute(
+                text("""
+                    UPDATE users SET selected_provider_id = :provider_id
+                    WHERE id = :user_id
+                """),
+                {"user_id": user_id, "provider_id": provider_id},
+            )
+            await session.commit()
+        return True
+    except Exception as e:
+        logger.warning("Set user provider failed: %s", e, exc_info=True)
+        return False

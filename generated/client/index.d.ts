@@ -33,6 +33,16 @@ export type Device = $Result.DefaultSelection<Prisma.$DevicePayload>
  * 
  */
 export type BillHistory = $Result.DefaultSelection<Prisma.$BillHistoryPayload>
+/**
+ * Model UtilityProvider
+ * 
+ */
+export type UtilityProvider = $Result.DefaultSelection<Prisma.$UtilityProviderPayload>
+/**
+ * Model HourlyRate
+ * 
+ */
+export type HourlyRate = $Result.DefaultSelection<Prisma.$HourlyRatePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -191,6 +201,26 @@ export class PrismaClient<
     * ```
     */
   get billHistory(): Prisma.BillHistoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.utilityProvider`: Exposes CRUD operations for the **UtilityProvider** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UtilityProviders
+    * const utilityProviders = await prisma.utilityProvider.findMany()
+    * ```
+    */
+  get utilityProvider(): Prisma.UtilityProviderDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.hourlyRate`: Exposes CRUD operations for the **HourlyRate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more HourlyRates
+    * const hourlyRates = await prisma.hourlyRate.findMany()
+    * ```
+    */
+  get hourlyRate(): Prisma.HourlyRateDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -635,7 +665,9 @@ export namespace Prisma {
     User: 'User',
     Location: 'Location',
     Device: 'Device',
-    BillHistory: 'BillHistory'
+    BillHistory: 'BillHistory',
+    UtilityProvider: 'UtilityProvider',
+    HourlyRate: 'HourlyRate'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -654,7 +686,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "location" | "device" | "billHistory"
+      modelProps: "user" | "location" | "device" | "billHistory" | "utilityProvider" | "hourlyRate"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -954,6 +986,154 @@ export namespace Prisma {
           }
         }
       }
+      UtilityProvider: {
+        payload: Prisma.$UtilityProviderPayload<ExtArgs>
+        fields: Prisma.UtilityProviderFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UtilityProviderFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UtilityProviderFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload>
+          }
+          findFirst: {
+            args: Prisma.UtilityProviderFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UtilityProviderFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload>
+          }
+          findMany: {
+            args: Prisma.UtilityProviderFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload>[]
+          }
+          create: {
+            args: Prisma.UtilityProviderCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload>
+          }
+          createMany: {
+            args: Prisma.UtilityProviderCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UtilityProviderCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload>[]
+          }
+          delete: {
+            args: Prisma.UtilityProviderDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload>
+          }
+          update: {
+            args: Prisma.UtilityProviderUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload>
+          }
+          deleteMany: {
+            args: Prisma.UtilityProviderDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UtilityProviderUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UtilityProviderUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload>[]
+          }
+          upsert: {
+            args: Prisma.UtilityProviderUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UtilityProviderPayload>
+          }
+          aggregate: {
+            args: Prisma.UtilityProviderAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUtilityProvider>
+          }
+          groupBy: {
+            args: Prisma.UtilityProviderGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UtilityProviderGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UtilityProviderCountArgs<ExtArgs>
+            result: $Utils.Optional<UtilityProviderCountAggregateOutputType> | number
+          }
+        }
+      }
+      HourlyRate: {
+        payload: Prisma.$HourlyRatePayload<ExtArgs>
+        fields: Prisma.HourlyRateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.HourlyRateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.HourlyRateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload>
+          }
+          findFirst: {
+            args: Prisma.HourlyRateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.HourlyRateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload>
+          }
+          findMany: {
+            args: Prisma.HourlyRateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload>[]
+          }
+          create: {
+            args: Prisma.HourlyRateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload>
+          }
+          createMany: {
+            args: Prisma.HourlyRateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.HourlyRateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload>[]
+          }
+          delete: {
+            args: Prisma.HourlyRateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload>
+          }
+          update: {
+            args: Prisma.HourlyRateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload>
+          }
+          deleteMany: {
+            args: Prisma.HourlyRateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.HourlyRateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.HourlyRateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload>[]
+          }
+          upsert: {
+            args: Prisma.HourlyRateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HourlyRatePayload>
+          }
+          aggregate: {
+            args: Prisma.HourlyRateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHourlyRate>
+          }
+          groupBy: {
+            args: Prisma.HourlyRateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<HourlyRateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.HourlyRateCountArgs<ExtArgs>
+            result: $Utils.Optional<HourlyRateCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1054,6 +1234,8 @@ export namespace Prisma {
     location?: LocationOmit
     device?: DeviceOmit
     billHistory?: BillHistoryOmit
+    utilityProvider?: UtilityProviderOmit
+    hourlyRate?: HourlyRateOmit
   }
 
   /* Types for Logging */
@@ -1179,6 +1361,46 @@ export namespace Prisma {
 
 
   /**
+   * Count Type UtilityProviderCountOutputType
+   */
+
+  export type UtilityProviderCountOutputType = {
+    hourlyRates: number
+    users: number
+  }
+
+  export type UtilityProviderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    hourlyRates?: boolean | UtilityProviderCountOutputTypeCountHourlyRatesArgs
+    users?: boolean | UtilityProviderCountOutputTypeCountUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UtilityProviderCountOutputType without action
+   */
+  export type UtilityProviderCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProviderCountOutputType
+     */
+    select?: UtilityProviderCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UtilityProviderCountOutputType without action
+   */
+  export type UtilityProviderCountOutputTypeCountHourlyRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HourlyRateWhereInput
+  }
+
+  /**
+   * UtilityProviderCountOutputType without action
+   */
+  export type UtilityProviderCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -1196,18 +1418,21 @@ export namespace Prisma {
     id: string | null
     email: string | null
     utilityProv: string | null
+    selectedProviderId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: string | null
     email: string | null
     utilityProv: string | null
+    selectedProviderId: string | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
     email: number
     utilityProv: number
+    selectedProviderId: number
     _all: number
   }
 
@@ -1216,18 +1441,21 @@ export namespace Prisma {
     id?: true
     email?: true
     utilityProv?: true
+    selectedProviderId?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
     email?: true
     utilityProv?: true
+    selectedProviderId?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
     email?: true
     utilityProv?: true
+    selectedProviderId?: true
     _all?: true
   }
 
@@ -1307,6 +1535,7 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv: string | null
+    selectedProviderId: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1330,6 +1559,8 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     utilityProv?: boolean
+    selectedProviderId?: boolean
+    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
     locations?: boolean | User$locationsArgs<ExtArgs>
     billHistory?: boolean | User$billHistoryArgs<ExtArgs>
     devices?: boolean | User$devicesArgs<ExtArgs>
@@ -1340,33 +1571,44 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     utilityProv?: boolean
+    selectedProviderId?: boolean
+    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     email?: boolean
     utilityProv?: boolean
+    selectedProviderId?: boolean
+    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
     id?: boolean
     email?: boolean
     utilityProv?: boolean
+    selectedProviderId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "utilityProv", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "utilityProv" | "selectedProviderId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
     locations?: boolean | User$locationsArgs<ExtArgs>
     billHistory?: boolean | User$billHistoryArgs<ExtArgs>
     devices?: boolean | User$devicesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
+  }
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    selectedProvider?: boolean | User$selectedProviderArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
+      selectedProvider: Prisma.$UtilityProviderPayload<ExtArgs> | null
       locations: Prisma.$LocationPayload<ExtArgs>[]
       billHistory: Prisma.$BillHistoryPayload<ExtArgs>[]
       devices: Prisma.$DevicePayload<ExtArgs>[]
@@ -1375,6 +1617,7 @@ export namespace Prisma {
       id: string
       email: string
       utilityProv: string | null
+      selectedProviderId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1769,6 +2012,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    selectedProvider<T extends User$selectedProviderArgs<ExtArgs> = {}>(args?: Subset<T, User$selectedProviderArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     locations<T extends User$locationsArgs<ExtArgs> = {}>(args?: Subset<T, User$locationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     billHistory<T extends User$billHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$billHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     devices<T extends User$devicesArgs<ExtArgs> = {}>(args?: Subset<T, User$devicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1804,6 +2048,7 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly utilityProv: FieldRef<"User", 'String'>
+    readonly selectedProviderId: FieldRef<"User", 'String'>
   }
     
 
@@ -2053,6 +2298,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2123,6 +2372,10 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2189,6 +2442,25 @@ export namespace Prisma {
      * Limit how many Users to delete.
      */
     limit?: number
+  }
+
+  /**
+   * User.selectedProvider
+   */
+  export type User$selectedProviderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    where?: UtilityProviderWhereInput
   }
 
   /**
@@ -5542,6 +5814,2313 @@ export namespace Prisma {
 
 
   /**
+   * Model UtilityProvider
+   */
+
+  export type AggregateUtilityProvider = {
+    _count: UtilityProviderCountAggregateOutputType | null
+    _min: UtilityProviderMinAggregateOutputType | null
+    _max: UtilityProviderMaxAggregateOutputType | null
+  }
+
+  export type UtilityProviderMinAggregateOutputType = {
+    id: string | null
+    zipCode: string | null
+    utilityName: string | null
+    rateName: string | null
+    sector: string | null
+    fetchedAt: Date | null
+  }
+
+  export type UtilityProviderMaxAggregateOutputType = {
+    id: string | null
+    zipCode: string | null
+    utilityName: string | null
+    rateName: string | null
+    sector: string | null
+    fetchedAt: Date | null
+  }
+
+  export type UtilityProviderCountAggregateOutputType = {
+    id: number
+    zipCode: number
+    utilityName: number
+    rateName: number
+    sector: number
+    rateStructureJson: number
+    weekdayScheduleJson: number
+    weekendScheduleJson: number
+    fuelAdjustmentsJson: number
+    fetchedAt: number
+    _all: number
+  }
+
+
+  export type UtilityProviderMinAggregateInputType = {
+    id?: true
+    zipCode?: true
+    utilityName?: true
+    rateName?: true
+    sector?: true
+    fetchedAt?: true
+  }
+
+  export type UtilityProviderMaxAggregateInputType = {
+    id?: true
+    zipCode?: true
+    utilityName?: true
+    rateName?: true
+    sector?: true
+    fetchedAt?: true
+  }
+
+  export type UtilityProviderCountAggregateInputType = {
+    id?: true
+    zipCode?: true
+    utilityName?: true
+    rateName?: true
+    sector?: true
+    rateStructureJson?: true
+    weekdayScheduleJson?: true
+    weekendScheduleJson?: true
+    fuelAdjustmentsJson?: true
+    fetchedAt?: true
+    _all?: true
+  }
+
+  export type UtilityProviderAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UtilityProvider to aggregate.
+     */
+    where?: UtilityProviderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UtilityProviders to fetch.
+     */
+    orderBy?: UtilityProviderOrderByWithRelationInput | UtilityProviderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UtilityProviderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UtilityProviders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UtilityProviders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UtilityProviders
+    **/
+    _count?: true | UtilityProviderCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UtilityProviderMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UtilityProviderMaxAggregateInputType
+  }
+
+  export type GetUtilityProviderAggregateType<T extends UtilityProviderAggregateArgs> = {
+        [P in keyof T & keyof AggregateUtilityProvider]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUtilityProvider[P]>
+      : GetScalarType<T[P], AggregateUtilityProvider[P]>
+  }
+
+
+
+
+  export type UtilityProviderGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UtilityProviderWhereInput
+    orderBy?: UtilityProviderOrderByWithAggregationInput | UtilityProviderOrderByWithAggregationInput[]
+    by: UtilityProviderScalarFieldEnum[] | UtilityProviderScalarFieldEnum
+    having?: UtilityProviderScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UtilityProviderCountAggregateInputType | true
+    _min?: UtilityProviderMinAggregateInputType
+    _max?: UtilityProviderMaxAggregateInputType
+  }
+
+  export type UtilityProviderGroupByOutputType = {
+    id: string
+    zipCode: string
+    utilityName: string
+    rateName: string
+    sector: string
+    rateStructureJson: JsonValue | null
+    weekdayScheduleJson: JsonValue | null
+    weekendScheduleJson: JsonValue | null
+    fuelAdjustmentsJson: JsonValue | null
+    fetchedAt: Date
+    _count: UtilityProviderCountAggregateOutputType | null
+    _min: UtilityProviderMinAggregateOutputType | null
+    _max: UtilityProviderMaxAggregateOutputType | null
+  }
+
+  type GetUtilityProviderGroupByPayload<T extends UtilityProviderGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UtilityProviderGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UtilityProviderGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UtilityProviderGroupByOutputType[P]>
+            : GetScalarType<T[P], UtilityProviderGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UtilityProviderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    zipCode?: boolean
+    utilityName?: boolean
+    rateName?: boolean
+    sector?: boolean
+    rateStructureJson?: boolean
+    weekdayScheduleJson?: boolean
+    weekendScheduleJson?: boolean
+    fuelAdjustmentsJson?: boolean
+    fetchedAt?: boolean
+    hourlyRates?: boolean | UtilityProvider$hourlyRatesArgs<ExtArgs>
+    users?: boolean | UtilityProvider$usersArgs<ExtArgs>
+    _count?: boolean | UtilityProviderCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["utilityProvider"]>
+
+  export type UtilityProviderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    zipCode?: boolean
+    utilityName?: boolean
+    rateName?: boolean
+    sector?: boolean
+    rateStructureJson?: boolean
+    weekdayScheduleJson?: boolean
+    weekendScheduleJson?: boolean
+    fuelAdjustmentsJson?: boolean
+    fetchedAt?: boolean
+  }, ExtArgs["result"]["utilityProvider"]>
+
+  export type UtilityProviderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    zipCode?: boolean
+    utilityName?: boolean
+    rateName?: boolean
+    sector?: boolean
+    rateStructureJson?: boolean
+    weekdayScheduleJson?: boolean
+    weekendScheduleJson?: boolean
+    fuelAdjustmentsJson?: boolean
+    fetchedAt?: boolean
+  }, ExtArgs["result"]["utilityProvider"]>
+
+  export type UtilityProviderSelectScalar = {
+    id?: boolean
+    zipCode?: boolean
+    utilityName?: boolean
+    rateName?: boolean
+    sector?: boolean
+    rateStructureJson?: boolean
+    weekdayScheduleJson?: boolean
+    weekendScheduleJson?: boolean
+    fuelAdjustmentsJson?: boolean
+    fetchedAt?: boolean
+  }
+
+  export type UtilityProviderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "zipCode" | "utilityName" | "rateName" | "sector" | "rateStructureJson" | "weekdayScheduleJson" | "weekendScheduleJson" | "fuelAdjustmentsJson" | "fetchedAt", ExtArgs["result"]["utilityProvider"]>
+  export type UtilityProviderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    hourlyRates?: boolean | UtilityProvider$hourlyRatesArgs<ExtArgs>
+    users?: boolean | UtilityProvider$usersArgs<ExtArgs>
+    _count?: boolean | UtilityProviderCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UtilityProviderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UtilityProviderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $UtilityProviderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UtilityProvider"
+    objects: {
+      hourlyRates: Prisma.$HourlyRatePayload<ExtArgs>[]
+      users: Prisma.$UserPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      zipCode: string
+      utilityName: string
+      rateName: string
+      sector: string
+      rateStructureJson: Prisma.JsonValue | null
+      weekdayScheduleJson: Prisma.JsonValue | null
+      weekendScheduleJson: Prisma.JsonValue | null
+      fuelAdjustmentsJson: Prisma.JsonValue | null
+      fetchedAt: Date
+    }, ExtArgs["result"]["utilityProvider"]>
+    composites: {}
+  }
+
+  type UtilityProviderGetPayload<S extends boolean | null | undefined | UtilityProviderDefaultArgs> = $Result.GetResult<Prisma.$UtilityProviderPayload, S>
+
+  type UtilityProviderCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UtilityProviderFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UtilityProviderCountAggregateInputType | true
+    }
+
+  export interface UtilityProviderDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UtilityProvider'], meta: { name: 'UtilityProvider' } }
+    /**
+     * Find zero or one UtilityProvider that matches the filter.
+     * @param {UtilityProviderFindUniqueArgs} args - Arguments to find a UtilityProvider
+     * @example
+     * // Get one UtilityProvider
+     * const utilityProvider = await prisma.utilityProvider.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UtilityProviderFindUniqueArgs>(args: SelectSubset<T, UtilityProviderFindUniqueArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UtilityProvider that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UtilityProviderFindUniqueOrThrowArgs} args - Arguments to find a UtilityProvider
+     * @example
+     * // Get one UtilityProvider
+     * const utilityProvider = await prisma.utilityProvider.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UtilityProviderFindUniqueOrThrowArgs>(args: SelectSubset<T, UtilityProviderFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UtilityProvider that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UtilityProviderFindFirstArgs} args - Arguments to find a UtilityProvider
+     * @example
+     * // Get one UtilityProvider
+     * const utilityProvider = await prisma.utilityProvider.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UtilityProviderFindFirstArgs>(args?: SelectSubset<T, UtilityProviderFindFirstArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UtilityProvider that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UtilityProviderFindFirstOrThrowArgs} args - Arguments to find a UtilityProvider
+     * @example
+     * // Get one UtilityProvider
+     * const utilityProvider = await prisma.utilityProvider.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UtilityProviderFindFirstOrThrowArgs>(args?: SelectSubset<T, UtilityProviderFindFirstOrThrowArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UtilityProviders that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UtilityProviderFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UtilityProviders
+     * const utilityProviders = await prisma.utilityProvider.findMany()
+     * 
+     * // Get first 10 UtilityProviders
+     * const utilityProviders = await prisma.utilityProvider.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const utilityProviderWithIdOnly = await prisma.utilityProvider.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UtilityProviderFindManyArgs>(args?: SelectSubset<T, UtilityProviderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UtilityProvider.
+     * @param {UtilityProviderCreateArgs} args - Arguments to create a UtilityProvider.
+     * @example
+     * // Create one UtilityProvider
+     * const UtilityProvider = await prisma.utilityProvider.create({
+     *   data: {
+     *     // ... data to create a UtilityProvider
+     *   }
+     * })
+     * 
+     */
+    create<T extends UtilityProviderCreateArgs>(args: SelectSubset<T, UtilityProviderCreateArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UtilityProviders.
+     * @param {UtilityProviderCreateManyArgs} args - Arguments to create many UtilityProviders.
+     * @example
+     * // Create many UtilityProviders
+     * const utilityProvider = await prisma.utilityProvider.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UtilityProviderCreateManyArgs>(args?: SelectSubset<T, UtilityProviderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UtilityProviders and returns the data saved in the database.
+     * @param {UtilityProviderCreateManyAndReturnArgs} args - Arguments to create many UtilityProviders.
+     * @example
+     * // Create many UtilityProviders
+     * const utilityProvider = await prisma.utilityProvider.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UtilityProviders and only return the `id`
+     * const utilityProviderWithIdOnly = await prisma.utilityProvider.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UtilityProviderCreateManyAndReturnArgs>(args?: SelectSubset<T, UtilityProviderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UtilityProvider.
+     * @param {UtilityProviderDeleteArgs} args - Arguments to delete one UtilityProvider.
+     * @example
+     * // Delete one UtilityProvider
+     * const UtilityProvider = await prisma.utilityProvider.delete({
+     *   where: {
+     *     // ... filter to delete one UtilityProvider
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UtilityProviderDeleteArgs>(args: SelectSubset<T, UtilityProviderDeleteArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UtilityProvider.
+     * @param {UtilityProviderUpdateArgs} args - Arguments to update one UtilityProvider.
+     * @example
+     * // Update one UtilityProvider
+     * const utilityProvider = await prisma.utilityProvider.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UtilityProviderUpdateArgs>(args: SelectSubset<T, UtilityProviderUpdateArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UtilityProviders.
+     * @param {UtilityProviderDeleteManyArgs} args - Arguments to filter UtilityProviders to delete.
+     * @example
+     * // Delete a few UtilityProviders
+     * const { count } = await prisma.utilityProvider.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UtilityProviderDeleteManyArgs>(args?: SelectSubset<T, UtilityProviderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UtilityProviders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UtilityProviderUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UtilityProviders
+     * const utilityProvider = await prisma.utilityProvider.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UtilityProviderUpdateManyArgs>(args: SelectSubset<T, UtilityProviderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UtilityProviders and returns the data updated in the database.
+     * @param {UtilityProviderUpdateManyAndReturnArgs} args - Arguments to update many UtilityProviders.
+     * @example
+     * // Update many UtilityProviders
+     * const utilityProvider = await prisma.utilityProvider.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UtilityProviders and only return the `id`
+     * const utilityProviderWithIdOnly = await prisma.utilityProvider.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UtilityProviderUpdateManyAndReturnArgs>(args: SelectSubset<T, UtilityProviderUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UtilityProvider.
+     * @param {UtilityProviderUpsertArgs} args - Arguments to update or create a UtilityProvider.
+     * @example
+     * // Update or create a UtilityProvider
+     * const utilityProvider = await prisma.utilityProvider.upsert({
+     *   create: {
+     *     // ... data to create a UtilityProvider
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UtilityProvider we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UtilityProviderUpsertArgs>(args: SelectSubset<T, UtilityProviderUpsertArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UtilityProviders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UtilityProviderCountArgs} args - Arguments to filter UtilityProviders to count.
+     * @example
+     * // Count the number of UtilityProviders
+     * const count = await prisma.utilityProvider.count({
+     *   where: {
+     *     // ... the filter for the UtilityProviders we want to count
+     *   }
+     * })
+    **/
+    count<T extends UtilityProviderCountArgs>(
+      args?: Subset<T, UtilityProviderCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UtilityProviderCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UtilityProvider.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UtilityProviderAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UtilityProviderAggregateArgs>(args: Subset<T, UtilityProviderAggregateArgs>): Prisma.PrismaPromise<GetUtilityProviderAggregateType<T>>
+
+    /**
+     * Group by UtilityProvider.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UtilityProviderGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UtilityProviderGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UtilityProviderGroupByArgs['orderBy'] }
+        : { orderBy?: UtilityProviderGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UtilityProviderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUtilityProviderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UtilityProvider model
+   */
+  readonly fields: UtilityProviderFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UtilityProvider.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UtilityProviderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    hourlyRates<T extends UtilityProvider$hourlyRatesArgs<ExtArgs> = {}>(args?: Subset<T, UtilityProvider$hourlyRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    users<T extends UtilityProvider$usersArgs<ExtArgs> = {}>(args?: Subset<T, UtilityProvider$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UtilityProvider model
+   */
+  interface UtilityProviderFieldRefs {
+    readonly id: FieldRef<"UtilityProvider", 'String'>
+    readonly zipCode: FieldRef<"UtilityProvider", 'String'>
+    readonly utilityName: FieldRef<"UtilityProvider", 'String'>
+    readonly rateName: FieldRef<"UtilityProvider", 'String'>
+    readonly sector: FieldRef<"UtilityProvider", 'String'>
+    readonly rateStructureJson: FieldRef<"UtilityProvider", 'Json'>
+    readonly weekdayScheduleJson: FieldRef<"UtilityProvider", 'Json'>
+    readonly weekendScheduleJson: FieldRef<"UtilityProvider", 'Json'>
+    readonly fuelAdjustmentsJson: FieldRef<"UtilityProvider", 'Json'>
+    readonly fetchedAt: FieldRef<"UtilityProvider", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UtilityProvider findUnique
+   */
+  export type UtilityProviderFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    /**
+     * Filter, which UtilityProvider to fetch.
+     */
+    where: UtilityProviderWhereUniqueInput
+  }
+
+  /**
+   * UtilityProvider findUniqueOrThrow
+   */
+  export type UtilityProviderFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    /**
+     * Filter, which UtilityProvider to fetch.
+     */
+    where: UtilityProviderWhereUniqueInput
+  }
+
+  /**
+   * UtilityProvider findFirst
+   */
+  export type UtilityProviderFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    /**
+     * Filter, which UtilityProvider to fetch.
+     */
+    where?: UtilityProviderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UtilityProviders to fetch.
+     */
+    orderBy?: UtilityProviderOrderByWithRelationInput | UtilityProviderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UtilityProviders.
+     */
+    cursor?: UtilityProviderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UtilityProviders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UtilityProviders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UtilityProviders.
+     */
+    distinct?: UtilityProviderScalarFieldEnum | UtilityProviderScalarFieldEnum[]
+  }
+
+  /**
+   * UtilityProvider findFirstOrThrow
+   */
+  export type UtilityProviderFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    /**
+     * Filter, which UtilityProvider to fetch.
+     */
+    where?: UtilityProviderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UtilityProviders to fetch.
+     */
+    orderBy?: UtilityProviderOrderByWithRelationInput | UtilityProviderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UtilityProviders.
+     */
+    cursor?: UtilityProviderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UtilityProviders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UtilityProviders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UtilityProviders.
+     */
+    distinct?: UtilityProviderScalarFieldEnum | UtilityProviderScalarFieldEnum[]
+  }
+
+  /**
+   * UtilityProvider findMany
+   */
+  export type UtilityProviderFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    /**
+     * Filter, which UtilityProviders to fetch.
+     */
+    where?: UtilityProviderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UtilityProviders to fetch.
+     */
+    orderBy?: UtilityProviderOrderByWithRelationInput | UtilityProviderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UtilityProviders.
+     */
+    cursor?: UtilityProviderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UtilityProviders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UtilityProviders.
+     */
+    skip?: number
+    distinct?: UtilityProviderScalarFieldEnum | UtilityProviderScalarFieldEnum[]
+  }
+
+  /**
+   * UtilityProvider create
+   */
+  export type UtilityProviderCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UtilityProvider.
+     */
+    data: XOR<UtilityProviderCreateInput, UtilityProviderUncheckedCreateInput>
+  }
+
+  /**
+   * UtilityProvider createMany
+   */
+  export type UtilityProviderCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UtilityProviders.
+     */
+    data: UtilityProviderCreateManyInput | UtilityProviderCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UtilityProvider createManyAndReturn
+   */
+  export type UtilityProviderCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * The data used to create many UtilityProviders.
+     */
+    data: UtilityProviderCreateManyInput | UtilityProviderCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UtilityProvider update
+   */
+  export type UtilityProviderUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UtilityProvider.
+     */
+    data: XOR<UtilityProviderUpdateInput, UtilityProviderUncheckedUpdateInput>
+    /**
+     * Choose, which UtilityProvider to update.
+     */
+    where: UtilityProviderWhereUniqueInput
+  }
+
+  /**
+   * UtilityProvider updateMany
+   */
+  export type UtilityProviderUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UtilityProviders.
+     */
+    data: XOR<UtilityProviderUpdateManyMutationInput, UtilityProviderUncheckedUpdateManyInput>
+    /**
+     * Filter which UtilityProviders to update
+     */
+    where?: UtilityProviderWhereInput
+    /**
+     * Limit how many UtilityProviders to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UtilityProvider updateManyAndReturn
+   */
+  export type UtilityProviderUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * The data used to update UtilityProviders.
+     */
+    data: XOR<UtilityProviderUpdateManyMutationInput, UtilityProviderUncheckedUpdateManyInput>
+    /**
+     * Filter which UtilityProviders to update
+     */
+    where?: UtilityProviderWhereInput
+    /**
+     * Limit how many UtilityProviders to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UtilityProvider upsert
+   */
+  export type UtilityProviderUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UtilityProvider to update in case it exists.
+     */
+    where: UtilityProviderWhereUniqueInput
+    /**
+     * In case the UtilityProvider found by the `where` argument doesn't exist, create a new UtilityProvider with this data.
+     */
+    create: XOR<UtilityProviderCreateInput, UtilityProviderUncheckedCreateInput>
+    /**
+     * In case the UtilityProvider was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UtilityProviderUpdateInput, UtilityProviderUncheckedUpdateInput>
+  }
+
+  /**
+   * UtilityProvider delete
+   */
+  export type UtilityProviderDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+    /**
+     * Filter which UtilityProvider to delete.
+     */
+    where: UtilityProviderWhereUniqueInput
+  }
+
+  /**
+   * UtilityProvider deleteMany
+   */
+  export type UtilityProviderDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UtilityProviders to delete
+     */
+    where?: UtilityProviderWhereInput
+    /**
+     * Limit how many UtilityProviders to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UtilityProvider.hourlyRates
+   */
+  export type UtilityProvider$hourlyRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    where?: HourlyRateWhereInput
+    orderBy?: HourlyRateOrderByWithRelationInput | HourlyRateOrderByWithRelationInput[]
+    cursor?: HourlyRateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: HourlyRateScalarFieldEnum | HourlyRateScalarFieldEnum[]
+  }
+
+  /**
+   * UtilityProvider.users
+   */
+  export type UtilityProvider$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * UtilityProvider without action
+   */
+  export type UtilityProviderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UtilityProvider
+     */
+    select?: UtilityProviderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UtilityProvider
+     */
+    omit?: UtilityProviderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UtilityProviderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model HourlyRate
+   */
+
+  export type AggregateHourlyRate = {
+    _count: HourlyRateCountAggregateOutputType | null
+    _avg: HourlyRateAvgAggregateOutputType | null
+    _sum: HourlyRateSumAggregateOutputType | null
+    _min: HourlyRateMinAggregateOutputType | null
+    _max: HourlyRateMaxAggregateOutputType | null
+  }
+
+  export type HourlyRateAvgAggregateOutputType = {
+    hour: number | null
+    baseRate: Decimal | null
+    deliveryCost: Decimal | null
+    totalRate: Decimal | null
+    periodIndex: number | null
+  }
+
+  export type HourlyRateSumAggregateOutputType = {
+    hour: number | null
+    baseRate: Decimal | null
+    deliveryCost: Decimal | null
+    totalRate: Decimal | null
+    periodIndex: number | null
+  }
+
+  export type HourlyRateMinAggregateOutputType = {
+    id: string | null
+    providerId: string | null
+    date: Date | null
+    hour: number | null
+    baseRate: Decimal | null
+    deliveryCost: Decimal | null
+    totalRate: Decimal | null
+    periodIndex: number | null
+    periodLabel: string | null
+  }
+
+  export type HourlyRateMaxAggregateOutputType = {
+    id: string | null
+    providerId: string | null
+    date: Date | null
+    hour: number | null
+    baseRate: Decimal | null
+    deliveryCost: Decimal | null
+    totalRate: Decimal | null
+    periodIndex: number | null
+    periodLabel: string | null
+  }
+
+  export type HourlyRateCountAggregateOutputType = {
+    id: number
+    providerId: number
+    date: number
+    hour: number
+    baseRate: number
+    deliveryCost: number
+    totalRate: number
+    periodIndex: number
+    periodLabel: number
+    _all: number
+  }
+
+
+  export type HourlyRateAvgAggregateInputType = {
+    hour?: true
+    baseRate?: true
+    deliveryCost?: true
+    totalRate?: true
+    periodIndex?: true
+  }
+
+  export type HourlyRateSumAggregateInputType = {
+    hour?: true
+    baseRate?: true
+    deliveryCost?: true
+    totalRate?: true
+    periodIndex?: true
+  }
+
+  export type HourlyRateMinAggregateInputType = {
+    id?: true
+    providerId?: true
+    date?: true
+    hour?: true
+    baseRate?: true
+    deliveryCost?: true
+    totalRate?: true
+    periodIndex?: true
+    periodLabel?: true
+  }
+
+  export type HourlyRateMaxAggregateInputType = {
+    id?: true
+    providerId?: true
+    date?: true
+    hour?: true
+    baseRate?: true
+    deliveryCost?: true
+    totalRate?: true
+    periodIndex?: true
+    periodLabel?: true
+  }
+
+  export type HourlyRateCountAggregateInputType = {
+    id?: true
+    providerId?: true
+    date?: true
+    hour?: true
+    baseRate?: true
+    deliveryCost?: true
+    totalRate?: true
+    periodIndex?: true
+    periodLabel?: true
+    _all?: true
+  }
+
+  export type HourlyRateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HourlyRate to aggregate.
+     */
+    where?: HourlyRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HourlyRates to fetch.
+     */
+    orderBy?: HourlyRateOrderByWithRelationInput | HourlyRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: HourlyRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HourlyRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HourlyRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned HourlyRates
+    **/
+    _count?: true | HourlyRateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: HourlyRateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: HourlyRateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: HourlyRateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: HourlyRateMaxAggregateInputType
+  }
+
+  export type GetHourlyRateAggregateType<T extends HourlyRateAggregateArgs> = {
+        [P in keyof T & keyof AggregateHourlyRate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHourlyRate[P]>
+      : GetScalarType<T[P], AggregateHourlyRate[P]>
+  }
+
+
+
+
+  export type HourlyRateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HourlyRateWhereInput
+    orderBy?: HourlyRateOrderByWithAggregationInput | HourlyRateOrderByWithAggregationInput[]
+    by: HourlyRateScalarFieldEnum[] | HourlyRateScalarFieldEnum
+    having?: HourlyRateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: HourlyRateCountAggregateInputType | true
+    _avg?: HourlyRateAvgAggregateInputType
+    _sum?: HourlyRateSumAggregateInputType
+    _min?: HourlyRateMinAggregateInputType
+    _max?: HourlyRateMaxAggregateInputType
+  }
+
+  export type HourlyRateGroupByOutputType = {
+    id: string
+    providerId: string
+    date: Date
+    hour: number
+    baseRate: Decimal
+    deliveryCost: Decimal
+    totalRate: Decimal
+    periodIndex: number
+    periodLabel: string
+    _count: HourlyRateCountAggregateOutputType | null
+    _avg: HourlyRateAvgAggregateOutputType | null
+    _sum: HourlyRateSumAggregateOutputType | null
+    _min: HourlyRateMinAggregateOutputType | null
+    _max: HourlyRateMaxAggregateOutputType | null
+  }
+
+  type GetHourlyRateGroupByPayload<T extends HourlyRateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<HourlyRateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof HourlyRateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], HourlyRateGroupByOutputType[P]>
+            : GetScalarType<T[P], HourlyRateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type HourlyRateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    providerId?: boolean
+    date?: boolean
+    hour?: boolean
+    baseRate?: boolean
+    deliveryCost?: boolean
+    totalRate?: boolean
+    periodIndex?: boolean
+    periodLabel?: boolean
+    provider?: boolean | UtilityProviderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hourlyRate"]>
+
+  export type HourlyRateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    providerId?: boolean
+    date?: boolean
+    hour?: boolean
+    baseRate?: boolean
+    deliveryCost?: boolean
+    totalRate?: boolean
+    periodIndex?: boolean
+    periodLabel?: boolean
+    provider?: boolean | UtilityProviderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hourlyRate"]>
+
+  export type HourlyRateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    providerId?: boolean
+    date?: boolean
+    hour?: boolean
+    baseRate?: boolean
+    deliveryCost?: boolean
+    totalRate?: boolean
+    periodIndex?: boolean
+    periodLabel?: boolean
+    provider?: boolean | UtilityProviderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hourlyRate"]>
+
+  export type HourlyRateSelectScalar = {
+    id?: boolean
+    providerId?: boolean
+    date?: boolean
+    hour?: boolean
+    baseRate?: boolean
+    deliveryCost?: boolean
+    totalRate?: boolean
+    periodIndex?: boolean
+    periodLabel?: boolean
+  }
+
+  export type HourlyRateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "providerId" | "date" | "hour" | "baseRate" | "deliveryCost" | "totalRate" | "periodIndex" | "periodLabel", ExtArgs["result"]["hourlyRate"]>
+  export type HourlyRateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    provider?: boolean | UtilityProviderDefaultArgs<ExtArgs>
+  }
+  export type HourlyRateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    provider?: boolean | UtilityProviderDefaultArgs<ExtArgs>
+  }
+  export type HourlyRateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    provider?: boolean | UtilityProviderDefaultArgs<ExtArgs>
+  }
+
+  export type $HourlyRatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "HourlyRate"
+    objects: {
+      provider: Prisma.$UtilityProviderPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      providerId: string
+      date: Date
+      hour: number
+      baseRate: Prisma.Decimal
+      deliveryCost: Prisma.Decimal
+      totalRate: Prisma.Decimal
+      periodIndex: number
+      periodLabel: string
+    }, ExtArgs["result"]["hourlyRate"]>
+    composites: {}
+  }
+
+  type HourlyRateGetPayload<S extends boolean | null | undefined | HourlyRateDefaultArgs> = $Result.GetResult<Prisma.$HourlyRatePayload, S>
+
+  type HourlyRateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<HourlyRateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: HourlyRateCountAggregateInputType | true
+    }
+
+  export interface HourlyRateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['HourlyRate'], meta: { name: 'HourlyRate' } }
+    /**
+     * Find zero or one HourlyRate that matches the filter.
+     * @param {HourlyRateFindUniqueArgs} args - Arguments to find a HourlyRate
+     * @example
+     * // Get one HourlyRate
+     * const hourlyRate = await prisma.hourlyRate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends HourlyRateFindUniqueArgs>(args: SelectSubset<T, HourlyRateFindUniqueArgs<ExtArgs>>): Prisma__HourlyRateClient<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one HourlyRate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {HourlyRateFindUniqueOrThrowArgs} args - Arguments to find a HourlyRate
+     * @example
+     * // Get one HourlyRate
+     * const hourlyRate = await prisma.hourlyRate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends HourlyRateFindUniqueOrThrowArgs>(args: SelectSubset<T, HourlyRateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__HourlyRateClient<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HourlyRate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HourlyRateFindFirstArgs} args - Arguments to find a HourlyRate
+     * @example
+     * // Get one HourlyRate
+     * const hourlyRate = await prisma.hourlyRate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends HourlyRateFindFirstArgs>(args?: SelectSubset<T, HourlyRateFindFirstArgs<ExtArgs>>): Prisma__HourlyRateClient<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first HourlyRate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HourlyRateFindFirstOrThrowArgs} args - Arguments to find a HourlyRate
+     * @example
+     * // Get one HourlyRate
+     * const hourlyRate = await prisma.hourlyRate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends HourlyRateFindFirstOrThrowArgs>(args?: SelectSubset<T, HourlyRateFindFirstOrThrowArgs<ExtArgs>>): Prisma__HourlyRateClient<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more HourlyRates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HourlyRateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all HourlyRates
+     * const hourlyRates = await prisma.hourlyRate.findMany()
+     * 
+     * // Get first 10 HourlyRates
+     * const hourlyRates = await prisma.hourlyRate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const hourlyRateWithIdOnly = await prisma.hourlyRate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends HourlyRateFindManyArgs>(args?: SelectSubset<T, HourlyRateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a HourlyRate.
+     * @param {HourlyRateCreateArgs} args - Arguments to create a HourlyRate.
+     * @example
+     * // Create one HourlyRate
+     * const HourlyRate = await prisma.hourlyRate.create({
+     *   data: {
+     *     // ... data to create a HourlyRate
+     *   }
+     * })
+     * 
+     */
+    create<T extends HourlyRateCreateArgs>(args: SelectSubset<T, HourlyRateCreateArgs<ExtArgs>>): Prisma__HourlyRateClient<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many HourlyRates.
+     * @param {HourlyRateCreateManyArgs} args - Arguments to create many HourlyRates.
+     * @example
+     * // Create many HourlyRates
+     * const hourlyRate = await prisma.hourlyRate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends HourlyRateCreateManyArgs>(args?: SelectSubset<T, HourlyRateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many HourlyRates and returns the data saved in the database.
+     * @param {HourlyRateCreateManyAndReturnArgs} args - Arguments to create many HourlyRates.
+     * @example
+     * // Create many HourlyRates
+     * const hourlyRate = await prisma.hourlyRate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many HourlyRates and only return the `id`
+     * const hourlyRateWithIdOnly = await prisma.hourlyRate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends HourlyRateCreateManyAndReturnArgs>(args?: SelectSubset<T, HourlyRateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a HourlyRate.
+     * @param {HourlyRateDeleteArgs} args - Arguments to delete one HourlyRate.
+     * @example
+     * // Delete one HourlyRate
+     * const HourlyRate = await prisma.hourlyRate.delete({
+     *   where: {
+     *     // ... filter to delete one HourlyRate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends HourlyRateDeleteArgs>(args: SelectSubset<T, HourlyRateDeleteArgs<ExtArgs>>): Prisma__HourlyRateClient<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one HourlyRate.
+     * @param {HourlyRateUpdateArgs} args - Arguments to update one HourlyRate.
+     * @example
+     * // Update one HourlyRate
+     * const hourlyRate = await prisma.hourlyRate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends HourlyRateUpdateArgs>(args: SelectSubset<T, HourlyRateUpdateArgs<ExtArgs>>): Prisma__HourlyRateClient<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more HourlyRates.
+     * @param {HourlyRateDeleteManyArgs} args - Arguments to filter HourlyRates to delete.
+     * @example
+     * // Delete a few HourlyRates
+     * const { count } = await prisma.hourlyRate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends HourlyRateDeleteManyArgs>(args?: SelectSubset<T, HourlyRateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HourlyRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HourlyRateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many HourlyRates
+     * const hourlyRate = await prisma.hourlyRate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends HourlyRateUpdateManyArgs>(args: SelectSubset<T, HourlyRateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HourlyRates and returns the data updated in the database.
+     * @param {HourlyRateUpdateManyAndReturnArgs} args - Arguments to update many HourlyRates.
+     * @example
+     * // Update many HourlyRates
+     * const hourlyRate = await prisma.hourlyRate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more HourlyRates and only return the `id`
+     * const hourlyRateWithIdOnly = await prisma.hourlyRate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends HourlyRateUpdateManyAndReturnArgs>(args: SelectSubset<T, HourlyRateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one HourlyRate.
+     * @param {HourlyRateUpsertArgs} args - Arguments to update or create a HourlyRate.
+     * @example
+     * // Update or create a HourlyRate
+     * const hourlyRate = await prisma.hourlyRate.upsert({
+     *   create: {
+     *     // ... data to create a HourlyRate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the HourlyRate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends HourlyRateUpsertArgs>(args: SelectSubset<T, HourlyRateUpsertArgs<ExtArgs>>): Prisma__HourlyRateClient<$Result.GetResult<Prisma.$HourlyRatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of HourlyRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HourlyRateCountArgs} args - Arguments to filter HourlyRates to count.
+     * @example
+     * // Count the number of HourlyRates
+     * const count = await prisma.hourlyRate.count({
+     *   where: {
+     *     // ... the filter for the HourlyRates we want to count
+     *   }
+     * })
+    **/
+    count<T extends HourlyRateCountArgs>(
+      args?: Subset<T, HourlyRateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], HourlyRateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a HourlyRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HourlyRateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends HourlyRateAggregateArgs>(args: Subset<T, HourlyRateAggregateArgs>): Prisma.PrismaPromise<GetHourlyRateAggregateType<T>>
+
+    /**
+     * Group by HourlyRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HourlyRateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends HourlyRateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: HourlyRateGroupByArgs['orderBy'] }
+        : { orderBy?: HourlyRateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, HourlyRateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHourlyRateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the HourlyRate model
+   */
+  readonly fields: HourlyRateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for HourlyRate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__HourlyRateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    provider<T extends UtilityProviderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UtilityProviderDefaultArgs<ExtArgs>>): Prisma__UtilityProviderClient<$Result.GetResult<Prisma.$UtilityProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the HourlyRate model
+   */
+  interface HourlyRateFieldRefs {
+    readonly id: FieldRef<"HourlyRate", 'String'>
+    readonly providerId: FieldRef<"HourlyRate", 'String'>
+    readonly date: FieldRef<"HourlyRate", 'DateTime'>
+    readonly hour: FieldRef<"HourlyRate", 'Int'>
+    readonly baseRate: FieldRef<"HourlyRate", 'Decimal'>
+    readonly deliveryCost: FieldRef<"HourlyRate", 'Decimal'>
+    readonly totalRate: FieldRef<"HourlyRate", 'Decimal'>
+    readonly periodIndex: FieldRef<"HourlyRate", 'Int'>
+    readonly periodLabel: FieldRef<"HourlyRate", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * HourlyRate findUnique
+   */
+  export type HourlyRateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    /**
+     * Filter, which HourlyRate to fetch.
+     */
+    where: HourlyRateWhereUniqueInput
+  }
+
+  /**
+   * HourlyRate findUniqueOrThrow
+   */
+  export type HourlyRateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    /**
+     * Filter, which HourlyRate to fetch.
+     */
+    where: HourlyRateWhereUniqueInput
+  }
+
+  /**
+   * HourlyRate findFirst
+   */
+  export type HourlyRateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    /**
+     * Filter, which HourlyRate to fetch.
+     */
+    where?: HourlyRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HourlyRates to fetch.
+     */
+    orderBy?: HourlyRateOrderByWithRelationInput | HourlyRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HourlyRates.
+     */
+    cursor?: HourlyRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HourlyRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HourlyRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HourlyRates.
+     */
+    distinct?: HourlyRateScalarFieldEnum | HourlyRateScalarFieldEnum[]
+  }
+
+  /**
+   * HourlyRate findFirstOrThrow
+   */
+  export type HourlyRateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    /**
+     * Filter, which HourlyRate to fetch.
+     */
+    where?: HourlyRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HourlyRates to fetch.
+     */
+    orderBy?: HourlyRateOrderByWithRelationInput | HourlyRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HourlyRates.
+     */
+    cursor?: HourlyRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HourlyRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HourlyRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HourlyRates.
+     */
+    distinct?: HourlyRateScalarFieldEnum | HourlyRateScalarFieldEnum[]
+  }
+
+  /**
+   * HourlyRate findMany
+   */
+  export type HourlyRateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    /**
+     * Filter, which HourlyRates to fetch.
+     */
+    where?: HourlyRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HourlyRates to fetch.
+     */
+    orderBy?: HourlyRateOrderByWithRelationInput | HourlyRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing HourlyRates.
+     */
+    cursor?: HourlyRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HourlyRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HourlyRates.
+     */
+    skip?: number
+    distinct?: HourlyRateScalarFieldEnum | HourlyRateScalarFieldEnum[]
+  }
+
+  /**
+   * HourlyRate create
+   */
+  export type HourlyRateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a HourlyRate.
+     */
+    data: XOR<HourlyRateCreateInput, HourlyRateUncheckedCreateInput>
+  }
+
+  /**
+   * HourlyRate createMany
+   */
+  export type HourlyRateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many HourlyRates.
+     */
+    data: HourlyRateCreateManyInput | HourlyRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HourlyRate createManyAndReturn
+   */
+  export type HourlyRateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * The data used to create many HourlyRates.
+     */
+    data: HourlyRateCreateManyInput | HourlyRateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * HourlyRate update
+   */
+  export type HourlyRateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a HourlyRate.
+     */
+    data: XOR<HourlyRateUpdateInput, HourlyRateUncheckedUpdateInput>
+    /**
+     * Choose, which HourlyRate to update.
+     */
+    where: HourlyRateWhereUniqueInput
+  }
+
+  /**
+   * HourlyRate updateMany
+   */
+  export type HourlyRateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update HourlyRates.
+     */
+    data: XOR<HourlyRateUpdateManyMutationInput, HourlyRateUncheckedUpdateManyInput>
+    /**
+     * Filter which HourlyRates to update
+     */
+    where?: HourlyRateWhereInput
+    /**
+     * Limit how many HourlyRates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * HourlyRate updateManyAndReturn
+   */
+  export type HourlyRateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * The data used to update HourlyRates.
+     */
+    data: XOR<HourlyRateUpdateManyMutationInput, HourlyRateUncheckedUpdateManyInput>
+    /**
+     * Filter which HourlyRates to update
+     */
+    where?: HourlyRateWhereInput
+    /**
+     * Limit how many HourlyRates to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * HourlyRate upsert
+   */
+  export type HourlyRateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the HourlyRate to update in case it exists.
+     */
+    where: HourlyRateWhereUniqueInput
+    /**
+     * In case the HourlyRate found by the `where` argument doesn't exist, create a new HourlyRate with this data.
+     */
+    create: XOR<HourlyRateCreateInput, HourlyRateUncheckedCreateInput>
+    /**
+     * In case the HourlyRate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<HourlyRateUpdateInput, HourlyRateUncheckedUpdateInput>
+  }
+
+  /**
+   * HourlyRate delete
+   */
+  export type HourlyRateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+    /**
+     * Filter which HourlyRate to delete.
+     */
+    where: HourlyRateWhereUniqueInput
+  }
+
+  /**
+   * HourlyRate deleteMany
+   */
+  export type HourlyRateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HourlyRates to delete
+     */
+    where?: HourlyRateWhereInput
+    /**
+     * Limit how many HourlyRates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * HourlyRate without action
+   */
+  export type HourlyRateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HourlyRate
+     */
+    select?: HourlyRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HourlyRate
+     */
+    omit?: HourlyRateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HourlyRateInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5558,7 +8137,8 @@ export namespace Prisma {
   export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
-    utilityProv: 'utilityProv'
+    utilityProv: 'utilityProv',
+    selectedProviderId: 'selectedProviderId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -5598,12 +8178,51 @@ export namespace Prisma {
   export type BillHistoryScalarFieldEnum = (typeof BillHistoryScalarFieldEnum)[keyof typeof BillHistoryScalarFieldEnum]
 
 
+  export const UtilityProviderScalarFieldEnum: {
+    id: 'id',
+    zipCode: 'zipCode',
+    utilityName: 'utilityName',
+    rateName: 'rateName',
+    sector: 'sector',
+    rateStructureJson: 'rateStructureJson',
+    weekdayScheduleJson: 'weekdayScheduleJson',
+    weekendScheduleJson: 'weekendScheduleJson',
+    fuelAdjustmentsJson: 'fuelAdjustmentsJson',
+    fetchedAt: 'fetchedAt'
+  };
+
+  export type UtilityProviderScalarFieldEnum = (typeof UtilityProviderScalarFieldEnum)[keyof typeof UtilityProviderScalarFieldEnum]
+
+
+  export const HourlyRateScalarFieldEnum: {
+    id: 'id',
+    providerId: 'providerId',
+    date: 'date',
+    hour: 'hour',
+    baseRate: 'baseRate',
+    deliveryCost: 'deliveryCost',
+    totalRate: 'totalRate',
+    periodIndex: 'periodIndex',
+    periodLabel: 'periodLabel'
+  };
+
+  export type HourlyRateScalarFieldEnum = (typeof HourlyRateScalarFieldEnum)[keyof typeof HourlyRateScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -5620,6 +8239,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -5702,6 +8330,20 @@ export namespace Prisma {
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
   /**
    * Deep Input Types
    */
@@ -5714,6 +8356,8 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     utilityProv?: StringNullableFilter<"User"> | string | null
+    selectedProviderId?: StringNullableFilter<"User"> | string | null
+    selectedProvider?: XOR<UtilityProviderNullableScalarRelationFilter, UtilityProviderWhereInput> | null
     locations?: LocationListRelationFilter
     billHistory?: BillHistoryListRelationFilter
     devices?: DeviceListRelationFilter
@@ -5723,6 +8367,8 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     utilityProv?: SortOrderInput | SortOrder
+    selectedProviderId?: SortOrderInput | SortOrder
+    selectedProvider?: UtilityProviderOrderByWithRelationInput
     locations?: LocationOrderByRelationAggregateInput
     billHistory?: BillHistoryOrderByRelationAggregateInput
     devices?: DeviceOrderByRelationAggregateInput
@@ -5735,6 +8381,8 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     utilityProv?: StringNullableFilter<"User"> | string | null
+    selectedProviderId?: StringNullableFilter<"User"> | string | null
+    selectedProvider?: XOR<UtilityProviderNullableScalarRelationFilter, UtilityProviderWhereInput> | null
     locations?: LocationListRelationFilter
     billHistory?: BillHistoryListRelationFilter
     devices?: DeviceListRelationFilter
@@ -5744,6 +8392,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     utilityProv?: SortOrderInput | SortOrder
+    selectedProviderId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -5756,6 +8405,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     utilityProv?: StringNullableWithAggregatesFilter<"User"> | string | null
+    selectedProviderId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type LocationWhereInput = {
@@ -5932,10 +8582,173 @@ export namespace Prisma {
     createdDate?: DateTimeWithAggregatesFilter<"BillHistory"> | Date | string
   }
 
+  export type UtilityProviderWhereInput = {
+    AND?: UtilityProviderWhereInput | UtilityProviderWhereInput[]
+    OR?: UtilityProviderWhereInput[]
+    NOT?: UtilityProviderWhereInput | UtilityProviderWhereInput[]
+    id?: StringFilter<"UtilityProvider"> | string
+    zipCode?: StringFilter<"UtilityProvider"> | string
+    utilityName?: StringFilter<"UtilityProvider"> | string
+    rateName?: StringFilter<"UtilityProvider"> | string
+    sector?: StringFilter<"UtilityProvider"> | string
+    rateStructureJson?: JsonNullableFilter<"UtilityProvider">
+    weekdayScheduleJson?: JsonNullableFilter<"UtilityProvider">
+    weekendScheduleJson?: JsonNullableFilter<"UtilityProvider">
+    fuelAdjustmentsJson?: JsonNullableFilter<"UtilityProvider">
+    fetchedAt?: DateTimeFilter<"UtilityProvider"> | Date | string
+    hourlyRates?: HourlyRateListRelationFilter
+    users?: UserListRelationFilter
+  }
+
+  export type UtilityProviderOrderByWithRelationInput = {
+    id?: SortOrder
+    zipCode?: SortOrder
+    utilityName?: SortOrder
+    rateName?: SortOrder
+    sector?: SortOrder
+    rateStructureJson?: SortOrderInput | SortOrder
+    weekdayScheduleJson?: SortOrderInput | SortOrder
+    weekendScheduleJson?: SortOrderInput | SortOrder
+    fuelAdjustmentsJson?: SortOrderInput | SortOrder
+    fetchedAt?: SortOrder
+    hourlyRates?: HourlyRateOrderByRelationAggregateInput
+    users?: UserOrderByRelationAggregateInput
+  }
+
+  export type UtilityProviderWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    zipCode_utilityName_rateName?: UtilityProviderZipCodeUtilityNameRateNameCompoundUniqueInput
+    AND?: UtilityProviderWhereInput | UtilityProviderWhereInput[]
+    OR?: UtilityProviderWhereInput[]
+    NOT?: UtilityProviderWhereInput | UtilityProviderWhereInput[]
+    zipCode?: StringFilter<"UtilityProvider"> | string
+    utilityName?: StringFilter<"UtilityProvider"> | string
+    rateName?: StringFilter<"UtilityProvider"> | string
+    sector?: StringFilter<"UtilityProvider"> | string
+    rateStructureJson?: JsonNullableFilter<"UtilityProvider">
+    weekdayScheduleJson?: JsonNullableFilter<"UtilityProvider">
+    weekendScheduleJson?: JsonNullableFilter<"UtilityProvider">
+    fuelAdjustmentsJson?: JsonNullableFilter<"UtilityProvider">
+    fetchedAt?: DateTimeFilter<"UtilityProvider"> | Date | string
+    hourlyRates?: HourlyRateListRelationFilter
+    users?: UserListRelationFilter
+  }, "id" | "zipCode_utilityName_rateName">
+
+  export type UtilityProviderOrderByWithAggregationInput = {
+    id?: SortOrder
+    zipCode?: SortOrder
+    utilityName?: SortOrder
+    rateName?: SortOrder
+    sector?: SortOrder
+    rateStructureJson?: SortOrderInput | SortOrder
+    weekdayScheduleJson?: SortOrderInput | SortOrder
+    weekendScheduleJson?: SortOrderInput | SortOrder
+    fuelAdjustmentsJson?: SortOrderInput | SortOrder
+    fetchedAt?: SortOrder
+    _count?: UtilityProviderCountOrderByAggregateInput
+    _max?: UtilityProviderMaxOrderByAggregateInput
+    _min?: UtilityProviderMinOrderByAggregateInput
+  }
+
+  export type UtilityProviderScalarWhereWithAggregatesInput = {
+    AND?: UtilityProviderScalarWhereWithAggregatesInput | UtilityProviderScalarWhereWithAggregatesInput[]
+    OR?: UtilityProviderScalarWhereWithAggregatesInput[]
+    NOT?: UtilityProviderScalarWhereWithAggregatesInput | UtilityProviderScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UtilityProvider"> | string
+    zipCode?: StringWithAggregatesFilter<"UtilityProvider"> | string
+    utilityName?: StringWithAggregatesFilter<"UtilityProvider"> | string
+    rateName?: StringWithAggregatesFilter<"UtilityProvider"> | string
+    sector?: StringWithAggregatesFilter<"UtilityProvider"> | string
+    rateStructureJson?: JsonNullableWithAggregatesFilter<"UtilityProvider">
+    weekdayScheduleJson?: JsonNullableWithAggregatesFilter<"UtilityProvider">
+    weekendScheduleJson?: JsonNullableWithAggregatesFilter<"UtilityProvider">
+    fuelAdjustmentsJson?: JsonNullableWithAggregatesFilter<"UtilityProvider">
+    fetchedAt?: DateTimeWithAggregatesFilter<"UtilityProvider"> | Date | string
+  }
+
+  export type HourlyRateWhereInput = {
+    AND?: HourlyRateWhereInput | HourlyRateWhereInput[]
+    OR?: HourlyRateWhereInput[]
+    NOT?: HourlyRateWhereInput | HourlyRateWhereInput[]
+    id?: StringFilter<"HourlyRate"> | string
+    providerId?: StringFilter<"HourlyRate"> | string
+    date?: DateTimeFilter<"HourlyRate"> | Date | string
+    hour?: IntFilter<"HourlyRate"> | number
+    baseRate?: DecimalFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFilter<"HourlyRate"> | number
+    periodLabel?: StringFilter<"HourlyRate"> | string
+    provider?: XOR<UtilityProviderScalarRelationFilter, UtilityProviderWhereInput>
+  }
+
+  export type HourlyRateOrderByWithRelationInput = {
+    id?: SortOrder
+    providerId?: SortOrder
+    date?: SortOrder
+    hour?: SortOrder
+    baseRate?: SortOrder
+    deliveryCost?: SortOrder
+    totalRate?: SortOrder
+    periodIndex?: SortOrder
+    periodLabel?: SortOrder
+    provider?: UtilityProviderOrderByWithRelationInput
+  }
+
+  export type HourlyRateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    providerId_date_hour?: HourlyRateProviderIdDateHourCompoundUniqueInput
+    AND?: HourlyRateWhereInput | HourlyRateWhereInput[]
+    OR?: HourlyRateWhereInput[]
+    NOT?: HourlyRateWhereInput | HourlyRateWhereInput[]
+    providerId?: StringFilter<"HourlyRate"> | string
+    date?: DateTimeFilter<"HourlyRate"> | Date | string
+    hour?: IntFilter<"HourlyRate"> | number
+    baseRate?: DecimalFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFilter<"HourlyRate"> | number
+    periodLabel?: StringFilter<"HourlyRate"> | string
+    provider?: XOR<UtilityProviderScalarRelationFilter, UtilityProviderWhereInput>
+  }, "id" | "providerId_date_hour">
+
+  export type HourlyRateOrderByWithAggregationInput = {
+    id?: SortOrder
+    providerId?: SortOrder
+    date?: SortOrder
+    hour?: SortOrder
+    baseRate?: SortOrder
+    deliveryCost?: SortOrder
+    totalRate?: SortOrder
+    periodIndex?: SortOrder
+    periodLabel?: SortOrder
+    _count?: HourlyRateCountOrderByAggregateInput
+    _avg?: HourlyRateAvgOrderByAggregateInput
+    _max?: HourlyRateMaxOrderByAggregateInput
+    _min?: HourlyRateMinOrderByAggregateInput
+    _sum?: HourlyRateSumOrderByAggregateInput
+  }
+
+  export type HourlyRateScalarWhereWithAggregatesInput = {
+    AND?: HourlyRateScalarWhereWithAggregatesInput | HourlyRateScalarWhereWithAggregatesInput[]
+    OR?: HourlyRateScalarWhereWithAggregatesInput[]
+    NOT?: HourlyRateScalarWhereWithAggregatesInput | HourlyRateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"HourlyRate"> | string
+    providerId?: StringWithAggregatesFilter<"HourlyRate"> | string
+    date?: DateTimeWithAggregatesFilter<"HourlyRate"> | Date | string
+    hour?: IntWithAggregatesFilter<"HourlyRate"> | number
+    baseRate?: DecimalWithAggregatesFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalWithAggregatesFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalWithAggregatesFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntWithAggregatesFilter<"HourlyRate"> | number
+    periodLabel?: StringWithAggregatesFilter<"HourlyRate"> | string
+  }
+
   export type UserCreateInput = {
     id: string
     email: string
     utilityProv?: string | null
+    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
     locations?: LocationCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryCreateNestedManyWithoutUserInput
     devices?: DeviceCreateNestedManyWithoutUserInput
@@ -5945,6 +8758,7 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv?: string | null
+    selectedProviderId?: string | null
     locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
@@ -5954,6 +8768,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
     locations?: LocationUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
     devices?: DeviceUpdateManyWithoutUserNestedInput
@@ -5963,6 +8778,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
     locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
@@ -5972,6 +8788,7 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv?: string | null
+    selectedProviderId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -5984,6 +8801,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type LocationCreateInput = {
@@ -6158,6 +8976,188 @@ export namespace Prisma {
     createdDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UtilityProviderCreateInput = {
+    id?: string
+    zipCode: string
+    utilityName: string
+    rateName: string
+    sector?: string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: Date | string
+    hourlyRates?: HourlyRateCreateNestedManyWithoutProviderInput
+    users?: UserCreateNestedManyWithoutSelectedProviderInput
+  }
+
+  export type UtilityProviderUncheckedCreateInput = {
+    id?: string
+    zipCode: string
+    utilityName: string
+    rateName: string
+    sector?: string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: Date | string
+    hourlyRates?: HourlyRateUncheckedCreateNestedManyWithoutProviderInput
+    users?: UserUncheckedCreateNestedManyWithoutSelectedProviderInput
+  }
+
+  export type UtilityProviderUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hourlyRates?: HourlyRateUpdateManyWithoutProviderNestedInput
+    users?: UserUpdateManyWithoutSelectedProviderNestedInput
+  }
+
+  export type UtilityProviderUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hourlyRates?: HourlyRateUncheckedUpdateManyWithoutProviderNestedInput
+    users?: UserUncheckedUpdateManyWithoutSelectedProviderNestedInput
+  }
+
+  export type UtilityProviderCreateManyInput = {
+    id?: string
+    zipCode: string
+    utilityName: string
+    rateName: string
+    sector?: string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: Date | string
+  }
+
+  export type UtilityProviderUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UtilityProviderUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HourlyRateCreateInput = {
+    id?: string
+    date: Date | string
+    hour: number
+    baseRate: Decimal | DecimalJsLike | number | string
+    deliveryCost: Decimal | DecimalJsLike | number | string
+    totalRate: Decimal | DecimalJsLike | number | string
+    periodIndex: number
+    periodLabel: string
+    provider: UtilityProviderCreateNestedOneWithoutHourlyRatesInput
+  }
+
+  export type HourlyRateUncheckedCreateInput = {
+    id?: string
+    providerId: string
+    date: Date | string
+    hour: number
+    baseRate: Decimal | DecimalJsLike | number | string
+    deliveryCost: Decimal | DecimalJsLike | number | string
+    totalRate: Decimal | DecimalJsLike | number | string
+    periodIndex: number
+    periodLabel: string
+  }
+
+  export type HourlyRateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    hour?: IntFieldUpdateOperationsInput | number
+    baseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFieldUpdateOperationsInput | number
+    periodLabel?: StringFieldUpdateOperationsInput | string
+    provider?: UtilityProviderUpdateOneRequiredWithoutHourlyRatesNestedInput
+  }
+
+  export type HourlyRateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    hour?: IntFieldUpdateOperationsInput | number
+    baseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFieldUpdateOperationsInput | number
+    periodLabel?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type HourlyRateCreateManyInput = {
+    id?: string
+    providerId: string
+    date: Date | string
+    hour: number
+    baseRate: Decimal | DecimalJsLike | number | string
+    deliveryCost: Decimal | DecimalJsLike | number | string
+    totalRate: Decimal | DecimalJsLike | number | string
+    periodIndex: number
+    periodLabel: string
+  }
+
+  export type HourlyRateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    hour?: IntFieldUpdateOperationsInput | number
+    baseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFieldUpdateOperationsInput | number
+    periodLabel?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type HourlyRateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    providerId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    hour?: IntFieldUpdateOperationsInput | number
+    baseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFieldUpdateOperationsInput | number
+    periodLabel?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -6186,6 +9186,11 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type UtilityProviderNullableScalarRelationFilter = {
+    is?: UtilityProviderWhereInput | null
+    isNot?: UtilityProviderWhereInput | null
   }
 
   export type LocationListRelationFilter = {
@@ -6227,18 +9232,21 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     utilityProv?: SortOrder
+    selectedProviderId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     utilityProv?: SortOrder
+    selectedProviderId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     utilityProv?: SortOrder
+    selectedProviderId?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -6493,6 +9501,208 @@ export namespace Prisma {
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type HourlyRateListRelationFilter = {
+    every?: HourlyRateWhereInput
+    some?: HourlyRateWhereInput
+    none?: HourlyRateWhereInput
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
+  export type HourlyRateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UtilityProviderZipCodeUtilityNameRateNameCompoundUniqueInput = {
+    zipCode: string
+    utilityName: string
+    rateName: string
+  }
+
+  export type UtilityProviderCountOrderByAggregateInput = {
+    id?: SortOrder
+    zipCode?: SortOrder
+    utilityName?: SortOrder
+    rateName?: SortOrder
+    sector?: SortOrder
+    rateStructureJson?: SortOrder
+    weekdayScheduleJson?: SortOrder
+    weekendScheduleJson?: SortOrder
+    fuelAdjustmentsJson?: SortOrder
+    fetchedAt?: SortOrder
+  }
+
+  export type UtilityProviderMaxOrderByAggregateInput = {
+    id?: SortOrder
+    zipCode?: SortOrder
+    utilityName?: SortOrder
+    rateName?: SortOrder
+    sector?: SortOrder
+    fetchedAt?: SortOrder
+  }
+
+  export type UtilityProviderMinOrderByAggregateInput = {
+    id?: SortOrder
+    zipCode?: SortOrder
+    utilityName?: SortOrder
+    rateName?: SortOrder
+    sector?: SortOrder
+    fetchedAt?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type UtilityProviderScalarRelationFilter = {
+    is?: UtilityProviderWhereInput
+    isNot?: UtilityProviderWhereInput
+  }
+
+  export type HourlyRateProviderIdDateHourCompoundUniqueInput = {
+    providerId: string
+    date: Date | string
+    hour: number
+  }
+
+  export type HourlyRateCountOrderByAggregateInput = {
+    id?: SortOrder
+    providerId?: SortOrder
+    date?: SortOrder
+    hour?: SortOrder
+    baseRate?: SortOrder
+    deliveryCost?: SortOrder
+    totalRate?: SortOrder
+    periodIndex?: SortOrder
+    periodLabel?: SortOrder
+  }
+
+  export type HourlyRateAvgOrderByAggregateInput = {
+    hour?: SortOrder
+    baseRate?: SortOrder
+    deliveryCost?: SortOrder
+    totalRate?: SortOrder
+    periodIndex?: SortOrder
+  }
+
+  export type HourlyRateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    providerId?: SortOrder
+    date?: SortOrder
+    hour?: SortOrder
+    baseRate?: SortOrder
+    deliveryCost?: SortOrder
+    totalRate?: SortOrder
+    periodIndex?: SortOrder
+    periodLabel?: SortOrder
+  }
+
+  export type HourlyRateMinOrderByAggregateInput = {
+    id?: SortOrder
+    providerId?: SortOrder
+    date?: SortOrder
+    hour?: SortOrder
+    baseRate?: SortOrder
+    deliveryCost?: SortOrder
+    totalRate?: SortOrder
+    periodIndex?: SortOrder
+    periodLabel?: SortOrder
+  }
+
+  export type HourlyRateSumOrderByAggregateInput = {
+    hour?: SortOrder
+    baseRate?: SortOrder
+    deliveryCost?: SortOrder
+    totalRate?: SortOrder
+    periodIndex?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type UtilityProviderCreateNestedOneWithoutUsersInput = {
+    create?: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: UtilityProviderCreateOrConnectWithoutUsersInput
+    connect?: UtilityProviderWhereUniqueInput
+  }
 
   export type LocationCreateNestedManyWithoutUserInput = {
     create?: XOR<LocationCreateWithoutUserInput, LocationUncheckedCreateWithoutUserInput> | LocationCreateWithoutUserInput[] | LocationUncheckedCreateWithoutUserInput[]
@@ -6542,6 +9752,16 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type UtilityProviderUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: UtilityProviderCreateOrConnectWithoutUsersInput
+    upsert?: UtilityProviderUpsertWithoutUsersInput
+    disconnect?: UtilityProviderWhereInput | boolean
+    delete?: UtilityProviderWhereInput | boolean
+    connect?: UtilityProviderWhereUniqueInput
+    update?: XOR<XOR<UtilityProviderUpdateToOneWithWhereWithoutUsersInput, UtilityProviderUpdateWithoutUsersInput>, UtilityProviderUncheckedUpdateWithoutUsersInput>
   }
 
   export type LocationUpdateManyWithoutUserNestedInput = {
@@ -6700,6 +9920,112 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutBillHistoryInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBillHistoryInput, UserUpdateWithoutBillHistoryInput>, UserUncheckedUpdateWithoutBillHistoryInput>
+  }
+
+  export type HourlyRateCreateNestedManyWithoutProviderInput = {
+    create?: XOR<HourlyRateCreateWithoutProviderInput, HourlyRateUncheckedCreateWithoutProviderInput> | HourlyRateCreateWithoutProviderInput[] | HourlyRateUncheckedCreateWithoutProviderInput[]
+    connectOrCreate?: HourlyRateCreateOrConnectWithoutProviderInput | HourlyRateCreateOrConnectWithoutProviderInput[]
+    createMany?: HourlyRateCreateManyProviderInputEnvelope
+    connect?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedManyWithoutSelectedProviderInput = {
+    create?: XOR<UserCreateWithoutSelectedProviderInput, UserUncheckedCreateWithoutSelectedProviderInput> | UserCreateWithoutSelectedProviderInput[] | UserUncheckedCreateWithoutSelectedProviderInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutSelectedProviderInput | UserCreateOrConnectWithoutSelectedProviderInput[]
+    createMany?: UserCreateManySelectedProviderInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type HourlyRateUncheckedCreateNestedManyWithoutProviderInput = {
+    create?: XOR<HourlyRateCreateWithoutProviderInput, HourlyRateUncheckedCreateWithoutProviderInput> | HourlyRateCreateWithoutProviderInput[] | HourlyRateUncheckedCreateWithoutProviderInput[]
+    connectOrCreate?: HourlyRateCreateOrConnectWithoutProviderInput | HourlyRateCreateOrConnectWithoutProviderInput[]
+    createMany?: HourlyRateCreateManyProviderInputEnvelope
+    connect?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutSelectedProviderInput = {
+    create?: XOR<UserCreateWithoutSelectedProviderInput, UserUncheckedCreateWithoutSelectedProviderInput> | UserCreateWithoutSelectedProviderInput[] | UserUncheckedCreateWithoutSelectedProviderInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutSelectedProviderInput | UserCreateOrConnectWithoutSelectedProviderInput[]
+    createMany?: UserCreateManySelectedProviderInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type HourlyRateUpdateManyWithoutProviderNestedInput = {
+    create?: XOR<HourlyRateCreateWithoutProviderInput, HourlyRateUncheckedCreateWithoutProviderInput> | HourlyRateCreateWithoutProviderInput[] | HourlyRateUncheckedCreateWithoutProviderInput[]
+    connectOrCreate?: HourlyRateCreateOrConnectWithoutProviderInput | HourlyRateCreateOrConnectWithoutProviderInput[]
+    upsert?: HourlyRateUpsertWithWhereUniqueWithoutProviderInput | HourlyRateUpsertWithWhereUniqueWithoutProviderInput[]
+    createMany?: HourlyRateCreateManyProviderInputEnvelope
+    set?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+    disconnect?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+    delete?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+    connect?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+    update?: HourlyRateUpdateWithWhereUniqueWithoutProviderInput | HourlyRateUpdateWithWhereUniqueWithoutProviderInput[]
+    updateMany?: HourlyRateUpdateManyWithWhereWithoutProviderInput | HourlyRateUpdateManyWithWhereWithoutProviderInput[]
+    deleteMany?: HourlyRateScalarWhereInput | HourlyRateScalarWhereInput[]
+  }
+
+  export type UserUpdateManyWithoutSelectedProviderNestedInput = {
+    create?: XOR<UserCreateWithoutSelectedProviderInput, UserUncheckedCreateWithoutSelectedProviderInput> | UserCreateWithoutSelectedProviderInput[] | UserUncheckedCreateWithoutSelectedProviderInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutSelectedProviderInput | UserCreateOrConnectWithoutSelectedProviderInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutSelectedProviderInput | UserUpsertWithWhereUniqueWithoutSelectedProviderInput[]
+    createMany?: UserCreateManySelectedProviderInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutSelectedProviderInput | UserUpdateWithWhereUniqueWithoutSelectedProviderInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutSelectedProviderInput | UserUpdateManyWithWhereWithoutSelectedProviderInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type HourlyRateUncheckedUpdateManyWithoutProviderNestedInput = {
+    create?: XOR<HourlyRateCreateWithoutProviderInput, HourlyRateUncheckedCreateWithoutProviderInput> | HourlyRateCreateWithoutProviderInput[] | HourlyRateUncheckedCreateWithoutProviderInput[]
+    connectOrCreate?: HourlyRateCreateOrConnectWithoutProviderInput | HourlyRateCreateOrConnectWithoutProviderInput[]
+    upsert?: HourlyRateUpsertWithWhereUniqueWithoutProviderInput | HourlyRateUpsertWithWhereUniqueWithoutProviderInput[]
+    createMany?: HourlyRateCreateManyProviderInputEnvelope
+    set?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+    disconnect?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+    delete?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+    connect?: HourlyRateWhereUniqueInput | HourlyRateWhereUniqueInput[]
+    update?: HourlyRateUpdateWithWhereUniqueWithoutProviderInput | HourlyRateUpdateWithWhereUniqueWithoutProviderInput[]
+    updateMany?: HourlyRateUpdateManyWithWhereWithoutProviderInput | HourlyRateUpdateManyWithWhereWithoutProviderInput[]
+    deleteMany?: HourlyRateScalarWhereInput | HourlyRateScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutSelectedProviderNestedInput = {
+    create?: XOR<UserCreateWithoutSelectedProviderInput, UserUncheckedCreateWithoutSelectedProviderInput> | UserCreateWithoutSelectedProviderInput[] | UserUncheckedCreateWithoutSelectedProviderInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutSelectedProviderInput | UserCreateOrConnectWithoutSelectedProviderInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutSelectedProviderInput | UserUpsertWithWhereUniqueWithoutSelectedProviderInput[]
+    createMany?: UserCreateManySelectedProviderInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutSelectedProviderInput | UserUpdateWithWhereUniqueWithoutSelectedProviderInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutSelectedProviderInput | UserUpdateManyWithWhereWithoutSelectedProviderInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UtilityProviderCreateNestedOneWithoutHourlyRatesInput = {
+    create?: XOR<UtilityProviderCreateWithoutHourlyRatesInput, UtilityProviderUncheckedCreateWithoutHourlyRatesInput>
+    connectOrCreate?: UtilityProviderCreateOrConnectWithoutHourlyRatesInput
+    connect?: UtilityProviderWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UtilityProviderUpdateOneRequiredWithoutHourlyRatesNestedInput = {
+    create?: XOR<UtilityProviderCreateWithoutHourlyRatesInput, UtilityProviderUncheckedCreateWithoutHourlyRatesInput>
+    connectOrCreate?: UtilityProviderCreateOrConnectWithoutHourlyRatesInput
+    upsert?: UtilityProviderUpsertWithoutHourlyRatesInput
+    connect?: UtilityProviderWhereUniqueInput
+    update?: XOR<XOR<UtilityProviderUpdateToOneWithWhereWithoutHourlyRatesInput, UtilityProviderUpdateWithoutHourlyRatesInput>, UtilityProviderUncheckedUpdateWithoutHourlyRatesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -6893,6 +10219,89 @@ export namespace Prisma {
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type UtilityProviderCreateWithoutUsersInput = {
+    id?: string
+    zipCode: string
+    utilityName: string
+    rateName: string
+    sector?: string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: Date | string
+    hourlyRates?: HourlyRateCreateNestedManyWithoutProviderInput
+  }
+
+  export type UtilityProviderUncheckedCreateWithoutUsersInput = {
+    id?: string
+    zipCode: string
+    utilityName: string
+    rateName: string
+    sector?: string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: Date | string
+    hourlyRates?: HourlyRateUncheckedCreateNestedManyWithoutProviderInput
+  }
+
+  export type UtilityProviderCreateOrConnectWithoutUsersInput = {
+    where: UtilityProviderWhereUniqueInput
+    create: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
+  }
 
   export type LocationCreateWithoutUserInput = {
     id?: string
@@ -6966,6 +10375,45 @@ export namespace Prisma {
   export type DeviceCreateManyUserInputEnvelope = {
     data: DeviceCreateManyUserInput | DeviceCreateManyUserInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UtilityProviderUpsertWithoutUsersInput = {
+    update: XOR<UtilityProviderUpdateWithoutUsersInput, UtilityProviderUncheckedUpdateWithoutUsersInput>
+    create: XOR<UtilityProviderCreateWithoutUsersInput, UtilityProviderUncheckedCreateWithoutUsersInput>
+    where?: UtilityProviderWhereInput
+  }
+
+  export type UtilityProviderUpdateToOneWithWhereWithoutUsersInput = {
+    where?: UtilityProviderWhereInput
+    data: XOR<UtilityProviderUpdateWithoutUsersInput, UtilityProviderUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type UtilityProviderUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hourlyRates?: HourlyRateUpdateManyWithoutProviderNestedInput
+  }
+
+  export type UtilityProviderUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hourlyRates?: HourlyRateUncheckedUpdateManyWithoutProviderNestedInput
   }
 
   export type LocationUpsertWithWhereUniqueWithoutUserInput = {
@@ -7054,6 +10502,7 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv?: string | null
+    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
     billHistory?: BillHistoryCreateNestedManyWithoutUserInput
     devices?: DeviceCreateNestedManyWithoutUserInput
   }
@@ -7062,6 +10511,7 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv?: string | null
+    selectedProviderId?: string | null
     billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
   }
@@ -7086,6 +10536,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
     billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
     devices?: DeviceUpdateManyWithoutUserNestedInput
   }
@@ -7094,6 +10545,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
     billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -7102,6 +10554,7 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv?: string | null
+    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
     locations?: LocationCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryCreateNestedManyWithoutUserInput
   }
@@ -7110,6 +10563,7 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv?: string | null
+    selectedProviderId?: string | null
     locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
   }
@@ -7134,6 +10588,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
     locations?: LocationUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
   }
@@ -7142,6 +10597,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
     locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -7150,6 +10606,7 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv?: string | null
+    selectedProvider?: UtilityProviderCreateNestedOneWithoutUsersInput
     locations?: LocationCreateNestedManyWithoutUserInput
     devices?: DeviceCreateNestedManyWithoutUserInput
   }
@@ -7158,6 +10615,7 @@ export namespace Prisma {
     id: string
     email: string
     utilityProv?: string | null
+    selectedProviderId?: string | null
     locations?: LocationUncheckedCreateNestedManyWithoutUserInput
     devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
   }
@@ -7182,6 +10640,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProvider?: UtilityProviderUpdateOneWithoutUsersNestedInput
     locations?: LocationUpdateManyWithoutUserNestedInput
     devices?: DeviceUpdateManyWithoutUserNestedInput
   }
@@ -7190,8 +10649,198 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    selectedProviderId?: NullableStringFieldUpdateOperationsInput | string | null
     locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
     devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type HourlyRateCreateWithoutProviderInput = {
+    id?: string
+    date: Date | string
+    hour: number
+    baseRate: Decimal | DecimalJsLike | number | string
+    deliveryCost: Decimal | DecimalJsLike | number | string
+    totalRate: Decimal | DecimalJsLike | number | string
+    periodIndex: number
+    periodLabel: string
+  }
+
+  export type HourlyRateUncheckedCreateWithoutProviderInput = {
+    id?: string
+    date: Date | string
+    hour: number
+    baseRate: Decimal | DecimalJsLike | number | string
+    deliveryCost: Decimal | DecimalJsLike | number | string
+    totalRate: Decimal | DecimalJsLike | number | string
+    periodIndex: number
+    periodLabel: string
+  }
+
+  export type HourlyRateCreateOrConnectWithoutProviderInput = {
+    where: HourlyRateWhereUniqueInput
+    create: XOR<HourlyRateCreateWithoutProviderInput, HourlyRateUncheckedCreateWithoutProviderInput>
+  }
+
+  export type HourlyRateCreateManyProviderInputEnvelope = {
+    data: HourlyRateCreateManyProviderInput | HourlyRateCreateManyProviderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutSelectedProviderInput = {
+    id: string
+    email: string
+    utilityProv?: string | null
+    locations?: LocationCreateNestedManyWithoutUserInput
+    billHistory?: BillHistoryCreateNestedManyWithoutUserInput
+    devices?: DeviceCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSelectedProviderInput = {
+    id: string
+    email: string
+    utilityProv?: string | null
+    locations?: LocationUncheckedCreateNestedManyWithoutUserInput
+    billHistory?: BillHistoryUncheckedCreateNestedManyWithoutUserInput
+    devices?: DeviceUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSelectedProviderInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSelectedProviderInput, UserUncheckedCreateWithoutSelectedProviderInput>
+  }
+
+  export type UserCreateManySelectedProviderInputEnvelope = {
+    data: UserCreateManySelectedProviderInput | UserCreateManySelectedProviderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type HourlyRateUpsertWithWhereUniqueWithoutProviderInput = {
+    where: HourlyRateWhereUniqueInput
+    update: XOR<HourlyRateUpdateWithoutProviderInput, HourlyRateUncheckedUpdateWithoutProviderInput>
+    create: XOR<HourlyRateCreateWithoutProviderInput, HourlyRateUncheckedCreateWithoutProviderInput>
+  }
+
+  export type HourlyRateUpdateWithWhereUniqueWithoutProviderInput = {
+    where: HourlyRateWhereUniqueInput
+    data: XOR<HourlyRateUpdateWithoutProviderInput, HourlyRateUncheckedUpdateWithoutProviderInput>
+  }
+
+  export type HourlyRateUpdateManyWithWhereWithoutProviderInput = {
+    where: HourlyRateScalarWhereInput
+    data: XOR<HourlyRateUpdateManyMutationInput, HourlyRateUncheckedUpdateManyWithoutProviderInput>
+  }
+
+  export type HourlyRateScalarWhereInput = {
+    AND?: HourlyRateScalarWhereInput | HourlyRateScalarWhereInput[]
+    OR?: HourlyRateScalarWhereInput[]
+    NOT?: HourlyRateScalarWhereInput | HourlyRateScalarWhereInput[]
+    id?: StringFilter<"HourlyRate"> | string
+    providerId?: StringFilter<"HourlyRate"> | string
+    date?: DateTimeFilter<"HourlyRate"> | Date | string
+    hour?: IntFilter<"HourlyRate"> | number
+    baseRate?: DecimalFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFilter<"HourlyRate"> | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFilter<"HourlyRate"> | number
+    periodLabel?: StringFilter<"HourlyRate"> | string
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutSelectedProviderInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutSelectedProviderInput, UserUncheckedUpdateWithoutSelectedProviderInput>
+    create: XOR<UserCreateWithoutSelectedProviderInput, UserUncheckedCreateWithoutSelectedProviderInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutSelectedProviderInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutSelectedProviderInput, UserUncheckedUpdateWithoutSelectedProviderInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutSelectedProviderInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutSelectedProviderInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
+    utilityProv?: StringNullableFilter<"User"> | string | null
+    selectedProviderId?: StringNullableFilter<"User"> | string | null
+  }
+
+  export type UtilityProviderCreateWithoutHourlyRatesInput = {
+    id?: string
+    zipCode: string
+    utilityName: string
+    rateName: string
+    sector?: string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: Date | string
+    users?: UserCreateNestedManyWithoutSelectedProviderInput
+  }
+
+  export type UtilityProviderUncheckedCreateWithoutHourlyRatesInput = {
+    id?: string
+    zipCode: string
+    utilityName: string
+    rateName: string
+    sector?: string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutSelectedProviderInput
+  }
+
+  export type UtilityProviderCreateOrConnectWithoutHourlyRatesInput = {
+    where: UtilityProviderWhereUniqueInput
+    create: XOR<UtilityProviderCreateWithoutHourlyRatesInput, UtilityProviderUncheckedCreateWithoutHourlyRatesInput>
+  }
+
+  export type UtilityProviderUpsertWithoutHourlyRatesInput = {
+    update: XOR<UtilityProviderUpdateWithoutHourlyRatesInput, UtilityProviderUncheckedUpdateWithoutHourlyRatesInput>
+    create: XOR<UtilityProviderCreateWithoutHourlyRatesInput, UtilityProviderUncheckedCreateWithoutHourlyRatesInput>
+    where?: UtilityProviderWhereInput
+  }
+
+  export type UtilityProviderUpdateToOneWithWhereWithoutHourlyRatesInput = {
+    where?: UtilityProviderWhereInput
+    data: XOR<UtilityProviderUpdateWithoutHourlyRatesInput, UtilityProviderUncheckedUpdateWithoutHourlyRatesInput>
+  }
+
+  export type UtilityProviderUpdateWithoutHourlyRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutSelectedProviderNestedInput
+  }
+
+  export type UtilityProviderUncheckedUpdateWithoutHourlyRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    zipCode?: StringFieldUpdateOperationsInput | string
+    utilityName?: StringFieldUpdateOperationsInput | string
+    rateName?: StringFieldUpdateOperationsInput | string
+    sector?: StringFieldUpdateOperationsInput | string
+    rateStructureJson?: NullableJsonNullValueInput | InputJsonValue
+    weekdayScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    weekendScheduleJson?: NullableJsonNullValueInput | InputJsonValue
+    fuelAdjustmentsJson?: NullableJsonNullValueInput | InputJsonValue
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutSelectedProviderNestedInput
   }
 
   export type LocationCreateManyUserInput = {
@@ -7280,6 +10929,80 @@ export namespace Prisma {
     hourlyEnergy?: NullableFloatFieldUpdateOperationsInput | number | null
     isSmart?: BoolFieldUpdateOperationsInput | boolean
     runDurationMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type HourlyRateCreateManyProviderInput = {
+    id?: string
+    date: Date | string
+    hour: number
+    baseRate: Decimal | DecimalJsLike | number | string
+    deliveryCost: Decimal | DecimalJsLike | number | string
+    totalRate: Decimal | DecimalJsLike | number | string
+    periodIndex: number
+    periodLabel: string
+  }
+
+  export type UserCreateManySelectedProviderInput = {
+    id: string
+    email: string
+    utilityProv?: string | null
+  }
+
+  export type HourlyRateUpdateWithoutProviderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    hour?: IntFieldUpdateOperationsInput | number
+    baseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFieldUpdateOperationsInput | number
+    periodLabel?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type HourlyRateUncheckedUpdateWithoutProviderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    hour?: IntFieldUpdateOperationsInput | number
+    baseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFieldUpdateOperationsInput | number
+    periodLabel?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type HourlyRateUncheckedUpdateManyWithoutProviderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    hour?: IntFieldUpdateOperationsInput | number
+    baseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    deliveryCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    periodIndex?: IntFieldUpdateOperationsInput | number
+    periodLabel?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserUpdateWithoutSelectedProviderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    locations?: LocationUpdateManyWithoutUserNestedInput
+    billHistory?: BillHistoryUpdateManyWithoutUserNestedInput
+    devices?: DeviceUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSelectedProviderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
+    locations?: LocationUncheckedUpdateManyWithoutUserNestedInput
+    billHistory?: BillHistoryUncheckedUpdateManyWithoutUserNestedInput
+    devices?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutSelectedProviderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    utilityProv?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

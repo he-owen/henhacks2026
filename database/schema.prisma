@@ -9,12 +9,14 @@ datasource db {
 }
 
 model User {
-  id          String        @id
-  email       String        @unique
-  utilityProv String?       @map("utility_prov")
-  locations   Location[]
-  billHistory BillHistory[]
-  devices     Device[]
+  id                 String           @id
+  email              String           @unique
+  utilityProv        String?          @map("utility_prov")
+  selectedProviderId String?          @map("selected_provider_id")
+  selectedProvider   UtilityProvider? @relation(fields: [selectedProviderId], references: [id])
+  locations          Location[]
+  billHistory        BillHistory[]
+  devices            Device[]
 
   @@map("users")
 }
@@ -54,5 +56,41 @@ model BillHistory {
 
   @@index([userId])
   @@map("bill_history")
+}
+
+model UtilityProvider {
+  id                  String       @id @default(uuid()) @map("provider_id")
+  zipCode             String       @map("zip_code")
+  utilityName         String       @map("utility_name")
+  rateName            String       @map("rate_name")
+  sector              String       @default("Residential")
+  rateStructureJson   Json?        @map("rate_structure_json")
+  weekdayScheduleJson Json?        @map("weekday_schedule_json")
+  weekendScheduleJson Json?        @map("weekend_schedule_json")
+  fuelAdjustmentsJson Json?        @map("fuel_adjustments_json")
+  fetchedAt           DateTime     @default(now()) @map("fetched_at") @db.Timestamptz(6)
+  hourlyRates         HourlyRate[]
+  users               User[]
+
+  @@unique([zipCode, utilityName, rateName])
+  @@index([zipCode])
+  @@map("utility_providers")
+}
+
+model HourlyRate {
+  id           String          @id @default(uuid()) @map("rate_id")
+  providerId   String          @map("provider_id")
+  date         DateTime        @map("date") @db.Date
+  hour         Int             @map("hour")
+  baseRate     Decimal         @map("base_rate") @db.Decimal(10, 6)
+  deliveryCost Decimal         @map("delivery_cost") @db.Decimal(10, 6)
+  totalRate    Decimal         @map("total_rate") @db.Decimal(10, 6)
+  periodIndex  Int             @map("period_index")
+  periodLabel  String          @map("period_label")
+  provider     UtilityProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, date, hour])
+  @@index([providerId, date])
+  @@map("hourly_rates")
 }
 
