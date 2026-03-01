@@ -75,6 +75,51 @@ export async function deleteDevice(accessToken, deviceId) {
   return res.json();
 }
 
+/**
+ * Run the daily optimizer for the authenticated user's devices.
+ * pricesByDay: number[7][24], dayOfWeek: string, userPreferences: object
+ */
+export async function runDailyOptimizationMe(accessToken, { pricesByDay, dayOfWeek, userPreferences }) {
+  const res = await fetch(`${API_BASE}/api/optimize/daily/me`, {
+    method: "POST",
+    headers: authHeaders(accessToken),
+    body: JSON.stringify({
+      prices_by_day: pricesByDay,
+      day_of_week: dayOfWeek,
+      user_preferences: userPreferences,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const e = new Error(err.detail || "Optimization failed");
+    if (res.status === 401) e.isUnauthorized = true;
+    throw e;
+  }
+  return res.json();
+}
+
+/**
+ * Run the weekly scheduler for the authenticated user's devices.
+ * pricesByDay: number[7][24], userPreferences: object
+ */
+export async function runWeeklyOptimizationMe(accessToken, { pricesByDay, userPreferences }) {
+  const res = await fetch(`${API_BASE}/api/optimize/weekly/me`, {
+    method: "POST",
+    headers: authHeaders(accessToken),
+    body: JSON.stringify({
+      prices_by_day: pricesByDay,
+      user_preferences: userPreferences,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const e = new Error(err.detail || "Weekly optimization failed");
+    if (res.status === 401) e.isUnauthorized = true;
+    throw e;
+  }
+  return res.json();
+}
+
 /** Get the current user's profile (selectedProviderId, zip, etc.). */
 export async function getUserProfile(accessToken) {
   const res = await fetch(`${API_BASE}/api/users/me/profile`, {
