@@ -190,6 +190,7 @@ async def upsert_utility_provider(
     utility_name: str,
     rate_name: str,
     sector: str = "Residential",
+    service_type: str | None = None,
     rate_structure_json: str | None = None,
     weekday_schedule_json: str | None = None,
     weekend_schedule_json: str | None = None,
@@ -200,27 +201,29 @@ async def upsert_utility_provider(
             result = await session.execute(
                 text("""
                     INSERT INTO utility_providers
-                        (provider_id, zip_code, utility_name, rate_name, sector,
+                        (provider_id, zip_code, utility_name, rate_name, sector, service_type,
                          rate_structure_json, weekday_schedule_json,
                          weekend_schedule_json, fuel_adjustments_json, fetched_at)
                     VALUES
-                        (gen_random_uuid(), :zip_code, :utility_name, :rate_name, :sector,
+                        (gen_random_uuid(), :zip_code, :utility_name, :rate_name, :sector, :service_type,
                          CAST(:rate_structure_json AS jsonb), CAST(:weekday_schedule_json AS jsonb),
                          CAST(:weekend_schedule_json AS jsonb), CAST(:fuel_adjustments_json AS jsonb), NOW())
                     ON CONFLICT (zip_code, utility_name, rate_name) DO UPDATE SET
                         sector = EXCLUDED.sector,
+                        service_type = EXCLUDED.service_type,
                         rate_structure_json = EXCLUDED.rate_structure_json,
                         weekday_schedule_json = EXCLUDED.weekday_schedule_json,
                         weekend_schedule_json = EXCLUDED.weekend_schedule_json,
                         fuel_adjustments_json = EXCLUDED.fuel_adjustments_json,
                         fetched_at = NOW()
-                    RETURNING provider_id, zip_code, utility_name, rate_name, sector, fetched_at
+                    RETURNING provider_id, zip_code, utility_name, rate_name, sector, service_type, fetched_at
                 """),
                 {
                     "zip_code": zip_code,
                     "utility_name": utility_name,
                     "rate_name": rate_name,
                     "sector": sector,
+                    "service_type": service_type,
                     "rate_structure_json": rate_structure_json,
                     "weekday_schedule_json": weekday_schedule_json,
                     "weekend_schedule_json": weekend_schedule_json,
@@ -239,7 +242,7 @@ async def get_providers_by_zip(zip_code: str) -> list[dict]:
     async with async_session() as session:
         result = await session.execute(
             text("""
-                SELECT provider_id, zip_code, utility_name, rate_name, sector, fetched_at
+                SELECT provider_id, zip_code, utility_name, rate_name, sector, service_type, fetched_at
                 FROM utility_providers
                 WHERE zip_code = :zip_code
                 ORDER BY utility_name, rate_name
@@ -253,7 +256,7 @@ async def get_provider_by_id(provider_id: str) -> dict | None:
     async with async_session() as session:
         result = await session.execute(
             text("""
-                SELECT provider_id, zip_code, utility_name, rate_name, sector,
+                SELECT provider_id, zip_code, utility_name, rate_name, sector, service_type,
                        rate_structure_json, weekday_schedule_json,
                        weekend_schedule_json, fuel_adjustments_json, fetched_at
                 FROM utility_providers

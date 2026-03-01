@@ -58,13 +58,13 @@ model Device {
 model BillHistory {
   id          String   @id @default(uuid()) @map("bill_id")
   userId      String   @map("user_id")
-  month       Int
-  year        Int
   billTotal   Decimal  @map("bill_total") @db.Decimal(12, 2)
+  createdDate DateTime @default(now()) @map("created_date") @db.Timestamptz(6)
+  locationId  String?  @map("location_id")
+  month       Int
   usageKwh    Int?     @map("usage_kwh")
   utility     String?
-  locationId  String?  @map("location_id")
-  createdDate DateTime @default(now()) @map("created_date") @db.Timestamptz(6)
+  year        Int
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -82,6 +82,7 @@ model UtilityProvider {
   weekendScheduleJson Json?        @map("weekend_schedule_json")
   fuelAdjustmentsJson Json?        @map("fuel_adjustments_json")
   fetchedAt           DateTime     @default(now()) @map("fetched_at") @db.Timestamptz(6)
+  serviceType         String?      @map("service_type") @db.VarChar(255)
   hourlyRates         HourlyRate[]
   users               User[]
 

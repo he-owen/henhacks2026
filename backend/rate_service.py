@@ -55,19 +55,23 @@ def fetch_rates_from_openei(
     return data.get("items") or data.get("results") or []
 
 
-async def fetch_and_store_providers(zip_code: str, sector: str = "Residential") -> list[dict]:
-    """Fetch providers from OpenEI for a zip, upsert them, and return summary rows."""
+async def fetch_and_store_providers(zip_code: str, sector: str = "Residential", limit: int = 25) -> list[dict]:
+    """Fetch providers from OpenEI for a zip, upsert them, and return summary rows.
+    Uses limit=25 to get a mix of bundled, energy (unbundled), and delivery service types.
+    """
     api_key = _get_api_key()
-    items = fetch_rates_from_openei(api_key, address=zip_code, sector=sector)
+    items = fetch_rates_from_openei(api_key, address=zip_code, sector=sector, limit=limit)
     results = []
     for item in items:
         utility_name = item.get("utility") or item.get("label") or "Unknown"
         rate_name = item.get("name") or item.get("label") or "Default"
+        service_type = item.get("servicetype")
         row = await upsert_utility_provider(
             zip_code=zip_code,
             utility_name=utility_name,
             rate_name=rate_name,
             sector=item.get("sector") or sector,
+            service_type=service_type,
             rate_structure_json=json.dumps(item.get("energyratestructure")),
             weekday_schedule_json=json.dumps(item.get("energyweekdayschedule")),
             weekend_schedule_json=json.dumps(item.get("energyweekendschedule")),
@@ -169,10 +173,15 @@ def compute_rate_for_hour(
     fuel_adjustments: list | None,
     dt: datetime,
     period_labels: dict[int, str] | None = None,
+    is_bundled: bool = False,
+    is_delivery_only: bool = False,
 ) -> dict:
     """Compute the base rate and delivery cost for a specific datetime hour.
 
     Returns a dict with base_rate, delivery_cost, total_rate, period_index, period_label.
+    - Bundled: delivery_cost = 0 (already included in OpenEI rate).
+    - Energy only: base = OpenEI energy rate, delivery = our calculated TOU delivery.
+    - Delivery only: base = 0, delivery = OpenEI delivery rate (rate structure is delivery).
     """
     month_idx = dt.month - 1
     hour_idx = dt.hour
@@ -181,24 +190,24 @@ def compute_rate_for_hour(
     schedule = weekend_schedule if is_weekend else weekday_schedule
 
     if not schedule or len(schedule) != 12 or len(schedule[0]) != 24:
-        return _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt)
+        return _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt, is_bundled, is_delivery_only)
 
     period_idx = schedule[month_idx][hour_idx]
 
     if not rate_structure or period_idx >= len(rate_structure):
-        return _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt)
+        return _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt, is_bundled, is_delivery_only)
 
     period = rate_structure[period_idx]
     tiers = period if isinstance(period, list) else [period]
     if not tiers or not isinstance(tiers[0], dict):
-        return _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt)
+        return _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt, is_bundled, is_delivery_only)
 
     tier = tiers[0]
     rate_val = tier.get("rate", 0) or 0
     adj = tier.get("adj", 0) or 0
     fam = fuel_adjustments or [0] * 12
     fuel = fam[month_idx] if month_idx < len(fam) else 0
-    base_rate = float(rate_val) + float(adj) + float(fuel)
+    openei_rate = float(rate_val) + float(adj) + float(fuel)
 
     if period_labels is None:
         period_labels = _classify_periods(rate_structure)
@@ -208,7 +217,13 @@ def compute_rate_for_hour(
         label = _hour_based_label(dt.hour, is_weekend)
     elif not _schedule_has_variation_for_month(weekday_schedule, weekend_schedule, month_idx):
         label = _hour_based_label(dt.hour, is_weekend)
-    delivery = _delivery_cost_for_label(label)
+
+    if is_bundled:
+        base_rate, delivery = openei_rate, 0.0
+    elif is_delivery_only:
+        base_rate, delivery = 0.0, openei_rate
+    else:
+        base_rate, delivery = openei_rate, _delivery_cost_for_label(label)
 
     return {
         "base_rate": round(base_rate, 6),
@@ -219,20 +234,29 @@ def compute_rate_for_hour(
     }
 
 
-def _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt: datetime):
+def _flat_fallback(
+    rate_structure, fuel_adjustments, month_idx, dt: datetime,
+    is_bundled: bool = False,
+    is_delivery_only: bool = False,
+):
     """Best-effort flat rate when schedule data is missing. Uses hour-based TOU heuristic."""
-    base = 0.0
+    openei_rate = 0.0
     if rate_structure and len(rate_structure) > 0:
         period = rate_structure[0]
         tiers = period if isinstance(period, list) else [period]
         if tiers and isinstance(tiers[0], dict):
-            base = float(tiers[0].get("rate", 0) or 0) + float(tiers[0].get("adj", 0) or 0)
+            openei_rate = float(tiers[0].get("rate", 0) or 0) + float(tiers[0].get("adj", 0) or 0)
     fam = fuel_adjustments or [0] * 12
     fuel = fam[month_idx] if month_idx < len(fam) else 0
-    base += float(fuel)
+    openei_rate += float(fuel)
     is_weekend = dt.weekday() >= 5
     label = _hour_based_label(dt.hour, is_weekend)
-    delivery = _delivery_cost_for_label(label)
+    if is_bundled:
+        base, delivery = openei_rate, 0.0
+    elif is_delivery_only:
+        base, delivery = 0.0, openei_rate
+    else:
+        base, delivery = openei_rate, _delivery_cost_for_label(label)
     return {
         "base_rate": round(base, 6),
         "delivery_cost": round(delivery, 6),
@@ -263,6 +287,22 @@ async def generate_monthly_rates(provider_id: str, month: int, year: int) -> int
     if isinstance(fuel_adjustments, str):
         fuel_adjustments = json.loads(fuel_adjustments) if fuel_adjustments else None
 
+    service_type = (provider.get("service_type") or "").strip().lower()
+    rate_name = (provider.get("rate_name") or "").lower()
+
+    # Bundled: OpenEI rate includes delivery; delivery_cost = 0
+    # Use " (bundled)" or "(bundled)" to avoid matching "unbundled"
+    is_bundled = service_type == "bundled"
+    if not is_bundled:
+        # Rate name e.g. "Residential Service (Bundled)" — not "Residential Service (Unbundled)"
+        is_bundled = "bundled" in rate_name and "unbundled" not in rate_name
+    # "Delivery with Standard Offer" includes both energy+delivery; treat as bundled
+    if not is_bundled and "standard offer" in service_type:
+        is_bundled = True
+
+    # Delivery only: OpenEI rate structure is delivery charges; base = 0, delivery = OpenEI rate
+    is_delivery_only = service_type == "delivery" and not is_bundled
+
     period_labels = _classify_periods(rate_structure)
     num_days = calendar.monthrange(year, month)[1]
     rates: list[dict] = []
@@ -274,6 +314,8 @@ async def generate_monthly_rates(provider_id: str, month: int, year: int) -> int
             info = compute_rate_for_hour(
                 rate_structure, weekday_schedule, weekend_schedule, fuel_adjustments, dt,
                 period_labels=period_labels,
+                is_bundled=is_bundled,
+                is_delivery_only=is_delivery_only,
             )
             rates.append({
                 "date": dt_date,
