@@ -218,7 +218,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/saakethpula/Documents/Hackathon 2026/henhacks2026/generated/client",
+      "value": "C:\\Users\\heowe\\OneDrive\\Desktop\\henhacks\\henhacks2026\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -227,12 +227,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/saakethpula/Documents/Hackathon 2026/henhacks2026/database/schema.prisma",
+    "sourceFilePath": "C:\\Users\\heowe\\OneDrive\\Desktop\\henhacks\\henhacks2026\\database\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

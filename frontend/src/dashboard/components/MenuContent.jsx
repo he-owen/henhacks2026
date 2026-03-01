@@ -5,7 +5,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
@@ -18,7 +17,6 @@ import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
 
 const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon /> },
-  { text: 'Analytics', icon: <AnalyticsRoundedIcon /> },
   { text: 'Devices', icon: <DevicesRoundedIcon /> },
   { text: 'Billing', icon: <ReceiptLongRoundedIcon /> },
   { text: 'Optimization', icon: <TrendingDownRoundedIcon /> },

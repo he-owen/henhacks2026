@@ -7,7 +7,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import AppNavbar from './components/AppNavbar';
 import Header from './components/Header';
 import MainGrid from './components/MainGrid';
-import AnalyticsPage from './components/AnalyticsPage';
 import DevicesPage from './components/DevicesPage';
 import BillingPage from './components/BillingPage';
 import OptimizationPage from './components/OptimizationPage';
@@ -37,8 +36,6 @@ function PageContent() {
   const { currentPage } = usePage();
 
   switch (currentPage) {
-    case 'Analytics':
-      return <AnalyticsPage />;
     case 'Devices':
       return <DevicesPage />;
     case 'Billing':
