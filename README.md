@@ -2,6 +2,8 @@
 
 Smart energy management for your home. Monitor your devices, optimize electricity costs with time-of-use rates, and reduce your carbon footprint.
 
+![PhasePlan](docs/screenshots/image.png)
+
 ---
 
 ## Features
