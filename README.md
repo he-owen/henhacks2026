@@ -15,9 +15,8 @@ Smart energy management for your home. Monitor your devices, optimize electricit
 - Non-smart devices constrained to hours you're actually around
 - Weekly mode checks all 7 days to find the cheapest day for heavy loads like laundry or EV charging
 
-### AI-Powered Device Setup
+### Device Setup
 - Type a device name (and optionally brand/model) and Gemini 2.5 Flash with Google Search grounding fills in type, wattage, smart capability, and run duration
-- Batch-add up to 50 of the same device at once
 - Edit energy, run time, and location inline in the data grid
 
 ### Bill OCR
