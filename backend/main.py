@@ -2,6 +2,25 @@ import asyncio
 import logging
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Any
+
+from database import check_database
+from daily_optimizer import run_optimization_hybrid
+from weekly_scheduler import find_optimal_day_for_appliances
+
+
+class DailyOptimizeRequest(BaseModel):
+    appliances: list[dict[str, Any]]
+    prices_by_day: list[list[float]]
+    day_of_week: str
+    user_preferences: dict[str, Any]
+
+
+class WeeklyScheduleRequest(BaseModel):
+    appliances: list[dict[str, Any]]
+    prices_by_day: list[list[float]]
+    user_preferences: dict[str, Any]
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from auth0_userinfo import get_userinfo
@@ -57,6 +76,25 @@ async def status():
     }
 
 
+@app.post("/api/optimize/daily")
+async def optimize_daily(request: DailyOptimizeRequest):
+    result = run_optimization_hybrid(
+        request.appliances,
+        request.prices_by_day,
+        request.day_of_week,
+        request.user_preferences,
+    )
+    return result
+
+
+@app.post("/api/optimize/weekly")
+async def optimize_weekly(request: WeeklyScheduleRequest):
+    result = find_optimal_day_for_appliances(
+        request.appliances,
+        request.user_preferences,
+        request.prices_by_day,
+    )
+    return result
 @app.post("/api/users/me")
 async def sync_me(credentials: HTTPAuthorizationCredentials | None = Depends(security)):
     """Sync the current Auth0 user to the users table. Call with Authorization: Bearer <access_token>."""
