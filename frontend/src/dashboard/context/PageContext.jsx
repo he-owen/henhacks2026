@@ -8,6 +8,7 @@ const PATH_TO_PAGE = {
   '/optimization': 'Optimization',
   '/tools': 'Tools',
   '/preferences': 'Preferences',
+  '/about': 'About',
 };
 
 const PAGE_TO_PATH = Object.fromEntries(
