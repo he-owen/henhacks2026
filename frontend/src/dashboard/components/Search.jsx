@@ -28,9 +28,6 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ElectricBoltRoundedIcon from '@mui/icons-material/ElectricBoltRounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { useAuth0 } from '@auth0/auth0-react';
 import { usePage } from '../context/PageContext';
 import { getDevices } from '../../api';
@@ -359,33 +356,8 @@ export default function Search() {
                 </>
               )}
 
-              {!q && (
-                <Box sx={{ px: 2, py: 1.5 }}>
-                  <Typography variant="caption" color="text.secondary">
-                    Type to search pages, sections, devices, and your schedule
-                  </Typography>
-                </Box>
-              )}
             </>
           )}
-        </Box>
-
-        {/* Footer hints */}
-        <Divider />
-        <Box sx={{ display: 'flex', gap: 2, px: 2, py: 1, alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <KeyboardReturnIcon sx={{ fontSize: 14 }} />
-            <Typography variant="caption" color="text.secondary">select</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <KeyboardArrowUpIcon sx={{ fontSize: 14 }} />
-            <KeyboardArrowDownIcon sx={{ fontSize: 14 }} />
-            <Typography variant="caption" color="text.secondary">navigate</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Typography variant="caption" color="text.secondary" sx={{ fontFamily: 'monospace' }}>esc</Typography>
-            <Typography variant="caption" color="text.secondary">close</Typography>
-          </Box>
         </Box>
       </Dialog>
     </>

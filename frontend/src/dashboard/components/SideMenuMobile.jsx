@@ -10,8 +10,10 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 import SelectContent from './SelectContent';
+import { usePage } from '../context/PageContext';
 
 function SideMenuMobile({ open, toggleDrawer }) {
+  const { setNotificationsOpen, notificationCount } = usePage();
   return (
     <Drawer
       anchor="right"
@@ -46,7 +48,7 @@ function SideMenuMobile({ open, toggleDrawer }) {
               Riley Carter
             </Typography>
           </Stack>
-          <MenuButton showBadge>
+          <MenuButton showBadge badgeCount={notificationCount} onClick={() => setNotificationsOpen(true)}>
             <NotificationsRoundedIcon />
           </MenuButton>
         </Stack>

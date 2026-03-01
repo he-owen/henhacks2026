@@ -23,6 +23,10 @@ const PageContext = React.createContext({
   setWeeklyScheduleResults: () => {},
   searchHighlight: null,
   setSearchHighlight: () => {},
+  notificationsOpen: false,
+  setNotificationsOpen: () => {},
+  notificationCount: null,
+  setNotificationCount: () => {},
 });
 
 export function PageProvider({ children }) {
@@ -30,8 +34,9 @@ export function PageProvider({ children }) {
   const navigate = useNavigate();
   const [optimizationResults, setOptimizationResults] = React.useState(null);
   const [weeklyScheduleResults, setWeeklyScheduleResults] = React.useState(null);
-  // { scrollToId: string, query: string } – set by Search, cleared after scroll
   const [searchHighlight, setSearchHighlight] = React.useState(null);
+  const [notificationsOpen, setNotificationsOpen] = React.useState(false);
+  const [notificationCount, setNotificationCount] = React.useState(null);
 
   const currentPage = PATH_TO_PAGE[location.pathname] || 'Home';
 
@@ -53,8 +58,12 @@ export function PageProvider({ children }) {
       setWeeklyScheduleResults,
       searchHighlight,
       setSearchHighlight,
+      notificationsOpen,
+      setNotificationsOpen,
+      notificationCount,
+      setNotificationCount,
     }),
-    [currentPage, setCurrentPage, optimizationResults, weeklyScheduleResults, searchHighlight],
+    [currentPage, setCurrentPage, optimizationResults, weeklyScheduleResults, searchHighlight, notificationsOpen, notificationCount],
   );
 
   return <PageContext.Provider value={value}>{children}</PageContext.Provider>;
