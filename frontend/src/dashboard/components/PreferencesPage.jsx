@@ -24,6 +24,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useScrollHighlight } from '../hooks/useScrollHighlight';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -50,6 +51,7 @@ function buildDefaultSchedule() {
 }
 
 export default function PreferencesPage() {
+  useScrollHighlight();
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const { locations, refreshLocations } = useLocation();
 
@@ -304,7 +306,7 @@ export default function PreferencesPage() {
         </DialogActions>
       </Dialog>
 
-      <Card variant="outlined" sx={{ mb: 3 }}>
+      <Card id="prefs-schedule" variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 1 }}>
             Weekly Schedule
@@ -365,7 +367,7 @@ export default function PreferencesPage() {
 
           <Divider sx={{ my: 3 }} />
 
-          <Typography variant="subtitle2" sx={{ mb: 1 }}>
+          <Typography id="prefs-thermostat" variant="subtitle2" sx={{ mb: 1 }}>
             Thermostat preferences
           </Typography>
           <Stack direction="row" spacing={2} sx={{ mb: 3 }}>

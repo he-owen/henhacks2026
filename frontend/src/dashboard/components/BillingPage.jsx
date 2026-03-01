@@ -33,6 +33,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid } from '@mui/x-data-grid';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useScrollHighlight } from '../hooks/useScrollHighlight';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import UploadFileRoundedIcon from '@mui/icons-material/UploadFileRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
@@ -367,6 +368,7 @@ function UtilityRatesView() {
 }
 
 export default function BillingPage() {
+  useScrollHighlight();
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -602,12 +604,14 @@ export default function BillingPage() {
         Billing
       </Typography>
 
+
       {error && (
         <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
       <Stack
+        id="billing-history"
         direction="row"
         sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
       >
@@ -666,7 +670,7 @@ export default function BillingPage() {
         />
       )}
 
-      <Accordion defaultExpanded={false} sx={{ mt: 3 }}>
+      <Accordion id="billing-rates" defaultExpanded={false} sx={{ mt: 3 }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant="subtitle1" fontWeight={600}>
             Utility Rates
