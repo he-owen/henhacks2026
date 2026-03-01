@@ -18,6 +18,7 @@ import Copyright from '../internals/components/Copyright';
 import DeviceFormDialog from './DeviceFormDialog';
 import { getDevices, createDevice, updateDevice, deleteDevice } from '../../api';
 import { useLocation } from '../context/LocationContext';
+import { useScrollHighlight } from '../hooks/useScrollHighlight';
 
 const PENDING_SPINNER = (
   <Box
@@ -79,6 +80,7 @@ function renderType(params) {
 const SESSION_EXPIRED_MESSAGE = 'Session expired or invalid. Please sign in again.';
 
 export default function DevicesPage() {
+  useScrollHighlight();
   const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } = useAuth0();
   const { locations, selectedLocationId } = useLocation();
   const [allDevices, setAllDevices] = React.useState([]);
@@ -359,6 +361,7 @@ export default function DevicesPage() {
         </Alert>
       )}
       <Stack
+        id="devices-header"
         direction="row"
         sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
       >

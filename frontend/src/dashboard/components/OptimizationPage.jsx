@@ -31,6 +31,7 @@ import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import { useAuth0 } from '@auth0/auth0-react';
 import Copyright from '../internals/components/Copyright';
 import { runDailyOptimizationMe, runWeeklyOptimizationMe, getUserPreferences } from '../../api';
+import { useScrollHighlight } from '../hooks/useScrollHighlight';
 import { usePage } from '../context/PageContext';
 
 // ---------------------------------------------------------------------------
@@ -283,6 +284,7 @@ function weeklyIcon(name, deviceType) {
 }
 
 export default function OptimizationPage() {
+  useScrollHighlight();
   const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } = useAuth0();
   const {
     optimizationResults: results, setOptimizationResults: setResults,
@@ -381,7 +383,7 @@ export default function OptimizationPage() {
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       {/* Header */}
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+      <Stack id="opt-header" direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography component="h2" variant="h6">Optimization</Typography>
         <Button
           variant="contained"
@@ -401,7 +403,7 @@ export default function OptimizationPage() {
       )}
 
       {/* Summary cards */}
-      <Grid container spacing={2} columns={12} sx={{ mb: (theme) => theme.spacing(2) }}>
+      <Grid id="opt-summary" container spacing={2} columns={12} sx={{ mb: (theme) => theme.spacing(2) }}>
         <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
           <Card variant="outlined" sx={{ height: '100%' }}>
             <CardContent>
@@ -475,7 +477,7 @@ export default function OptimizationPage() {
       </Grid>
 
       {/* Schedule / Recommendations */}
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+      <Typography id="opt-schedule" component="h2" variant="h6" sx={{ mb: 2 }}>
         {results ? `Today's Schedule — ${todayName}` : 'Recommendations'}
       </Typography>
 

@@ -30,6 +30,7 @@ import Collapse from '@mui/material/Collapse';
 import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid } from '@mui/x-data-grid';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useScrollHighlight } from '../hooks/useScrollHighlight';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import UploadFileRoundedIcon from '@mui/icons-material/UploadFileRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
@@ -368,6 +369,7 @@ function UtilityRatesView() {
 }
 
 export default function BillingPage() {
+  useScrollHighlight();
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -597,7 +599,9 @@ export default function BillingPage() {
         Billing
       </Typography>
 
-      <UtilityRatesView />
+      <Box id="billing-rates">
+        <UtilityRatesView />
+      </Box>
 
       <Divider sx={{ my: 3 }} />
 
@@ -608,6 +612,7 @@ export default function BillingPage() {
       )}
 
       <Stack
+        id="billing-history"
         direction="row"
         sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
       >
