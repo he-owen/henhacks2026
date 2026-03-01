@@ -7,12 +7,14 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import { useAuth0 } from '@auth0/auth0-react';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 import SelectContent from './SelectContent';
 import { usePage } from '../context/PageContext';
 
 function SideMenuMobile({ open, toggleDrawer }) {
+  const { user } = useAuth0();
   const { setNotificationsOpen, notificationCount } = usePage();
   return (
     <Drawer
@@ -40,12 +42,12 @@ function SideMenuMobile({ open, toggleDrawer }) {
           >
             <Avatar
               sizes="small"
-              alt="Riley Carter"
-              src="/static/images/avatar/7.jpg"
+              alt={user?.name ?? user?.email ?? 'User'}
+              src={user?.picture}
               sx={{ width: 24, height: 24 }}
             />
             <Typography component="p" variant="h6">
-              Riley Carter
+              {user?.name ?? user?.email ?? 'User'}
             </Typography>
           </Stack>
           <MenuButton showBadge badgeCount={notificationCount} onClick={() => setNotificationsOpen(true)}>
