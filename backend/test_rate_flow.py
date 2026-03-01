@@ -236,7 +236,38 @@ async def main():
             print(f"  [INFO] Month {wrong_month} has {len(wrong_rates)} rates (may have been generated separately)")
 
     # ------------------------------------------------------------------
-    print(f"\n=== 9. Spot-check hourly coverage for each day ===")
+    print(f"\n=== 9. TOU mix: verify off-peak, mid-peak, peak (not all peak) ===")
+    if db_providers:
+        # Use Delmarva Resident Bundled if available, else first provider
+        delmarva = next(
+            (p for p in db_providers if "delmarva" in (p.get("utility_name") or "").lower()
+            and "resident" in (p.get("rate_name") or "").lower()),
+            db_providers[0],
+        )
+        pid = delmarva["provider_id"]
+        # Regenerate Feb 2026 to ensure TOU heuristic is applied
+        await generate_monthly_rates(pid, 2, 2026)
+        feb_rates = await get_hourly_rates(pid, 2, 2026)
+        if feb_rates:
+            labels = [r["period_label"] for r in feb_rates]
+            peak_count = labels.count("peak")
+            off_count = labels.count("off-peak")
+            mid_count = labels.count("mid-peak")
+            flat_count = labels.count("flat")
+            print(f"  Feb 2026 labels: peak={peak_count}, mid-peak={mid_count}, off-peak={off_count}, flat={flat_count}")
+            if peak_count == len(feb_rates):
+                fail("All hours are peak — TOU heuristic not applied")
+            elif off_count > 0 or mid_count > 0:
+                ok(f"TOU mix present: {off_count} off-peak, {mid_count} mid-peak, {peak_count} peak")
+            else:
+                fail(f"Unexpected label distribution: {set(labels)}")
+        else:
+            print("  [SKIP] No Feb 2026 rates to check")
+    else:
+        print("  [SKIP] No providers")
+
+    # ------------------------------------------------------------------
+    print(f"\n=== 10. Spot-check hourly coverage for each day ===")
     if db_providers:
         pid = db_providers[0]["provider_id"]
         rates = await get_hourly_rates(pid, MONTH, YEAR)

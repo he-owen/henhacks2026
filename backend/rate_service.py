@@ -119,6 +119,49 @@ def _delivery_cost_for_label(label: str) -> float:
     return BASE_DELIVERY_RATE * MID_PEAK_MULTIPLIER
 
 
+def _hour_based_label(hour: int, is_weekend: bool = False) -> str:
+    """Fallback: assign peak/mid/off by hour when OpenEI has no TOU variation."""
+    if 0 <= hour <= 5:  # midnight-6am
+        return "off-peak"
+    if 14 <= hour <= 20:  # 2pm-9pm
+        return "peak"
+    return "mid-peak"
+
+
+def _has_tou_variation(rate_structure: list, period_labels: dict[int, str] | None) -> bool:
+    """True if OpenEI provides meaningful TOU (multiple distinct labels and rate values)."""
+    if not period_labels or period_labels == {0: "flat"}:
+        return False
+    labels = set(period_labels.values())
+    if len(labels) <= 1:
+        return False
+    # Case B: all periods have the same rate - no real TOU variation
+    if rate_structure and len(rate_structure) > 1:
+        rates = []
+        for period in rate_structure:
+            tiers = period if isinstance(period, list) else [period]
+            if tiers and isinstance(tiers[0], dict):
+                rates.append(float(tiers[0].get("rate", 0) or 0))
+            else:
+                rates.append(0.0)
+        if rates and len(set(rates)) <= 1:
+            return False
+    return True
+
+
+def _schedule_has_variation_for_month(
+    weekday_schedule: list, weekend_schedule: list, month_idx: int
+) -> bool:
+    """True if at least one schedule has different period indices across the 24 hours."""
+    for schedule in (weekday_schedule, weekend_schedule):
+        if not schedule or len(schedule) != 12 or len(schedule[0]) != 24:
+            continue
+        period_indices = schedule[month_idx]
+        if len(set(period_indices)) > 1:
+            return True
+    return False
+
+
 def compute_rate_for_hour(
     rate_structure: list,
     weekday_schedule: list,
@@ -138,17 +181,17 @@ def compute_rate_for_hour(
     schedule = weekend_schedule if is_weekend else weekday_schedule
 
     if not schedule or len(schedule) != 12 or len(schedule[0]) != 24:
-        return _flat_fallback(rate_structure, fuel_adjustments, month_idx)
+        return _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt)
 
     period_idx = schedule[month_idx][hour_idx]
 
     if not rate_structure or period_idx >= len(rate_structure):
-        return _flat_fallback(rate_structure, fuel_adjustments, month_idx)
+        return _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt)
 
     period = rate_structure[period_idx]
     tiers = period if isinstance(period, list) else [period]
     if not tiers or not isinstance(tiers[0], dict):
-        return _flat_fallback(rate_structure, fuel_adjustments, month_idx)
+        return _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt)
 
     tier = tiers[0]
     rate_val = tier.get("rate", 0) or 0
@@ -160,6 +203,11 @@ def compute_rate_for_hour(
     if period_labels is None:
         period_labels = _classify_periods(rate_structure)
     label = period_labels.get(period_idx, "mid-peak")
+    # Use heuristic when OpenEI has no TOU variation OR schedule maps all hours to same period
+    if not _has_tou_variation(rate_structure, period_labels):
+        label = _hour_based_label(dt.hour, is_weekend)
+    elif not _schedule_has_variation_for_month(weekday_schedule, weekend_schedule, month_idx):
+        label = _hour_based_label(dt.hour, is_weekend)
     delivery = _delivery_cost_for_label(label)
 
     return {
@@ -171,8 +219,8 @@ def compute_rate_for_hour(
     }
 
 
-def _flat_fallback(rate_structure, fuel_adjustments, month_idx):
-    """Best-effort flat rate when schedule data is missing."""
+def _flat_fallback(rate_structure, fuel_adjustments, month_idx, dt: datetime):
+    """Best-effort flat rate when schedule data is missing. Uses hour-based TOU heuristic."""
     base = 0.0
     if rate_structure and len(rate_structure) > 0:
         period = rate_structure[0]
@@ -182,13 +230,15 @@ def _flat_fallback(rate_structure, fuel_adjustments, month_idx):
     fam = fuel_adjustments or [0] * 12
     fuel = fam[month_idx] if month_idx < len(fam) else 0
     base += float(fuel)
-    delivery = BASE_DELIVERY_RATE * MID_PEAK_MULTIPLIER
+    is_weekend = dt.weekday() >= 5
+    label = _hour_based_label(dt.hour, is_weekend)
+    delivery = _delivery_cost_for_label(label)
     return {
         "base_rate": round(base, 6),
         "delivery_cost": round(delivery, 6),
         "total_rate": round(base + delivery, 6),
         "period_index": 0,
-        "period_label": "flat",
+        "period_label": label,
     }
 
 
